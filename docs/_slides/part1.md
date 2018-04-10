@@ -339,7 +339,7 @@ out_suffix <-"exercise5_03312018" #output suffix for the files and ouptu folder 
 create_out_dir_param <- TRUE 
 
 ### Input data files used:
-infile_reg_outline <- "new_strata_rita_10282017.shp" # Region outline and FEMA zones
+infile_reg_outline <- "new_strata_rita_10282017" # Region outline and FEMA zones
 infile_modis_bands_information <- "df_modis_band_info.txt" # MOD09 bands information.
 nlcd_2006_filename <- "nlcd_2006_RITA.tif" # NLCD2006 Land cover data aggregated at ~ 1km.
 infile_name_nlcd_legend <- "nlcd_legend.txt" #Legend information for 2006 NLCD.
@@ -385,7 +385,7 @@ reg_sf <- st_read(file.path(in_dir_var,infile_reg_outline))
 {:.text-document title="{{ site.handouts[0] }}"}
 
 ~~~
-Reading layer `new_strata_rita_10282017' from data source `/nfs/public-data/training/new_strata_rita_10282017.shp' using driver `ESRI Shapefile'
+Reading layer `new_strata_rita_10282017' from data source `/nfs/public-data/training/new_strata_rita_10282017' using driver `ESRI Shapefile'
 Simple feature collection with 2 features and 17 fields
 geometry type:  MULTIPOLYGON
 dimension:      XY

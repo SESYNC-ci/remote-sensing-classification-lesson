@@ -8,6 +8,12 @@ handouts:
  - data/new_strata_rita_10282017
  - data/df_modis_band_info.txt
  - data/nlcd_2006_RITA.tif
+ - data/nlcd_legend.txt
+ - data/mosaiced_MOD09A1_A2005265__006_reflectance_masked_RITA_reg_1km.tif
+ - data/mosaiced_MOD09A1_A2005273__006_reflectance_masked_RITA_reg_1km.tif
+ - data/class1_sites
+ - data/class2_sites
+ - data/class3_sites
  - data/README.md
 tag: v0.0
 lesson: 4

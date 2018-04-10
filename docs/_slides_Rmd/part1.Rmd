@@ -81,7 +81,7 @@ out_suffix <-"exercise5_03312018" #output suffix for the files and ouptu folder 
 create_out_dir_param <- TRUE 
 
 ### Input data files used:
-infile_reg_outline <- "new_strata_rita_10282017.shp" # Region outline and FEMA zones
+infile_reg_outline <- "new_strata_rita_10282017" # Region outline and FEMA zones
 infile_modis_bands_information <- "df_modis_band_info.txt" # MOD09 bands information.
 nlcd_2006_filename <- "nlcd_2006_RITA.tif" # NLCD2006 Land cover data aggregated at ~ 1km.
 infile_name_nlcd_legend <- "nlcd_legend.txt" #Legend information for 2006 NLCD.

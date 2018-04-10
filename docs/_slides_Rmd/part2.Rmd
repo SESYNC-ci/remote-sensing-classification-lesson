@@ -93,15 +93,9 @@ create_out_dir_param=TRUE #PARAM9
 #ARG9
 #local raster name defining resolution, extent
 infile_RITA_reflectance_date2 <- "mosaiced_MOD09A1_A2005273__006_reflectance_masked_RITA_reg_1km.tif"
-infile_reg_outline <- "new_strata_rita_10282017.shp" # Region outline and FEMA zones
+infile_reg_outline <- "new_strata_rita_10282017" # Region outline and FEMA zones
 infile_modis_bands_information <- "df_modis_band_info.txt" # MOD09 bands information.
 nlcd_2006_filename <- "nlcd_2006_RITA.tif" # NLCD2006 Land cover data aggregated at ~ 1km.
-
-infilename_class1 <- "class1.shp" # Ground truth data for class 1
-infilename_class2 <- "class2.shp" # Ground truth data for class 2
-infilename_class3 <- "class3.shp" # Ground truth data for class 3
-
-#class1_sites.shp
 
 ###########################  START SCRIPT  ##############################
 
@@ -169,9 +163,9 @@ writeRaster(r_after_MNDWI,
 #2) Flooded vegetation
 #3) Flooded area, or water (lake etc)
 
-class1_data_sf <- st_read(file.path(in_dir_var,"class1_sites.shp"))
-class2_data_sf <- st_read(file.path(in_dir_var,"class2_sites.shp"))
-class3_data_sf <- st_read(file.path(in_dir_var,"class3_sites.shp"))
+class1_data_sf <- st_read(file.path(in_dir_var,"class1_sites"))
+class2_data_sf <- st_read(file.path(in_dir_var,"class2_sites"))
+class3_data_sf <- st_read(file.path(in_dir_var,"class3_sites"))
 
 ### combine object, note they should be in the same projection system
 class_data_sf <- rbind(class1_data_sf,class2_data_sf,class3_data_sf)

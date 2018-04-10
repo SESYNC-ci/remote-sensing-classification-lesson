@@ -160,15 +160,9 @@ create_out_dir_param=TRUE #PARAM9
 #ARG9
 #local raster name defining resolution, extent
 infile_RITA_reflectance_date2 <- "mosaiced_MOD09A1_A2005273__006_reflectance_masked_RITA_reg_1km.tif"
-infile_reg_outline <- "new_strata_rita_10282017.shp" # Region outline and FEMA zones
+infile_reg_outline <- "new_strata_rita_10282017" # Region outline and FEMA zones
 infile_modis_bands_information <- "df_modis_band_info.txt" # MOD09 bands information.
 nlcd_2006_filename <- "nlcd_2006_RITA.tif" # NLCD2006 Land cover data aggregated at ~ 1km.
-
-infilename_class1 <- "class1.shp" # Ground truth data for class 1
-infilename_class2 <- "class2.shp" # Ground truth data for class 2
-infilename_class3 <- "class3.shp" # Ground truth data for class 3
-
-#class1_sites.shp
 
 ###########################  START SCRIPT  ##############################
 
@@ -283,12 +277,12 @@ Error in .local(x, filename, ...): Attempting to write a file to a path that doe
 #2) Flooded vegetation
 #3) Flooded area, or water (lake etc)
 
-class1_data_sf <- st_read(file.path(in_dir_var,"class1_sites.shp"))
+class1_data_sf <- st_read(file.path(in_dir_var,"class1_sites"))
 ~~~
 {:.text-document title="{{ site.handouts[1] }}"}
 
 ~~~
-Reading layer `class1_sites' from data source `/nfs/public-data/training/class1_sites.shp' using driver `ESRI Shapefile'
+Reading layer `class1_sites' from data source `/nfs/public-data/training/class1_sites' using driver `ESRI Shapefile'
 Simple feature collection with 6 features and 2 fields
 geometry type:  POLYGON
 dimension:      XY
@@ -299,12 +293,12 @@ proj4string:    NA
 {:.output}
 
 ~~~r
-class2_data_sf <- st_read(file.path(in_dir_var,"class2_sites.shp"))
+class2_data_sf <- st_read(file.path(in_dir_var,"class2_sites"))
 ~~~
 {:.text-document title="{{ site.handouts[1] }}"}
 
 ~~~
-Reading layer `class2_sites' from data source `/nfs/public-data/training/class2_sites.shp' using driver `ESRI Shapefile'
+Reading layer `class2_sites' from data source `/nfs/public-data/training/class2_sites' using driver `ESRI Shapefile'
 Simple feature collection with 8 features and 2 fields
 geometry type:  MULTIPOLYGON
 dimension:      XY
@@ -315,12 +309,12 @@ proj4string:    NA
 {:.output}
 
 ~~~r
-class3_data_sf <- st_read(file.path(in_dir_var,"class3_sites.shp"))
+class3_data_sf <- st_read(file.path(in_dir_var,"class3_sites"))
 ~~~
 {:.text-document title="{{ site.handouts[1] }}"}
 
 ~~~
-Reading layer `class3_sites' from data source `/nfs/public-data/training/class3_sites.shp' using driver `ESRI Shapefile'
+Reading layer `class3_sites' from data source `/nfs/public-data/training/class3_sites' using driver `ESRI Shapefile'
 Simple feature collection with 9 features and 2 fields
 geometry type:  POLYGON
 dimension:      XY
