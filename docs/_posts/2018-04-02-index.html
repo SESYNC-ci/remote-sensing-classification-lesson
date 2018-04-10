@@ -21,7 +21,7 @@
 
 <h2 style="text-transform: none;" id="hurricane-inundation">Hurricane Inundation</h2>
 
-<p>Lesson 4 with <em>Benoit Parmentier</em></p>
+<p>Lesson 3 with <em>Benoit Parmentier</em></p>
 
 <h2 id="contents">Contents</h2>
 
@@ -34,7 +34,7 @@
 
 <p><a name="/slides/part1"></a></p>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">####################################  Introduction to Remote Sensing   #######################################</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">####################################  Introduction to Remote Sensing   #######################################</span><span class="w">
 </span><span class="c1">############################  Analyze and map flooding from RITA hurricane  #######################################</span><span class="w">
 </span><span class="c1">#This script performs analyses for the Exercise 5 of the Short Course using reflectance data derived from MODIS.</span><span class="w">
 </span><span class="c1">#The goal is to map flooding from RITA using various reflectance bands from Remote Sensing platforms.</span><span class="w">
@@ -67,7 +67,7 @@
  Linking to sp version: 1.2-7 
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">spdep</span><span class="p">)</span><span class="w"> </span><span class="c1">#spatial analyses operations, functions etc.</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">spdep</span><span class="p">)</span><span class="w"> </span><span class="c1">#spatial analyses operations, functions etc.</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Loading required package: Matrix
@@ -81,14 +81,14 @@
 <span class="n">repos</span><span class="p">=</span><span class="s1">'https://nowosad.github.io/drat/'</span><span class="p">,</span> <span class="n">type</span><span class="p">=</span><span class="s1">'source'</span><span class="p">))`</span>
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">gtools</span><span class="p">)</span><span class="w"> </span><span class="c1"># contains mixsort and other useful functions</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">gtools</span><span class="p">)</span><span class="w"> </span><span class="c1"># contains mixsort and other useful functions</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">maptools</span><span class="p">)</span><span class="w"> </span><span class="c1"># tools to manipulate spatial data</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Checking rgeos availability: TRUE
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">parallel</span><span class="p">)</span><span class="w"> </span><span class="c1"># parallel computation, part of base package no</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">parallel</span><span class="p">)</span><span class="w"> </span><span class="c1"># parallel computation, part of base package no</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">rasterVis</span><span class="p">)</span><span class="w"> </span><span class="c1"># raster visualization operations</span><span class="w">
 </span></code></pre></div></div>
 
@@ -104,7 +104,7 @@
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Loading required package: RColorBrewer
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">raster</span><span class="p">)</span><span class="w"> </span><span class="c1"># raster functionalities</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">raster</span><span class="p">)</span><span class="w"> </span><span class="c1"># raster functionalities</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span><span class="w"> </span><span class="c1">#ARIMA forecasting</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">xts</span><span class="p">)</span><span class="w"> </span><span class="c1">#extension for time series object and analyses</span><span class="w">
 </span></code></pre></div></div>
@@ -121,7 +121,7 @@ Attaching package: 'zoo'
     as.Date, as.Date.numeric
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">zoo</span><span class="p">)</span><span class="w"> </span><span class="c1"># time series object and analysis</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">zoo</span><span class="p">)</span><span class="w"> </span><span class="c1"># time series object and analysis</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">lubridate</span><span class="p">)</span><span class="w"> </span><span class="c1"># dates functionality</span><span class="w">
 </span></code></pre></div></div>
 
@@ -134,7 +134,7 @@ Attaching package: 'lubridate'
     date
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">colorRamps</span><span class="p">)</span><span class="w"> </span><span class="c1">#contains matlab.like color palette</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">colorRamps</span><span class="p">)</span><span class="w"> </span><span class="c1">#contains matlab.like color palette</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">rgeos</span><span class="p">)</span><span class="w"> </span><span class="c1">#contains topological operations</span><span class="w">
 </span></code></pre></div></div>
 
@@ -144,7 +144,7 @@ Attaching package: 'lubridate'
  Polygon checking: TRUE 
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">sphet</span><span class="p">)</span><span class="w"> </span><span class="c1">#contains spreg, spatial regression modeling</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">sphet</span><span class="p">)</span><span class="w"> </span><span class="c1">#contains spreg, spatial regression modeling</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
@@ -156,7 +156,7 @@ Attaching package: 'sphet'
     distance
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">BMS</span><span class="p">)</span><span class="w"> </span><span class="c1">#contains hex2bin and bin2hex, Bayesian methods</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">BMS</span><span class="p">)</span><span class="w"> </span><span class="c1">#contains hex2bin and bin2hex, Bayesian methods</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">bitops</span><span class="p">)</span><span class="w"> </span><span class="c1"># function for bitwise operations</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">foreign</span><span class="p">)</span><span class="w"> </span><span class="c1"># import datasets from SAS, spss, stata and other sources</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">gdata</span><span class="p">)</span><span class="w"> </span><span class="c1">#read xls, dbf etc., not recently updated but useful</span><span class="w">
@@ -200,7 +200,7 @@ Attaching package: 'gdata'
     startsWith
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">classInt</span><span class="p">)</span><span class="w"> </span><span class="c1">#methods to generate class limits</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">classInt</span><span class="p">)</span><span class="w"> </span><span class="c1">#methods to generate class limits</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">plyr</span><span class="p">)</span><span class="w"> </span><span class="c1">#data wrangling: various operations for splitting, combining data</span><span class="w">
 </span></code></pre></div></div>
 
@@ -213,7 +213,7 @@ Attaching package: 'plyr'
     here
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#library(gstat) #spatial interpolation and kriging methods</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#library(gstat) #spatial interpolation and kriging methods</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">readxl</span><span class="p">)</span><span class="w"> </span><span class="c1">#functionalities to read in excel type data</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">psych</span><span class="p">)</span><span class="w"> </span><span class="c1">#pca/eigenvector decomposition functionalities</span><span class="w">
 </span></code></pre></div></div>
@@ -227,13 +227,13 @@ Attaching package: 'psych'
     logit
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">sf</span><span class="p">)</span><span class="w"> </span><span class="c1"># spatial objects classes</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">sf</span><span class="p">)</span><span class="w"> </span><span class="c1"># spatial objects classes</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Linking to GEOS 3.5.1, GDAL 2.1.3, proj.4 4.9.2
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">plotrix</span><span class="p">)</span><span class="w"> </span><span class="c1">#various graphic functions e.g. draw.circle</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">plotrix</span><span class="p">)</span><span class="w"> </span><span class="c1">#various graphic functions e.g. draw.circle</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
@@ -245,7 +245,7 @@ Attaching package: 'plotrix'
     rescale
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###### Functions used in this script</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###### Functions used in this script</span><span class="w">
 
 </span><span class="n">create_dir_fun</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">outDir</span><span class="p">,</span><span class="n">out_suffix</span><span class="o">=</span><span class="kc">NULL</span><span class="p">){</span><span class="w">
   </span><span class="c1">#if out_suffix is not null then append out_suffix string</span><span class="w">
@@ -275,7 +275,7 @@ Attaching package: 'plotrix'
 </span><span class="n">create_out_dir_param</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kc">TRUE</span><span class="w"> 
 
 </span><span class="c1">### Input data files used:</span><span class="w">
-</span><span class="n">infile_reg_outline</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"new_strata_rita_10282017.shp"</span><span class="w"> </span><span class="c1"># Region outline and FEMA zones</span><span class="w">
+</span><span class="n">infile_reg_outline</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"new_strata_rita_10282017"</span><span class="w"> </span><span class="c1"># Region outline and FEMA zones</span><span class="w">
 </span><span class="n">infile_modis_bands_information</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"df_modis_band_info.txt"</span><span class="w"> </span><span class="c1"># MOD09 bands information.</span><span class="w">
 </span><span class="n">nlcd_2006_filename</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"nlcd_2006_RITA.tif"</span><span class="w"> </span><span class="c1"># NLCD2006 Land cover data aggregated at ~ 1km.</span><span class="w">
 </span><span class="n">infile_name_nlcd_legend</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"nlcd_legend.txt"</span><span class="w"> </span><span class="c1">#Legend information for 2006 NLCD.</span><span class="w">
@@ -313,10 +313,10 @@ Attaching package: 'plotrix'
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-1.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">reg_sf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">st_read</span><span class="p">(</span><span class="n">file.path</span><span class="p">(</span><span class="n">in_dir_var</span><span class="p">,</span><span class="n">infile_reg_outline</span><span class="p">))</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">reg_sf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">st_read</span><span class="p">(</span><span class="n">file.path</span><span class="p">(</span><span class="n">in_dir_var</span><span class="p">,</span><span class="n">infile_reg_outline</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Reading layer `new_strata_rita_10282017' from data source `/nfs/public-data/training/new_strata_rita_10282017.shp' using driver `ESRI Shapefile'
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Reading layer `new_strata_rita_10282017' from data source `/nfs/public-data/training/new_strata_rita_10282017' using driver `ESRI Shapefile'
 Simple feature collection with 2 features and 17 fields
 geometry type:  MULTIPOLYGON
 dimension:      XY
@@ -325,7 +325,7 @@ epsg (SRID):    4269
 proj4string:    +proj=longlat +datum=NAD83 +no_defs
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">reg_sf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">st_transform</span><span class="p">(</span><span class="n">reg_sf</span><span class="p">,</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">reg_sf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">st_transform</span><span class="p">(</span><span class="n">reg_sf</span><span class="p">,</span><span class="w">
                        </span><span class="n">crs</span><span class="o">=</span><span class="n">CRS_reg</span><span class="p">)</span><span class="w">
 </span><span class="n">reg_sp</span><span class="w"> </span><span class="o">&lt;-</span><span class="n">as</span><span class="p">(</span><span class="n">reg_sf</span><span class="p">,</span><span class="w"> </span><span class="s2">"Spatial"</span><span class="p">)</span><span class="w"> </span><span class="c1">#Convert to sp object before rasterization</span><span class="w">
 
@@ -338,7 +338,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-2.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Let's examine a location within FEMA flooded zone and outside: use centroids</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Let's examine a location within FEMA flooded zone and outside: use centroids</span><span class="w">
 </span><span class="n">centroids_sf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">st_centroid</span><span class="p">(</span><span class="n">reg_sf</span><span class="p">)</span><span class="w">
 
 </span><span class="n">df_before</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">extract</span><span class="p">(</span><span class="n">r_before</span><span class="p">,</span><span class="n">centroids_sf</span><span class="p">)</span><span class="w">
@@ -351,7 +351,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-3.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">## Read band information since it is more informative!!</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">## Read band information since it is more informative!!</span><span class="w">
 </span><span class="n">df_modis_band_info</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">read.table</span><span class="p">(</span><span class="n">file.path</span><span class="p">(</span><span class="n">in_dir_var</span><span class="p">,</span><span class="n">infile_modis_bands_information</span><span class="p">),</span><span class="w">
                                  </span><span class="n">sep</span><span class="o">=</span><span class="s2">","</span><span class="p">,</span><span class="w">
                                  </span><span class="n">stringsAsFactors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">F</span><span class="p">)</span><span class="w">
@@ -368,7 +368,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 7     SWIR3           7          2105        2155
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="nf">names</span><span class="p">(</span><span class="n">r_before</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df_modis_band_info</span><span class="o">$</span><span class="n">band_name</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="nf">names</span><span class="p">(</span><span class="n">r_before</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df_modis_band_info</span><span class="o">$</span><span class="n">band_name</span><span class="w">
 </span><span class="nf">names</span><span class="p">(</span><span class="n">r_after</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">df_modis_band_info</span><span class="o">$</span><span class="n">band_name</span><span class="w">
 
 </span><span class="c1">### Order band in terms of wavelenth:</span><span class="w">
@@ -391,7 +391,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-4.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###############################################</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###############################################</span><span class="w">
 </span><span class="c1">##### PART II: Examine spectral class signatures for land cover NLCD classes ##############</span><span class="w">
 
 </span><span class="c1">###### Read in NLDC 2006, note that it was aggregated at 1km.</span><span class="w">
@@ -442,7 +442,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 16 0.07421595
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="nf">names</span><span class="p">(</span><span class="n">lc_legend_df</span><span class="p">)</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="nf">names</span><span class="p">(</span><span class="n">lc_legend_df</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] "ID"                         "COUNT"                     
@@ -451,7 +451,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 [7] "Opacity"                   
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Add relevant categories</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Add relevant categories</span><span class="w">
 </span><span class="n">lc_legend_df_subset</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">lc_legend_df</span><span class="p">,</span><span class="n">select</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s2">"ID"</span><span class="p">,</span><span class="s2">"NLCD.2006.Land.Cover.Class"</span><span class="p">))</span><span class="w">
 </span><span class="nf">names</span><span class="p">(</span><span class="n">lc_legend_df_subset</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"ID"</span><span class="p">,</span><span class="s2">"cat_name"</span><span class="p">)</span><span class="w">
 
@@ -475,14 +475,14 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 6 0.15738439   Developed, High Intensity
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="nf">names</span><span class="p">(</span><span class="n">avg_reflectance_nlcd</span><span class="p">)</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="nf">names</span><span class="p">(</span><span class="n">avg_reflectance_nlcd</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] "zone"     "Red"      "NIR"      "Blue"     "Green"    "SWIR1"   
 [7] "SWIR2"    "SWIR3"    "cat_name"
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">col_ordering</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">band_refl_order</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">col_ordering</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">band_refl_order</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="w">
 
 </span><span class="n">plot</span><span class="p">(</span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">avg_reflectance_nlcd</span><span class="p">[</span><span class="m">9</span><span class="p">,</span><span class="n">col_ordering</span><span class="p">]),</span><span class="w">
      </span><span class="n">type</span><span class="o">=</span><span class="s2">"l"</span><span class="p">,</span><span class="w">
@@ -496,7 +496,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-5.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">####### Explore data in Feature space:</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">####### Explore data in Feature space:</span><span class="w">
 
 </span><span class="c1">#Feature space NIR1 and Red</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_before</span><span class="o">$</span><span class="n">Red</span><span class="p">,</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">NIR</span><span class="p">)</span><span class="w">
@@ -504,22 +504,22 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-6.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before</span><span class="o">$</span><span class="n">Green</span><span class="p">,</span><span class="n">r_before</span><span class="o">$</span><span class="n">Red</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before</span><span class="o">$</span><span class="n">Green</span><span class="p">,</span><span class="n">r_before</span><span class="o">$</span><span class="n">Red</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-7.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before</span><span class="o">$</span><span class="n">SWIR1</span><span class="p">,</span><span class="n">r_before</span><span class="o">$</span><span class="n">NIR</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before</span><span class="o">$</span><span class="n">SWIR1</span><span class="p">,</span><span class="n">r_before</span><span class="o">$</span><span class="n">NIR</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-8.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before</span><span class="o">$</span><span class="n">Red</span><span class="p">,</span><span class="n">r_before</span><span class="o">$</span><span class="n">SWIR1</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before</span><span class="o">$</span><span class="n">Red</span><span class="p">,</span><span class="n">r_before</span><span class="o">$</span><span class="n">SWIR1</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-9.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">df_r_before_nlcd</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.data.frame</span><span class="p">(</span><span class="n">stack</span><span class="p">(</span><span class="n">r_before</span><span class="p">,</span><span class="n">nlcd2006_reg</span><span class="p">))</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">df_r_before_nlcd</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.data.frame</span><span class="p">(</span><span class="n">stack</span><span class="p">(</span><span class="n">r_before</span><span class="p">,</span><span class="n">nlcd2006_reg</span><span class="p">))</span><span class="w">
 </span><span class="n">head</span><span class="p">(</span><span class="n">df_r_before_nlcd</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
@@ -539,7 +539,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 6 0.05998935             NA
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#Evergreen Forest:</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#Evergreen Forest:</span><span class="w">
 </span><span class="n">df_subset</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">df_r_before_nlcd</span><span class="p">,</span><span class="n">nlcd_2006_RITA</span><span class="o">==</span><span class="m">42</span><span class="p">)</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">df_subset</span><span class="o">$</span><span class="n">Green</span><span class="p">,</span><span class="w">
      </span><span class="n">df_subset</span><span class="o">$</span><span class="n">Red</span><span class="p">,</span><span class="w">
@@ -573,7 +573,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-10.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Feature space Red and NIR</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Feature space Red and NIR</span><span class="w">
 
 </span><span class="c1">#Evergreen Forest:</span><span class="w">
 </span><span class="n">df_subset</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">df_r_before_nlcd</span><span class="p">,</span><span class="n">nlcd_2006_RITA</span><span class="o">==</span><span class="m">42</span><span class="p">)</span><span class="w">
@@ -608,7 +608,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-11.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Feature space Blue and Red</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Feature space Blue and Red</span><span class="w">
 
 </span><span class="c1">#Water:</span><span class="w">
 </span><span class="n">df_subset</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">df_r_before_nlcd</span><span class="p">,</span><span class="n">nlcd_2006_RITA</span><span class="o">==</span><span class="m">11</span><span class="p">)</span><span class="w">
@@ -643,7 +643,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-12.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Generate Color composites</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Generate Color composites</span><span class="w">
 </span><span class="c1">### True color composite</span><span class="w">
 
 </span><span class="n">plotRGB</span><span class="p">(</span><span class="n">r_before</span><span class="p">,</span><span class="w">
@@ -656,7 +656,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-13.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### False color composite:</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### False color composite:</span><span class="w">
 
 </span><span class="n">plotRGB</span><span class="p">(</span><span class="n">r_before</span><span class="p">,</span><span class="w">
         </span><span class="n">r</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="w">
@@ -668,7 +668,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-14.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plotRGB</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plotRGB</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="w">
         </span><span class="n">r</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="w">
         </span><span class="n">g</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="w">
         </span><span class="n">b</span><span class="o">=</span><span class="m">4</span><span class="p">,</span><span class="w">
@@ -678,7 +678,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-15.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Note the effect of flooding is particularly visible in the false color composites.</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Note the effect of flooding is particularly visible in the false color composites.</span><span class="w">
 </span><span class="c1">### Let's examine different band combination to enhance features in the image, including flooded areas.</span><span class="w">
 
 </span><span class="c1">###############################################</span><span class="w">
@@ -691,12 +691,12 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-16.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"NIR"</span><span class="p">))</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"NIR"</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-17.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Lower NIR often correlates to areas with high water fraction or inundated:</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Lower NIR often correlates to areas with high water fraction or inundated:</span><span class="w">
 </span><span class="n">r_rec_NIR_before</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">r_before</span><span class="p">,</span><span class="s2">"NIR"</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">0.2</span><span class="w">
 </span><span class="n">r_rec_NIR_after</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"NIR"</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">0.2</span><span class="w">
 
@@ -706,12 +706,12 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-18.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_rec_NIR_after</span><span class="p">,</span><span class="w"> </span><span class="n">main</span><span class="o">=</span><span class="s2">"After RITA, NIR &gt; 0.2"</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_rec_NIR_after</span><span class="p">,</span><span class="w"> </span><span class="n">main</span><span class="o">=</span><span class="s2">"After RITA, NIR &gt; 0.2"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-19.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#Compare to actual flooding data</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#Compare to actual flooding data</span><span class="w">
 </span><span class="n">freq_fema_zones</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.data.frame</span><span class="p">(</span><span class="n">freq</span><span class="p">(</span><span class="n">r_ref</span><span class="p">))</span><span class="w">
 </span><span class="n">xtab_threshold</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">crosstab</span><span class="p">(</span><span class="n">r_ref</span><span class="p">,</span><span class="n">r_rec_NIR_after</span><span class="p">,</span><span class="n">long</span><span class="o">=</span><span class="nb">T</span><span class="p">)</span><span class="w">
 
@@ -722,7 +722,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 76.17498
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">############## Generating indices based on raster algebra of original bands</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">############## Generating indices based on raster algebra of original bands</span><span class="w">
 </span><span class="c1">## Let's generate a series of indices, we list a few possibility from the literature.</span><span class="w">
 </span><span class="c1">#1) NDVI = (NIR - Red)/(NIR+Red)</span><span class="w">
 </span><span class="c1">#2) NDWI = (Green - NIR)/(Green + NIR)</span><span class="w">
@@ -736,7 +736,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] "Red"   "NIR"   "Blue"  "Green" "SWIR1" "SWIR2" "SWIR3"
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_before_NDVI</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="n">r_before</span><span class="o">$</span><span class="n">NIR</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">Red</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">r_before</span><span class="o">$</span><span class="n">NIR</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">Red</span><span class="p">)</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_before_NDVI</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="n">r_before</span><span class="o">$</span><span class="n">NIR</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">Red</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">r_before</span><span class="o">$</span><span class="n">NIR</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">Red</span><span class="p">)</span><span class="w">
 </span><span class="n">r_after_NDVI</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"NIR"</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"Red"</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"NIR"</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"Red"</span><span class="p">))</span><span class="w">
 
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_before_NDVI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="n">col</span><span class="o">=</span><span class="n">matlab.like</span><span class="p">(</span><span class="m">255</span><span class="p">))</span><span class="w">
@@ -744,12 +744,12 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-20.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="n">col</span><span class="o">=</span><span class="n">matlab.like2</span><span class="p">(</span><span class="m">255</span><span class="p">))</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="n">col</span><span class="o">=</span><span class="n">matlab.like2</span><span class="p">(</span><span class="m">255</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-21.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Experiment with different threshold values:</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Experiment with different threshold values:</span><span class="w">
 </span><span class="c1"># THis is suggesting flooding!!!</span><span class="w">
 
 </span><span class="n">histogram</span><span class="p">(</span><span class="n">r_before_NDVI</span><span class="p">)</span><span class="w"> </span><span class="c1"># Examine histogram to look for potential threshold values</span><span class="w">
@@ -757,32 +757,32 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-22.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">histogram</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="p">)</span><span class="w"> </span><span class="c1"># Examine histogram to look for poential threshold values</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">histogram</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="p">)</span><span class="w"> </span><span class="c1"># Examine histogram to look for poential threshold values</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-23.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before_NDVI</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">-0.5</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before_NDVI</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">-0.5</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-24.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">-0.5</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">-0.5</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-25.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before_NDVI</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">-0.1</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before_NDVI</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">-0.1</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-26.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">-0.1</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">-0.1</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-27.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#2) NDWI = (Green - NIR)/(Green + NIR)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#2) NDWI = (Green - NIR)/(Green + NIR)</span><span class="w">
 </span><span class="c1">#3) MNDWI = Green - SWIR2 / Green + SWIR2</span><span class="w">
 
 </span><span class="c1">#Modified NDWI known as MNDWI : Green - SWIR2/(Green + SWIR2)</span><span class="w">
@@ -800,44 +800,44 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-28.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="n">col</span><span class="o">=</span><span class="n">rev</span><span class="p">(</span><span class="n">matlab.like</span><span class="p">(</span><span class="m">255</span><span class="p">)))</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="n">col</span><span class="o">=</span><span class="n">rev</span><span class="p">(</span><span class="n">matlab.like</span><span class="p">(</span><span class="m">255</span><span class="p">)))</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-29.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### THis is suggesting flooding!!!</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### THis is suggesting flooding!!!</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_before_MNDWI</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-30.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-31.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before_MNDWI</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.1</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before_MNDWI</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.1</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-32.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.1</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.1</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-33.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_diff_MNDWI</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">r_after_MNDWI</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">r_before_MNDWI</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_diff_MNDWI</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">r_after_MNDWI</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">r_before_MNDWI</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_diff_MNDWI</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-34.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_diff_MNDWI</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.2</span><span class="p">)</span><span class="w"> </span><span class="c1">## Increase in MNDWI: Areas that may have become flooded</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_diff_MNDWI</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.2</span><span class="p">)</span><span class="w"> </span><span class="c1">## Increase in MNDWI: Areas that may have become flooded</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-35.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#Standardize image:</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#Standardize image:</span><span class="w">
 </span><span class="n">mean_val</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">cellStats</span><span class="p">(</span><span class="n">r_diff_MNDWI</span><span class="p">,</span><span class="s2">"mean"</span><span class="p">)</span><span class="w">
 </span><span class="n">sd_val</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">cellStats</span><span class="p">(</span><span class="n">r_diff_MNDWI</span><span class="p">,</span><span class="s2">"sd"</span><span class="p">)</span><span class="w">
 
@@ -847,22 +847,22 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-36.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">histogram</span><span class="p">(</span><span class="n">r_diff_std</span><span class="p">)</span><span class="w"> 
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">histogram</span><span class="p">(</span><span class="n">r_diff_std</span><span class="p">)</span><span class="w"> 
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-37.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_diff_std</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="c1">## increase in MNDWI 2 standard deiation away</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_diff_std</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="c1">## increase in MNDWI 2 standard deiation away</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-38.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_diff_std</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="c1">## increase in MNDWI 2 standard deiation away</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_diff_std</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="c1">## increase in MNDWI 2 standard deiation away</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-39.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Generate a map of flooding with MNDWI and compare to FEMA map:</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Generate a map of flooding with MNDWI and compare to FEMA map:</span><span class="w">
 
 </span><span class="n">r_after_flood</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">r_diff_std</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">1</span><span class="w"> 
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_after_flood</span><span class="p">)</span><span class="w">
@@ -876,7 +876,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-40.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">xtab_tb</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">crosstab</span><span class="p">(</span><span class="n">r_after_flood</span><span class="p">,</span><span class="n">r_ref_rec</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">xtab_tb</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">crosstab</span><span class="p">(</span><span class="n">r_after_flood</span><span class="p">,</span><span class="n">r_ref_rec</span><span class="p">)</span><span class="w">
 
 </span><span class="c1">## Examine overlap between flooded area and FEMA:</span><span class="w">
 
@@ -885,13 +885,13 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-41.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_overlap</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">r_ref_rec</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r_after_flood</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_overlap</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">r_ref_rec</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r_after_flood</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_overlap</span><span class="p">)</span><span class="w"> </span><span class="c1">## Flood map area of aggreement with FEMA</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-42.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###############################################</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###############################################</span><span class="w">
 </span><span class="c1">##### PART IV: Principal Component Analysis and band transformation</span><span class="w">
 </span><span class="c1">## Another avenue to combine original bands into indices is to use linear transformation.</span><span class="w">
 </span><span class="c1">## We examine Principal Component Analysis and the Tassel Cap Transform.</span><span class="w">
@@ -905,7 +905,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] "matrix"
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">print</span><span class="p">(</span><span class="n">cor_matrix</span><span class="p">)</span><span class="w"> </span><span class="c1">#note size is 7x7</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">print</span><span class="p">(</span><span class="n">cor_matrix</span><span class="p">)</span><span class="w"> </span><span class="c1">#note size is 7x7</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>            Red       NIR         Blue     Green        SWIR1     SWIR2
@@ -926,14 +926,14 @@ SWIR2 0.9448527
 SWIR3 1.0000000
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">pca_mod</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">principal</span><span class="p">(</span><span class="n">cor_matrix</span><span class="p">,</span><span class="n">nfactors</span><span class="o">=</span><span class="m">7</span><span class="p">,</span><span class="n">rotate</span><span class="o">=</span><span class="s2">"none"</span><span class="p">)</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">pca_mod</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">principal</span><span class="p">(</span><span class="n">cor_matrix</span><span class="p">,</span><span class="n">nfactors</span><span class="o">=</span><span class="m">7</span><span class="p">,</span><span class="n">rotate</span><span class="o">=</span><span class="s2">"none"</span><span class="p">)</span><span class="w">
 </span><span class="nf">class</span><span class="p">(</span><span class="n">pca_mod</span><span class="o">$</span><span class="n">loadings</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] "loadings"
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">print</span><span class="p">(</span><span class="n">pca_mod</span><span class="o">$</span><span class="n">loadings</span><span class="p">)</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">print</span><span class="p">(</span><span class="n">pca_mod</span><span class="o">$</span><span class="n">loadings</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
@@ -953,7 +953,7 @@ Proportion Var 0.627 0.330 0.035 0.005 0.002 0.001 0.000
 Cumulative Var 0.627 0.957 0.992 0.997 0.998 1.000 1.000
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">pca_mod</span><span class="o">$</span><span class="n">loadings</span><span class="p">[,</span><span class="m">1</span><span class="p">][</span><span class="n">band_refl_order</span><span class="p">],</span><span class="n">type</span><span class="o">=</span><span class="s2">"b"</span><span class="p">,</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">pca_mod</span><span class="o">$</span><span class="n">loadings</span><span class="p">[,</span><span class="m">1</span><span class="p">][</span><span class="n">band_refl_order</span><span class="p">],</span><span class="n">type</span><span class="o">=</span><span class="s2">"b"</span><span class="p">,</span><span class="w">
      </span><span class="n">xlab</span><span class="o">=</span><span class="s2">"time steps"</span><span class="p">,</span><span class="w">
      </span><span class="n">ylab</span><span class="o">=</span><span class="s2">"PC loadings"</span><span class="p">,</span><span class="w">
      </span><span class="n">ylim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="w">
@@ -975,13 +975,13 @@ Cumulative Var 0.627 0.957 0.992 0.997 0.998 1.000 1.000
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-43.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">## Add scree plot</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">## Add scree plot</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">pca_mod</span><span class="o">$</span><span class="n">values</span><span class="p">,</span><span class="n">main</span><span class="o">=</span><span class="s2">"Scree plot: Variance explained"</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s2">"b"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-44.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Generate scores from eigenvectors</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Generate scores from eigenvectors</span><span class="w">
 </span><span class="c1">### Using predict function: this is recommended for raster.</span><span class="w">
 </span><span class="n">r_pca</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">predict</span><span class="p">(</span><span class="n">r_before</span><span class="p">,</span><span class="w"> </span><span class="n">pca_mod</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="o">=</span><span class="m">1</span><span class="o">:</span><span class="m">7</span><span class="p">,</span><span class="n">filename</span><span class="o">=</span><span class="s2">"pc_scores.tif"</span><span class="p">,</span><span class="n">overwrite</span><span class="o">=</span><span class="nb">T</span><span class="p">)</span><span class="w"> </span><span class="c1"># fast</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-2</span><span class="p">,</span><span class="m">2</span><span class="p">))</span><span class="w">
@@ -989,27 +989,27 @@ Cumulative Var 0.627 0.957 0.992 0.997 0.998 1.000 1.000
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-45.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-2</span><span class="p">,</span><span class="m">2</span><span class="p">))</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-2</span><span class="p">,</span><span class="m">2</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-46.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">3</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-2</span><span class="p">,</span><span class="m">2</span><span class="p">))</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">3</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-2</span><span class="p">,</span><span class="m">2</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-47.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="n">subset</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="m">2</span><span class="p">))</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="n">subset</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="m">2</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-48.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="m">2</span><span class="p">),</span><span class="n">subset</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="m">3</span><span class="p">))</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="m">2</span><span class="p">),</span><span class="n">subset</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="m">3</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-49.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Generate a plot for PCA with loadings and compare to Tassel Cap</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Generate a plot for PCA with loadings and compare to Tassel Cap</span><span class="w">
 
 </span><span class="n">var_labels</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">rownames</span><span class="p">(</span><span class="n">loadings_df</span><span class="p">)</span><span class="w">
 
@@ -1036,7 +1036,7 @@ Cumulative Var 0.627 0.957 0.992 0.997 0.998 1.000 1.000
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-50.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">##### plot feature space:</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">##### plot feature space:</span><span class="w">
 
 </span><span class="n">df_raster_val</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.data.frame</span><span class="p">(</span><span class="n">stack</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="n">r_pca</span><span class="p">,</span><span class="n">nlcd2006_reg</span><span class="p">))</span><span class="w">
 </span><span class="n">head</span><span class="p">(</span><span class="n">df_raster_val</span><span class="p">)</span><span class="w">
@@ -1065,7 +1065,7 @@ Cumulative Var 0.627 0.957 0.992 0.997 0.998 1.000 1.000
 6   1.4554931  0.37810266             NA
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#Water</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#Water</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">df_raster_val</span><span class="p">[</span><span class="n">df_raster_val</span><span class="o">$</span><span class="n">nlcd_2006_RITA</span><span class="o">==</span><span class="m">11</span><span class="p">,</span><span class="nf">c</span><span class="p">(</span><span class="s2">"pc_scores.1"</span><span class="p">)],</span><span class="w">
      </span><span class="n">df_raster_val</span><span class="p">[</span><span class="n">df_raster_val</span><span class="o">$</span><span class="n">nlcd_2006_RITA</span><span class="o">==</span><span class="m">11</span><span class="p">,</span><span class="nf">c</span><span class="p">(</span><span class="s2">"pc_scores.2"</span><span class="p">)],</span><span class="w">
      </span><span class="n">col</span><span class="o">=</span><span class="s2">"blue"</span><span class="p">,</span><span class="n">cex</span><span class="o">=</span><span class="m">0.15</span><span class="p">,</span><span class="w">
@@ -1085,18 +1085,18 @@ Cumulative Var 0.627 0.957 0.992 0.997 0.998 1.000 1.000
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-51.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Note the negative values are related to Forest and positve to water on PC2</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Note the negative values are related to Forest and positve to water on PC2</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_pca</span><span class="o">$</span><span class="n">pc_scores.2</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.1</span><span class="p">)</span><span class="w"> </span><span class="c1">#water related?</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-52.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_pca</span><span class="o">$</span><span class="n">pc_scores.2</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">0.1</span><span class="p">)</span><span class="w"> </span><span class="c1">#vegetation related?</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_pca</span><span class="o">$</span><span class="n">pc_scores.2</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">0.1</span><span class="p">)</span><span class="w"> </span><span class="c1">#vegetation related?</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-53.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Examine relationship with Tasselcap transform adapted for MODIS:</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Examine relationship with Tasselcap transform adapted for MODIS:</span><span class="w">
 </span><span class="c1">#6) TCWI =  0.10839 * Red+ 0.0912 * NIR +0.5065 * Blue+ 0.404 * Green </span><span class="w">
 </span><span class="c1">#            - 0.241 * SWIR1- 0.4658 * SWIR2-</span><span class="w">
 </span><span class="c1">#           0.5306 * SWIR3</span><span class="w">
@@ -1117,7 +1117,7 @@ names       : layer
 values      : -0.5969822, -0.00232494  (min, max)
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_TCBI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.3956</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">Red</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">0.4718</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">NIR</span><span class="w"> </span><span class="m">+0.3354</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">Blue</span><span class="o">+</span><span class="w"> </span><span class="m">0.3834</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">Green</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_TCBI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.3956</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">Red</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">0.4718</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">NIR</span><span class="w"> </span><span class="m">+0.3354</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">Blue</span><span class="o">+</span><span class="w"> </span><span class="m">0.3834</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">Green</span><span class="w">
           </span><span class="o">+</span><span class="w"> </span><span class="m">0.3946</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">SWIR1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">0.3434</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">SWIR2</span><span class="o">+</span><span class="w"> </span><span class="m">0.2964</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">SWIR3</span><span class="w">
 </span></code></pre></div></div>
 
@@ -1131,43 +1131,43 @@ names       : layer
 values      : 0.00172096, 0.4989139  (min, max)
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#r_TCWI &lt;- r_TCWI*10</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#r_TCWI &lt;- r_TCWI*10</span><span class="w">
 </span><span class="n">histogram</span><span class="p">(</span><span class="n">r_TCWI</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-54.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_TCWI</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_TCWI</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-55.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_TCWI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">0.2</span><span class="p">))</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_TCWI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">0.2</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-56.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_TCWI</span><span class="o">&gt;</span><span class="m">0.1</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_TCWI</span><span class="o">&gt;</span><span class="m">0.1</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-57.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">histogram</span><span class="p">(</span><span class="n">r_TCBI</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">histogram</span><span class="p">(</span><span class="n">r_TCBI</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-58.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_TCBI</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_TCBI</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-59.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_TCBI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">0.2</span><span class="p">))</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_TCBI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">0.2</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-60.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_stack</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">stack</span><span class="p">(</span><span class="n">r_TCWI</span><span class="p">,</span><span class="n">r_TCBI</span><span class="p">,</span><span class="w"> </span><span class="n">r_pca</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_stack</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">stack</span><span class="p">(</span><span class="n">r_TCWI</span><span class="p">,</span><span class="n">r_TCBI</span><span class="p">,</span><span class="w"> </span><span class="n">r_pca</span><span class="p">)</span><span class="w">
 </span><span class="nf">names</span><span class="p">(</span><span class="n">r_stack</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"TCWI"</span><span class="p">,</span><span class="s2">"TCBI"</span><span class="p">,</span><span class="nf">names</span><span class="p">(</span><span class="n">r_pca</span><span class="p">))</span><span class="w">
 </span><span class="n">cor_r_TC</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">layerStats</span><span class="p">(</span><span class="n">r_stack</span><span class="p">,</span><span class="s2">"pearson"</span><span class="p">,</span><span class="n">na.rm</span><span class="o">=</span><span class="nb">T</span><span class="p">)</span><span class="w">
 </span><span class="n">cor_r_TC</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.data.frame</span><span class="p">(</span><span class="n">cor_r_TC</span><span class="o">$</span><span class="n">`pearson correlation coefficient`</span><span class="p">)</span><span class="w">
@@ -1196,7 +1196,7 @@ pc_scores.6 -0.185931965 -0.3138831416  1.00000000  0.05074089
 pc_scores.7  0.127193911  0.3596098185  0.05074089  1.00000000
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">##### Plot on the loading space using TCBI and TCWI as supplementary variables</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">##### Plot on the loading space using TCBI and TCWI as supplementary variables</span><span class="w">
 </span><span class="n">var_labels</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">rownames</span><span class="p">(</span><span class="n">loadings_df</span><span class="p">)</span><span class="w">
 
 </span><span class="n">plot</span><span class="p">(</span><span class="n">loadings_df</span><span class="p">[,</span><span class="m">1</span><span class="p">],</span><span class="n">loadings_df</span><span class="p">[,</span><span class="m">2</span><span class="p">],</span><span class="w">
@@ -1227,7 +1227,7 @@ pc_scores.7  0.127193911  0.3596098185  0.05074089  1.00000000
 
 <p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-61.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">########################## End of Script ###################################</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">########################## End of Script ###################################</span><span class="w">
 </span></code></pre></div></div>
 
 <p class="ToS"><a href="#/slides/part1">Top of Section</a></p>
@@ -1236,7 +1236,7 @@ pc_scores.7  0.127193911  0.3596098185  0.05074089  1.00000000
 
 <p><a name="/slides/part2"></a></p>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">####################################    Flood Mapping Analyses   #######################################</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">####################################    Flood Mapping Analyses   #######################################</span><span class="w">
 </span><span class="c1">############################  Analyze and map flooding from RITA hurricane  #######################################</span><span class="w">
 </span><span class="c1">#This script performs analyses for the Exercise 6 of the Short Course using reflectance data derived from MODIS.</span><span class="w">
 </span><span class="c1">#The goal is to map flooding from RITA using various reflectance bands from Remote Sensing platforms.</span><span class="w">
@@ -1300,7 +1300,7 @@ Attaching package: 'e1071'
     permutations
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">caret</span><span class="p">)</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">caret</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Loading required package: ggplot2
@@ -1330,7 +1330,7 @@ Attaching package: 'ggplot2'
     calc
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###### Functions used in this script</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###### Functions used in this script</span><span class="w">
 
 </span><span class="n">create_dir_fun</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">outDir</span><span class="p">,</span><span class="n">out_suffix</span><span class="o">=</span><span class="kc">NULL</span><span class="p">){</span><span class="w">
   </span><span class="c1">#if out_suffix is not null then append out_suffix string</span><span class="w">
@@ -1368,15 +1368,9 @@ Attaching package: 'ggplot2'
 </span><span class="c1">#ARG9</span><span class="w">
 </span><span class="c1">#local raster name defining resolution, extent</span><span class="w">
 </span><span class="n">infile_RITA_reflectance_date2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"mosaiced_MOD09A1_A2005273__006_reflectance_masked_RITA_reg_1km.tif"</span><span class="w">
-</span><span class="n">infile_reg_outline</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"new_strata_rita_10282017.shp"</span><span class="w"> </span><span class="c1"># Region outline and FEMA zones</span><span class="w">
+</span><span class="n">infile_reg_outline</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"new_strata_rita_10282017"</span><span class="w"> </span><span class="c1"># Region outline and FEMA zones</span><span class="w">
 </span><span class="n">infile_modis_bands_information</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"df_modis_band_info.txt"</span><span class="w"> </span><span class="c1"># MOD09 bands information.</span><span class="w">
 </span><span class="n">nlcd_2006_filename</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"nlcd_2006_RITA.tif"</span><span class="w"> </span><span class="c1"># NLCD2006 Land cover data aggregated at ~ 1km.</span><span class="w">
-
-</span><span class="n">infilename_class1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"class1.shp"</span><span class="w"> </span><span class="c1"># Ground truth data for class 1</span><span class="w">
-</span><span class="n">infilename_class2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"class2.shp"</span><span class="w"> </span><span class="c1"># Ground truth data for class 2</span><span class="w">
-</span><span class="n">infilename_class3</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"class3.shp"</span><span class="w"> </span><span class="c1"># Ground truth data for class 3</span><span class="w">
-
-</span><span class="c1">#class1_sites.shp</span><span class="w">
 
 </span><span class="c1">###########################  START SCRIPT  ##############################</span><span class="w">
 
@@ -1419,7 +1413,7 @@ Attaching package: 'ggplot2'
 7     SWIR3           7          2105        2155
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">df_modis_band_info</span><span class="o">$</span><span class="n">band_number</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">3</span><span class="p">,</span><span class="m">4</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">6</span><span class="p">,</span><span class="m">7</span><span class="p">)</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">df_modis_band_info</span><span class="o">$</span><span class="n">band_number</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">3</span><span class="p">,</span><span class="m">4</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">5</span><span class="p">,</span><span class="m">6</span><span class="p">,</span><span class="m">7</span><span class="p">)</span><span class="w">
 </span><span class="n">write.table</span><span class="p">(</span><span class="n">df_modis_band_info</span><span class="p">,</span><span class="n">file.path</span><span class="p">(</span><span class="n">in_dir_var</span><span class="p">,</span><span class="n">infile_modis_bands_information</span><span class="p">),</span><span class="w">
             </span><span class="n">sep</span><span class="o">=</span><span class="s2">","</span><span class="p">)</span><span class="w">
 
@@ -1434,13 +1428,13 @@ Attaching package: 'ggplot2'
 
 <p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-1.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_after_NDVI</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"NIR"</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"Red"</span><span class="p">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"NIR"</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"Red"</span><span class="p">))</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_after_NDVI</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"NIR"</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"Red"</span><span class="p">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"NIR"</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"Red"</span><span class="p">))</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-2.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">data_type_str</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">dataType</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">data_type_str</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">dataType</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="p">)</span><span class="w">
 
 </span><span class="n">NAvalue</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">NA_flag_val</span><span class="w">
 </span><span class="n">out_filename</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">paste</span><span class="p">(</span><span class="s2">"ndvi_post_Rita"</span><span class="p">,</span><span class="s2">"_"</span><span class="p">,</span><span class="n">out_suffix</span><span class="p">,</span><span class="n">file_format</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span><span class="w">
@@ -1455,7 +1449,7 @@ Attaching package: 'ggplot2'
   ./output_exercise6_03312018
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">NAvalue</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">NA_flag_val</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">NAvalue</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">NA_flag_val</span><span class="w">
 </span><span class="n">out_filename</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">paste</span><span class="p">(</span><span class="s2">"mndwi_post_Rita"</span><span class="p">,</span><span class="s2">"_"</span><span class="p">,</span><span class="n">out_suffix</span><span class="p">,</span><span class="n">file_format</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span><span class="w">
 </span><span class="n">out_filename</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">file.path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span><span class="n">out_filename</span><span class="p">)</span><span class="w">
 </span><span class="n">writeRaster</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="p">,</span><span class="w">
@@ -1468,15 +1462,15 @@ Attaching package: 'ggplot2'
   ./output_exercise6_03312018
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#training_data_sf &lt;- st_read("training1.shp")</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#training_data_sf &lt;- st_read("training1.shp")</span><span class="w">
 </span><span class="c1">#1) vegetation and other (small water fraction)</span><span class="w">
 </span><span class="c1">#2) Flooded vegetation</span><span class="w">
 </span><span class="c1">#3) Flooded area, or water (lake etc)</span><span class="w">
 
-</span><span class="n">class1_data_sf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">st_read</span><span class="p">(</span><span class="n">file.path</span><span class="p">(</span><span class="n">in_dir_var</span><span class="p">,</span><span class="s2">"class1_sites.shp"</span><span class="p">))</span><span class="w">
+</span><span class="n">class1_data_sf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">st_read</span><span class="p">(</span><span class="n">file.path</span><span class="p">(</span><span class="n">in_dir_var</span><span class="p">,</span><span class="s2">"class1_sites"</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Reading layer `class1_sites' from data source `/nfs/public-data/training/class1_sites.shp' using driver `ESRI Shapefile'
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Reading layer `class1_sites' from data source `/nfs/public-data/training/class1_sites' using driver `ESRI Shapefile'
 Simple feature collection with 6 features and 2 fields
 geometry type:  POLYGON
 dimension:      XY
@@ -1485,10 +1479,10 @@ epsg (SRID):    NA
 proj4string:    NA
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">class2_data_sf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">st_read</span><span class="p">(</span><span class="n">file.path</span><span class="p">(</span><span class="n">in_dir_var</span><span class="p">,</span><span class="s2">"class2_sites.shp"</span><span class="p">))</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">class2_data_sf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">st_read</span><span class="p">(</span><span class="n">file.path</span><span class="p">(</span><span class="n">in_dir_var</span><span class="p">,</span><span class="s2">"class2_sites"</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Reading layer `class2_sites' from data source `/nfs/public-data/training/class2_sites.shp' using driver `ESRI Shapefile'
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Reading layer `class2_sites' from data source `/nfs/public-data/training/class2_sites' using driver `ESRI Shapefile'
 Simple feature collection with 8 features and 2 fields
 geometry type:  MULTIPOLYGON
 dimension:      XY
@@ -1497,10 +1491,10 @@ epsg (SRID):    NA
 proj4string:    NA
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">class3_data_sf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">st_read</span><span class="p">(</span><span class="n">file.path</span><span class="p">(</span><span class="n">in_dir_var</span><span class="p">,</span><span class="s2">"class3_sites.shp"</span><span class="p">))</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">class3_data_sf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">st_read</span><span class="p">(</span><span class="n">file.path</span><span class="p">(</span><span class="n">in_dir_var</span><span class="p">,</span><span class="s2">"class3_sites"</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Reading layer `class3_sites' from data source `/nfs/public-data/training/class3_sites.shp' using driver `ESRI Shapefile'
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Reading layer `class3_sites' from data source `/nfs/public-data/training/class3_sites' using driver `ESRI Shapefile'
 Simple feature collection with 9 features and 2 fields
 geometry type:  POLYGON
 dimension:      XY
@@ -1509,7 +1503,7 @@ epsg (SRID):    NA
 proj4string:    NA
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### combine object, note they should be in the same projection system</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### combine object, note they should be in the same projection system</span><span class="w">
 </span><span class="n">class_data_sf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">rbind</span><span class="p">(</span><span class="n">class1_data_sf</span><span class="p">,</span><span class="n">class2_data_sf</span><span class="p">,</span><span class="n">class3_data_sf</span><span class="p">)</span><span class="w">
 </span><span class="n">class_data_sf</span><span class="o">$</span><span class="n">poly_ID</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="n">nrow</span><span class="p">(</span><span class="n">class_data_sf</span><span class="p">)</span><span class="w"> </span><span class="c1">#unique ID for each polygon</span><span class="w">
 </span><span class="n">nrow</span><span class="p">(</span><span class="n">class_data_sf</span><span class="p">)</span><span class="w"> </span><span class="c1"># 23 different polygons used at ground truth data</span><span class="w">
@@ -1518,7 +1512,7 @@ proj4string:    NA
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 23
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">class_data_sp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as</span><span class="p">(</span><span class="n">class_data_sf</span><span class="p">,</span><span class="s2">"Spatial"</span><span class="p">)</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">class_data_sp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as</span><span class="p">(</span><span class="n">class_data_sf</span><span class="p">,</span><span class="s2">"Spatial"</span><span class="p">)</span><span class="w">
 
 </span><span class="n">r_x</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">init</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"x"</span><span class="p">)</span><span class="w"> </span><span class="c1">#raster with coordinates x</span><span class="w">
 </span><span class="n">r_y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">init</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"x"</span><span class="p">)</span><span class="w"> </span><span class="c1">#raster with coordiates y</span><span class="w">
@@ -1598,13 +1592,13 @@ Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
 column name 'x' is duplicated in the result
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="nf">dim</span><span class="p">(</span><span class="n">pixels_extracted_df</span><span class="p">)</span><span class="w"> </span><span class="c1">#We have 1547 pixels extracted</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="nf">dim</span><span class="p">(</span><span class="n">pixels_extracted_df</span><span class="p">)</span><span class="w"> </span><span class="c1">#We have 1547 pixels extracted</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 1547   12
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">class_data_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">class_data_sf</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">class_data_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">class_data_sf</span><span class="w">
 </span><span class="n">st_geometry</span><span class="p">(</span><span class="n">class_data_df</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kc">NULL</span><span class="w"> </span><span class="c1">#this will coerce the sf object into a data.frame</span><span class="w">
 
 </span><span class="n">pixels_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">merge</span><span class="p">(</span><span class="n">pixels_extracted_df</span><span class="p">,</span><span class="n">class_data_df</span><span class="p">,</span><span class="n">by.x</span><span class="o">=</span><span class="s2">"ID"</span><span class="p">,</span><span class="n">by.y</span><span class="o">=</span><span class="s2">"poly_ID"</span><span class="p">)</span><span class="w">
@@ -1628,7 +1622,7 @@ column name 'x' is duplicated in the result
 6 0.1697936 0.06790353 0.7601402 -0.5310712         1        1
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">table</span><span class="p">(</span><span class="n">pixels_df</span><span class="o">$</span><span class="n">class_ID</span><span class="p">)</span><span class="w"> </span><span class="c1"># count by class of pixels ground truth data</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">table</span><span class="p">(</span><span class="n">pixels_df</span><span class="o">$</span><span class="n">class_ID</span><span class="p">)</span><span class="w"> </span><span class="c1"># count by class of pixels ground truth data</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
@@ -1636,7 +1630,7 @@ column name 'x' is duplicated in the result
 508 285 754 
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">######## Examining sites data used for the classification</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">######## Examining sites data used for the classification</span><span class="w">
 
 </span><span class="c1">#Water</span><span class="w">
 </span><span class="n">x_range</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">range</span><span class="p">(</span><span class="n">pixels_df</span><span class="o">$</span><span class="n">Green</span><span class="p">,</span><span class="n">na.rm</span><span class="o">=</span><span class="nb">T</span><span class="p">)</span><span class="w">
@@ -1655,7 +1649,7 @@ column name 'x' is duplicated in the result
 
 <p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-3.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">## Let's use a palette that reflects wetness or level of water </span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">## Let's use a palette that reflects wetness or level of water </span><span class="w">
 </span><span class="n">col_palette</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"green"</span><span class="p">,</span><span class="s2">"blue"</span><span class="p">,</span><span class="s2">"darkblue"</span><span class="p">)</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">NDVI</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">MNDWI</span><span class="p">,</span><span class="w">
      </span><span class="n">xlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="n">ylim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="w">
@@ -1682,12 +1676,12 @@ column name 'x' is duplicated in the result
 
 <p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-4.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">histogram</span><span class="p">(</span><span class="n">r_after</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">histogram</span><span class="p">(</span><span class="n">r_after</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-5.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">pixels_df</span><span class="o">$</span><span class="n">class_ID</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">factor</span><span class="p">(</span><span class="n">pixels_df</span><span class="o">$</span><span class="n">class_ID</span><span class="p">,</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">pixels_df</span><span class="o">$</span><span class="n">class_ID</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">factor</span><span class="p">(</span><span class="n">pixels_df</span><span class="o">$</span><span class="n">class_ID</span><span class="p">,</span><span class="w">
                     </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">3</span><span class="p">),</span><span class="w">
                     </span><span class="n">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">names_vals</span><span class="p">)</span><span class="w">
 
@@ -1699,7 +1693,7 @@ column name 'x' is duplicated in the result
 
 <p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-6.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###############################################</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###############################################</span><span class="w">
 </span><span class="c1">##### PART II: Split training and testing ##############</span><span class="w">
 
 </span><span class="c1">##let's keep 30% of data for testing for each class</span><span class="w">
@@ -1714,7 +1708,7 @@ vegetation    wetland      water
        508        285        754 
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">set.seed</span><span class="p">(</span><span class="m">100</span><span class="p">)</span><span class="w"> </span><span class="c1">## set random seed for reproducibility</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">set.seed</span><span class="p">(</span><span class="m">100</span><span class="p">)</span><span class="w"> </span><span class="c1">## set random seed for reproducibility</span><span class="w">
 
 </span><span class="c1">### This is for one class:</span><span class="w">
 </span><span class="c1">##Better as a function but we use a loop for clarity here:</span><span class="w">
@@ -1738,7 +1732,7 @@ vegetation    wetland      water
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 1547   17
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">head</span><span class="p">(</span><span class="n">data_df</span><span class="p">)</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">head</span><span class="p">(</span><span class="n">data_df</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  ID       x       y        Red       NIR       Blue      Green     SWIR1
@@ -1764,7 +1758,7 @@ vegetation    wetland      water
 6      6        0
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">data_training</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">data_df</span><span class="p">,</span><span class="n">training</span><span class="o">==</span><span class="m">1</span><span class="p">)</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">data_training</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">data_df</span><span class="p">,</span><span class="n">training</span><span class="o">==</span><span class="m">1</span><span class="p">)</span><span class="w">
 
 </span><span class="c1">###############################################</span><span class="w">
 </span><span class="c1">##### PART III: Generate classification using CART and SVM ##############</span><span class="w">
@@ -1783,7 +1777,7 @@ vegetation    wetland      water
 
 <p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-7.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1"># Now predict the subset data based on the model; prediction for entire area takes longer time</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1"># Now predict the subset data based on the model; prediction for entire area takes longer time</span><span class="w">
 </span><span class="n">raster_out_filename</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">paste0</span><span class="p">(</span><span class="s2">"r_predicted_rpart_"</span><span class="p">,</span><span class="n">out_suffix</span><span class="p">,</span><span class="n">file_format</span><span class="p">)</span><span class="w">
 </span><span class="n">r_predicted_rpart</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">predict</span><span class="p">(</span><span class="n">r_stack</span><span class="p">,</span><span class="n">mod_rpart</span><span class="p">,</span><span class="w"> 
                              </span><span class="n">type</span><span class="o">=</span><span class="s1">'class'</span><span class="p">,</span><span class="w">
@@ -1806,12 +1800,12 @@ vegetation    wetland      water
 
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_predicted_rpart</span><span class="p">)</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_predicted_rpart</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-8.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_predicted_rpart</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ratify</span><span class="p">(</span><span class="n">r_predicted_rpart</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_predicted_rpart</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ratify</span><span class="p">(</span><span class="n">r_predicted_rpart</span><span class="p">)</span><span class="w">
 </span><span class="n">rat</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">levels</span><span class="p">(</span><span class="n">r_predicted_rpart</span><span class="p">)[[</span><span class="m">1</span><span class="p">]]</span><span class="w">
 </span><span class="n">rat</span><span class="o">$</span><span class="n">legend</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"vegetation"</span><span class="p">,</span><span class="s2">"wetland"</span><span class="p">,</span><span class="s2">"water"</span><span class="p">)</span><span class="w">
 </span><span class="n">levels</span><span class="p">(</span><span class="n">r_predicted_rpart</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">rat</span><span class="w">
@@ -1823,7 +1817,7 @@ vegetation    wetland      water
 
 <p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-9.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">############### Using Support Vector Machine #########</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">############### Using Support Vector Machine #########</span><span class="w">
 
 </span><span class="c1">## set class_ID as factor to generate classification</span><span class="w">
 
@@ -1859,7 +1853,7 @@ Levels:
  vegetation wetland water
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1"># Now predict the subset data based on the model; prediction for entire area takes longer time</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1"># Now predict the subset data based on the model; prediction for entire area takes longer time</span><span class="w">
 </span><span class="n">raster_outfilename</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">paste0</span><span class="p">(</span><span class="s2">"r_predicted_svm_"</span><span class="p">,</span><span class="n">out_suffix</span><span class="p">,</span><span class="n">file_format</span><span class="p">)</span><span class="w">
 </span><span class="n">r_predicted_svm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">predict</span><span class="p">(</span><span class="n">r_stack</span><span class="p">,</span><span class="w"> </span><span class="n">mod_svm</span><span class="p">,</span><span class="w">
                            </span><span class="n">progress</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">'text'</span><span class="p">,</span><span class="w">
@@ -1881,17 +1875,17 @@ Levels:
 
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-10.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">histogram</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">histogram</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
 <p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-11.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_predicted_svm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ratify</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_predicted_svm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ratify</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)</span><span class="w">
 </span><span class="n">rat</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">levels</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)[[</span><span class="m">1</span><span class="p">]]</span><span class="w">
 </span><span class="n">rat</span><span class="o">$</span><span class="n">legend</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"vegetation"</span><span class="p">,</span><span class="s2">"wetland"</span><span class="p">,</span><span class="s2">"water"</span><span class="p">)</span><span class="w">
 </span><span class="n">levels</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">rat</span><span class="w">
@@ -1903,7 +1897,7 @@ Levels:
 
 <p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-12.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
-<div class="language-r captioned text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###############################################</span><span class="w">
+<div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###############################################</span><span class="w">
 </span><span class="c1">##### PART IV: Compare methods for the performance ##############</span><span class="w">
 
 </span><span class="nf">dim</span><span class="p">(</span><span class="n">data_df</span><span class="p">)</span><span class="w"> </span><span class="c1"># full dataset, let's use data points for testing</span><span class="w">
@@ -1912,7 +1906,7 @@ Levels:
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 1547   17
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#omit values that contain NA, because may be problematic with SVM.</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#omit values that contain NA, because may be problematic with SVM.</span><span class="w">
 </span><span class="n">data_testing</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">na.omit</span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">data_df</span><span class="p">,</span><span class="n">training</span><span class="o">==</span><span class="m">0</span><span class="p">))</span><span class="w"> 
 </span><span class="nf">dim</span><span class="p">(</span><span class="n">data_testing</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
@@ -1920,7 +1914,7 @@ Levels:
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 450  17
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Predict on testing data using rpart model fitted with training data</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Predict on testing data using rpart model fitted with training data</span><span class="w">
 </span><span class="n">testing_rpart</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">predict</span><span class="p">(</span><span class="n">mod_rpart</span><span class="p">,</span><span class="w"> </span><span class="n">data_testing</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s1">'class'</span><span class="p">)</span><span class="w">
 </span><span class="c1">#### Predict on testing data using SVM model fitted with training data</span><span class="w">
 </span><span class="n">testing_svm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">predict</span><span class="p">(</span><span class="n">mod_svm</span><span class="p">,</span><span class="n">data_testing</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="o">=</span><span class="s1">'class'</span><span class="p">)</span><span class="w">
@@ -1934,7 +1928,7 @@ vegetation    wetland      water
        150         78        222 
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Generate confusion matrix to assess the performance of the model</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Generate confusion matrix to assess the performance of the model</span><span class="w">
 
 </span><span class="n">tb_rpart</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">testing_rpart</span><span class="p">,</span><span class="n">data_testing</span><span class="o">$</span><span class="n">class_ID</span><span class="p">)</span><span class="w">
 </span><span class="n">tb_svm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">testing_svm</span><span class="p">,</span><span class="n">data_testing</span><span class="o">$</span><span class="n">class_ID</span><span class="p">)</span><span class="w">
@@ -1953,7 +1947,7 @@ vegetation    wetland      water
        149         77        224 
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">table</span><span class="p">(</span><span class="n">data_testing</span><span class="o">$</span><span class="n">class_ID</span><span class="p">)</span><span class="w"> </span><span class="c1">#reference, ground truth in columns</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">table</span><span class="p">(</span><span class="n">data_testing</span><span class="o">$</span><span class="n">class_ID</span><span class="p">)</span><span class="w"> </span><span class="c1">#reference, ground truth in columns</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
@@ -1961,33 +1955,33 @@ vegetation    wetland      water
        149         84        217 
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">tb_rpart</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">/</span><span class="nf">sum</span><span class="p">(</span><span class="n">tb_rpart</span><span class="p">[,</span><span class="m">1</span><span class="p">])</span><span class="w"> </span><span class="c1">#producer accuracy</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">tb_rpart</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">/</span><span class="nf">sum</span><span class="p">(</span><span class="n">tb_rpart</span><span class="p">[,</span><span class="m">1</span><span class="p">])</span><span class="w"> </span><span class="c1">#producer accuracy</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 0.9798658
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">tb_svm</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">/</span><span class="nf">sum</span><span class="p">(</span><span class="n">tb_svm</span><span class="p">[,</span><span class="m">1</span><span class="p">])</span><span class="w"> </span><span class="c1">#producer accuracy</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">tb_svm</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="o">/</span><span class="nf">sum</span><span class="p">(</span><span class="n">tb_svm</span><span class="p">[,</span><span class="m">1</span><span class="p">])</span><span class="w"> </span><span class="c1">#producer accuracy</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 1
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#overall accuracy for svm</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#overall accuracy for svm</span><span class="w">
 </span><span class="nf">sum</span><span class="p">(</span><span class="n">diag</span><span class="p">(</span><span class="n">tb_svm</span><span class="p">))</span><span class="o">/</span><span class="nf">sum</span><span class="p">(</span><span class="n">table</span><span class="p">(</span><span class="n">testing_svm</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 0.9644444
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#overall accuracy for rpart</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#overall accuracy for rpart</span><span class="w">
 </span><span class="nf">sum</span><span class="p">(</span><span class="n">diag</span><span class="p">(</span><span class="n">tb_rpart</span><span class="p">))</span><span class="o">/</span><span class="nf">sum</span><span class="p">(</span><span class="n">table</span><span class="p">(</span><span class="n">testing_rpart</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 0.9444444
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#Generate more accuracy measurements from CARET</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#Generate more accuracy measurements from CARET</span><span class="w">
 </span><span class="n">accuracy_info_svm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">confusionMatrix</span><span class="p">(</span><span class="n">testing_svm</span><span class="p">,</span><span class="n">data_testing</span><span class="o">$</span><span class="n">class_ID</span><span class="p">,</span><span class="w"> </span><span class="n">positive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NULL</span><span class="p">)</span><span class="w">
 </span><span class="n">accuracy_info_rpart</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">confusionMatrix</span><span class="p">(</span><span class="n">testing_rpart</span><span class="p">,</span><span class="n">data_testing</span><span class="o">$</span><span class="n">class_ID</span><span class="p">,</span><span class="w"> </span><span class="n">positive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NULL</span><span class="p">)</span><span class="w">
 
@@ -2000,7 +1994,7 @@ AccuracyPValue  McnemarPValue
  1.266887e-101            NaN 
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">accuracy_info_svm</span><span class="o">$</span><span class="n">overall</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">accuracy_info_svm</span><span class="o">$</span><span class="n">overall</span><span class="w">
 </span></code></pre></div></div>
 
 <div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>      Accuracy          Kappa  AccuracyLower  AccuracyUpper   AccuracyNull 
@@ -2009,7 +2003,7 @@ AccuracyPValue  McnemarPValue
  9.645095e-114            NaN 
 </code></pre></div></div>
 
-<div class="language-r text-document highlighter-rouge" title="worksheet-4-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### write out the results:</span><span class="w">
+<div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### write out the results:</span><span class="w">
 </span><span class="n">write.table</span><span class="p">(</span><span class="n">accuracy_info_rpart</span><span class="o">$</span><span class="n">table</span><span class="p">,</span><span class="s2">"confusion_matrix_rpart.txt"</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s2">","</span><span class="p">)</span><span class="w">
 </span><span class="n">write.table</span><span class="p">(</span><span class="n">accuracy_info_svm</span><span class="o">$</span><span class="n">table</span><span class="p">,</span><span class="s2">"confusion_matrix_svm.txt"</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s2">","</span><span class="p">)</span><span class="w">
 
