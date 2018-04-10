@@ -1,15 +1,25 @@
 # Site
 
-title:
+title: "Remote Sensing & Classification"
+subtitle: Hurricane Inundation
 handouts:
-tag:
-lesson:
-instructor:
+ - worksheet-1.R
+ - worksheet-2.R
+ - data/new_strata_rita_10282017
+ - data/df_modis_band_info.txt
+ - data/nlcd_2006_RITA.tif
+ - data/README.md
+tag: v0.0
+lesson: 4
+instructor: Benoit Parmentier
 authors:
+ - Benoit Parmentier
 
 # Slides
 
 slide_sorter:
+ - part1
+ - part2
 
 #####################################
 # Only modify content above or risk #
