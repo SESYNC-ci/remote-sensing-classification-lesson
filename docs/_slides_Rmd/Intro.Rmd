@@ -1,0 +1,22 @@
+---
+editor_options: 
+  chunk_output_type: console
+excerpt: Introduction to Remote Sensing
+---
+
+## Part 1: Map flooding from RITA hurricane  
+
+Goal: Map hurricane flooding using reflectance data derived from MODIS.  
+   
+
+## Part 2: Analyze flood mapping 
+
+Goal: Analyze flooding including data provided by FEMA flood region.  
+
+
+
+
+
+
+
+
