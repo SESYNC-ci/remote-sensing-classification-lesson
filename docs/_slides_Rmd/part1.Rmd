@@ -5,8 +5,12 @@ excerpt: Introduction to Remote Sensing
 ---
 ### Load packages
 ```{r, title = "{{ site.handouts[0] }}"}
- library(raster) # raster functionalities
- library(rgdal) # GDAL/OGR binding for R with functionalities
+library(raster) # raster functionalities
+library(rgdal) # GDAL/OGR binding for R with functionalities
+library(sf) # spatial objects classes
+library(colorRamps) # contains matlab.like color palette
+library(psych) # pca/eigenvector decomposition functionalities
+library(plotrix) # various graphic functions e.g. draw.circle
 # library(sp) # spatial/geographfic objects and functions
 # library(spdep) # spatial analyses operations, functions etc.
 # library(gtools) # contains mixsort and other useful functions
@@ -17,7 +21,6 @@ excerpt: Introduction to Remote Sensing
 # library(xts) # extension for time series object and analyses
 # library(zoo) # time series object and analysis
 # library(lubridate) # dates functionality
-# library(colorRamps) # contains matlab.like color palette
 # library(rgeos) # contains topological operations
 # library(sphet) # contains spreg, spatial regression modeling
 # library(BMS) # contains hex2bin and bin2hex, Bayesian methods
@@ -28,18 +31,21 @@ excerpt: Introduction to Remote Sensing
 # library(plyr) # data wrangling: various operations for splitting, combining data
 # library(gstat) # spatial interpolation and kriging methods
 # library(readxl) # functionalities to read in excel type data
-# library(psych) # pca/eigenvector decomposition functionalities
-# library(sf) # spatial objects classes
+
+
 # library(plotrix) # various graphic functions e.g. draw.circle
 ```
 
 REB Notes: 
 update code to use dplyr rather than plyr package.
+over plotting of the evergreen forest, urban and water
+line 491: where does histogram() function come from???  replaced with raster::hist() 
+overplotting of legend in time series pca
 
 
 ### Define functions used in this lesson
 ```{r}
-create_dir_fun <- function(outDir,out_suffix=NULL){
+create_dir_fun <- function(outDir, out_suffix=NULL){
   # if out_suffix is not null then append out_suffix string
   if(!is.null(out_suffix)){
     out_name <- paste("output_", out_suffix,sep="")
@@ -117,9 +123,8 @@ r_after <- brick(file.path(in_dir_var, infile_reflectance_date2)) # After RITA, 
 
 plot(r_before) # Note that this is a multibands image.
 
-reg_sf <- st_read(file.path(in_dir_var,infile_reg_outline))
-reg_sf <- st_transform(reg_sf,
-                       crs=CRS_reg)
+reg_sf <- st_read(file.path(in_dir_var, infile_reg_outline))
+reg_sf <- st_transform(reg_sf, crs=CRS_reg)
 reg_sp <-as(reg_sf, "Spatial") # convert to sp object before rasterization
 
 r_ref <- rasterize(reg_sp,
@@ -163,8 +168,11 @@ plot(df_before[2,band_refl_order],type="l",
      xlab="Bands",
      ylab="Reflectance",
      main="Reflectance profile for centroid of flooded area")
+
 lines(df_after[2,band_refl_order],col="red")
+
 names_vals <- c("Before Rita","After Rita")
+
 legend("topleft",legend=names_vals,
        pt.cex=0.7,cex=0.7,col=c("black","red"),
        lty=1, #add circle symbol to line
@@ -176,7 +184,7 @@ legend("topleft",legend=names_vals,
 
 Read in NLCD 2006; note that it was aggregated at 1km.
 ```{r}
-nlcd2006_reg <- raster(file.path(in_dir_var,nlcd_2006_filename))
+nlcd2006_reg <- raster(file.path(in_dir_var, nlcd_2006_filename))
 ```
 
 Extract zonal averages by NLCD classes using zonal raster
@@ -189,12 +197,13 @@ Read in NLCD legend to add to the average information
 lc_legend_df <- read.table(file.path(in_dir_var,infile_name_nlcd_legend),
                            stringsAsFactors = F,
                            sep=",")
+
 print(avg_reflectance_nlcd)
 
 names(lc_legend_df)
 ```
 
-Add relevant categories
+Add relevant categories and plot
 ```{r}
 lc_legend_df_subset <- subset(lc_legend_df,select=c("ID","NLCD.2006.Land.Cover.Class"))
 names(lc_legend_df_subset) <- c("ID","cat_name")
@@ -219,9 +228,9 @@ lines(as.numeric(avg_reflectance_nlcd[6,col_ordering]),
 ## Part II: Explore data in feature space
 ```{r}
 plot(r_before$Red, r_before$NIR)
-plot(r_before$Green,r_before$Red)
-plot(r_before$SWIR1,r_before$NIR)
-plot(r_before$Red,r_before$SWIR1)
+plot(r_before$Green, r_before$Red)
+plot(r_before$SWIR1, r_before$NIR)
+plot(r_before$Red, r_before$SWIR1)
 
 df_r_before_nlcd <- as.data.frame(stack(r_before,nlcd2006_reg))
 head(df_r_before_nlcd)
@@ -232,6 +241,7 @@ head(df_r_before_nlcd)
 Evergreen Forest:
 ```{r}
 df_subset <- subset(df_r_before_nlcd,nlcd_2006_RITA==42)
+
 plot(df_subset$Green,
      df_subset$Red,
      col="green",
@@ -244,6 +254,7 @@ plot(df_subset$Green,
 Urban: dense
 ```{r}
 df_subset <- subset(df_r_before_nlcd,nlcd_2006_RITA==22)
+
 points(df_subset$Green,
        df_subset$Red,
        col="darkred",
@@ -253,6 +264,7 @@ points(df_subset$Green,
 Water: 11 for NLCD
 ```{r}
 df_subset <- subset(df_r_before_nlcd,nlcd_2006_RITA==22)
+
 points(df_subset$Green,
        df_subset$Red,
        col="blue",
@@ -260,6 +272,7 @@ points(df_subset$Green,
 
 title("Feature space Green-Red")
 names_vals <- c("Evergreen Forest","Developed High Intensity","Water")
+
 legend("topright",legend=names_vals,
        pt.cex=0.7,cex=0.7,col=c("green","darkred","blue"),
        pch=1, # add circle symbol to line
@@ -271,6 +284,7 @@ legend("topright",legend=names_vals,
 Evergreen Forest:
 ```{r}
 df_subset <- subset(df_r_before_nlcd,nlcd_2006_RITA==42)
+
 plot(df_subset$Red,
      df_subset$NIR,
      col="green",
@@ -282,6 +296,7 @@ plot(df_subset$Red,
 Developed, High Intensity
 ```{r}
 df_subset <- subset(df_r_before_nlcd,nlcd_2006_RITA==22)
+
 points(df_subset$Red,
        df_subset$NIR,
        col="darkred",
@@ -291,6 +306,7 @@ points(df_subset$Red,
 Water
 ```{r}
 df_subset <- subset(df_r_before_nlcd,nlcd_2006_RITA==11)
+
 points(df_subset$Red,
        df_subset$NIR,
        col="blue",
@@ -298,6 +314,7 @@ points(df_subset$Red,
 
 title("Feature space Red-NIR")
 names_vals <- c("Evergreen Forest","Developed High Intensity","Water")
+
 legend("topright",legend=names_vals,
        pt.cex=0.7,cex=0.7,col=c("green","darkred","blue"),
        pch=1, # add circle symbol to line
@@ -309,6 +326,7 @@ legend("topright",legend=names_vals,
 Water:
 ```{r}
 df_subset <- subset(df_r_before_nlcd,nlcd_2006_RITA==11)
+
 plot(df_subset$Blue,
        df_subset$Red,
        col="blue",
@@ -320,6 +338,7 @@ plot(df_subset$Blue,
 Evergreen Forest:
 ```{r}
 df_subset <- subset(df_r_before_nlcd,nlcd_2006_RITA==42)
+
 points(df_subset$Blue,
        df_subset$Red,
        col="green",
@@ -329,6 +348,7 @@ points(df_subset$Blue,
 Urban dense:
 ```{r}
 df_subset <- subset(df_r_before_nlcd,nlcd_2006_RITA==22)
+
 points(df_subset$Blue,
        df_subset$Red,
        col="darkred",
@@ -336,6 +356,7 @@ points(df_subset$Blue,
 
 title("Feature space Blue-Red")
 names_vals <- c("Evergreen Forest","Developed High Intensity","Water")
+
 legend("topright",legend=names_vals,
        pt.cex=0.7,cex=0.7,col=c("green","darkred","blue"),
        pch=1, # add circle symbol to line
@@ -399,7 +420,7 @@ xtab_threshold <- crosstab(r_ref,r_rec_NIR_after,long=T)
 ## % overlap between the flooded area and values below 0.2 in NIR
 (xtab_threshold[5,3]/freq_fema_zones[2,2])*100 
 ```
-There is agreement with FEMA flooded area in %.
+There is in agreement with FEMA flooded area in %.
 
 ### Generating indices based on raster algebra of original bands
 
@@ -457,6 +478,7 @@ This is suggesting flooding!!!
 
 ```{r}
 r_diff_MNDWI <- r_after_MNDWI - r_before_MNDWI
+
 plot(r_diff_MNDWI)
 plot(r_diff_MNDWI > 0.2)  
 ```
@@ -468,8 +490,9 @@ mean_val <- cellStats(r_diff_MNDWI,"mean")
 sd_val <- cellStats(r_diff_MNDWI,"sd")
 
 r_diff_std <- (r_diff_MNDWI - mean_val)/ sd_val
+
 plot(r_diff_std)
-histogram(r_diff_std) 
+raster::hist(r_diff_std) # histogram(r_diff_std) 
 plot(r_diff_std > 2) 
 plot(r_diff_std > 1)  
 ```
@@ -479,12 +502,14 @@ Note the increase in MNDWI 2 standard deviations away
 Generate a map of flooding with MNDWI and compare to FEMA map:
 ```{r}
 r_after_flood <- r_diff_std > 1 
+
 plot(r_after_flood)
 
-#reclass in zero/1!!!
+# reclass in zero/1!!!
 
 df <- data.frame(id=c(1,2), v=c(0,1))
 r_ref_rec <- subs(r_ref, df)
+
 plot(r_ref_rec)
 xtab_tb <- crosstab(r_after_flood,r_ref_rec)
 ```
@@ -492,7 +517,9 @@ xtab_tb <- crosstab(r_after_flood,r_ref_rec)
 Examine overlap between flooded area and FEMA:
 ```{r}
 plot(r_after_flood)
+
 r_overlap <- r_ref_rec * r_after_flood
+
 plot(r_overlap) # Flood map area of aggreement with FEMA
 ```
 
@@ -526,6 +553,7 @@ title("Loadings for the first three components using T-mode")
 Make this a time series:
 ```{r}
 loadings_df <- as.data.frame(pca_mod$loadings[,1:7])
+
 title("Loadings for the first three components using T-mode")
 names_vals <- c("pc1","pc2","pc3")
 legend("topright",legend=names_vals,
@@ -543,13 +571,14 @@ plot(pca_mod$values,main="Scree plot: Variance explained",type="b")
 Generate scores from eigenvectors:
 Using predict function: this is recommended for raster.
 ```{r}
-r_pca <- predict(r_before, pca_mod, index=1:7,filename="pc_scores.tif",overwrite=T) # fast
-plot(r_pca,y=2,zlim=c(-2,2))
-plot(r_pca,y=1,zlim=c(-2,2))
-plot(r_pca,y=3,zlim=c(-2,2))
+r_pca <- predict(r_before, pca_mod, index=1:7, filename="pc_scores.tif", overwrite=T) # fast
 
-plot(subset(r_pca,1),subset(r_pca,2))
-plot(subset(r_pca,2),subset(r_pca,3))
+plot(r_pca,y=2, zlim=c(-2,2))
+plot(r_pca,y=1, zlim=c(-2,2))
+plot(r_pca,y=3, zlim=c(-2,2))
+
+plot(subset(r_pca,1), subset(r_pca, 2))
+plot(subset(r_pca,2), subset(r_pca, 3))
 ```
 
 
@@ -572,15 +601,15 @@ axis(2, las=1,at=seq(-1,1,0.2),cex=1.2) # "1' for side=below, the axis is drawn 
 
 box()    # This draws a box...
 
-title(paste0("Loadings for component ", names(loadings_df)[1]," and " ,names(loadings_df)[2] ))
-draw.circle(0,0,c(1.0,1.0),nv=500)#,border="purple",
-text(loadings_df[,1],loadings_df[,2],var_labels,pos=1,cex=1)            
+title(paste0("Loadings for component ", names(loadings_df)[1]," and " , names(loadings_df)[2] ))
+draw.circle(0,0, c(1.0,1.0), nv=500) # ,border="purple",
+text(loadings_df[,1], loadings_df[,2], var_labels, pos=1,cex=1)            
 grid(2,2)
 ```
 
 Plot feature space:
 ```{r}
-df_raster_val <- as.data.frame(stack(r_after,r_pca,nlcd2006_reg))
+df_raster_val <- as.data.frame(stack(r_after, r_pca, nlcd2006_reg))
 head(df_raster_val)
 
 # Water
@@ -621,19 +650,19 @@ r_TCBI = 0.3956 * r_before$Red + 0.4718 * r_before$NIR +0.3354 * r_before$Blue+ 
           + 0.3946 * r_before$SWIR1 + 0.3434 * r_before$SWIR2+ 0.2964 * r_before$SWIR3
 
 # r_TCWI <- r_TCWI*10
-histogram(r_TCWI)
+raster::hist(r_TCWI) # histogram(r_TCWI)
 plot(r_TCWI)
-plot(r_TCWI,zlim=c(0,0.2))
+plot(r_TCWI, zlim=c(0,0.2))
 
 plot(r_TCWI>0.1)
 
-histogram(r_TCBI)
+raster::hist(r_TCBI) # histogram(r_TCBI)
 plot(r_TCBI)
-plot(r_TCBI,zlim=c(0,0.2))
+plot(r_TCBI,zlim=c(0, 0.2))
 
-r_stack <- stack(r_TCWI,r_TCBI, r_pca)
-names(r_stack) <- c("TCWI","TCBI",names(r_pca))
-cor_r_TC <- layerStats(r_stack,"pearson",na.rm=T)
+r_stack <- stack(r_TCWI, r_TCBI, r_pca)
+names(r_stack) <- c("TCWI","TCBI", names(r_pca))
+cor_r_TC <- layerStats(r_stack, "pearson", na.rm=T)
 cor_r_TC <- as.data.frame(cor_r_TC$`pearson correlation coefficient`)
 print(cor_r_TC)
 ```
@@ -653,15 +682,16 @@ plot(loadings_df[,1],loadings_df[,2],
      axes = FALSE,
      cex.lab = 1.2)
 
-points(cor_r_TC$pc_scores.1[1],cor_r_TC$pc_scores.2[1],col="red")
-points(cor_r_TC$pc_scores.1[2],cor_r_TC$pc_scores.2[2],col="green")
+points(cor_r_TC$pc_scores.1[1], cor_r_TC$pc_scores.2[1], col="red")
+points(cor_r_TC$pc_scores.1[2], cor_r_TC$pc_scores.2[2], col="green")
 
-axis(1, at=seq(-1,1,0.2),cex=1.2)
-axis(2, las=1,at=seq(-1,1,0.2),cex=1.2) # "1' for side=below, the axis is drawn on the right at location 0 and 1
+axis(1, at=seq(-1,1,0.2), cex=1.2)
+axis(2, las=1,at=seq(-1,1,0.2), cex=1.2) # "1' for side=below, the axis is drawn on the right at location 0 and 1
+
 box()    # This draws a box...
 
 title(paste0("Loadings for component ", names(loadings_df)[1]," and " ,names(loadings_df)[2] ))
-draw.circle(0,0,c(1.0,1.0),nv=500)#,border="purple",
+draw.circle(0,0,c(1.0,1.0),nv=500) # ,border="purple",
 text(loadings_df[,1],loadings_df[,2],var_labels,pos=1,cex=1)            
 text(cor_r_TC$pc_scores.1[1],cor_r_TC$pc_scores.2[1],"TCWI",pos=1,cex=1)
 text(cor_r_TC$pc_scores.1[2],cor_r_TC$pc_scores.2[2],"TCBI",pos=1,cex=1)
