@@ -7,36 +7,37 @@ excerpt: Flood Mapping Analyses
 ```{r, title = "{{ site.handouts[1] }}"}
 # Load packages 
 
-library(sp) # spatial/geographfic objects and functions
-library(rgdal) #GDAL/OGR binding for R with functionalities
-library(spdep) #spatial analyses operations, functions etc.
-library(gtools) # contains mixsort and other useful functions
-library(maptools) # tools to manipulate spatial data
-library(parallel) # parallel computation, part of base package no
-library(rasterVis) # raster visualization operations
-library(raster) # raster functionalities
-library(forecast) #ARIMA forecasting
-library(xts) #extension for time series object and analyses
-library(zoo) # time series object and analysis
-library(lubridate) # dates functionality
-library(colorRamps) #contains matlab.like color palette
-library(rgeos) #contains topological operations
-library(sphet) #contains spreg, spatial regression modeling
-library(BMS) #contains hex2bin and bin2hex, Bayesian methods
-library(bitops) # function for bitwise operations
-library(foreign) # import datasets from SAS, spss, stata and other sources
-#library(gdata) #read xls, dbf etc., not recently updated but useful
-library(classInt) #methods to generate class limits
-library(plyr) #data wrangling: various operations for splitting, combining data
-#library(gstat) #spatial interpolation and kriging methods
-library(readxl) #functionalities to read in excel type data
-library(psych) #pca/eigenvector decomposition functionalities
-library(sf)
-library(plotrix) #various graphic functions e.g. draw.circle
-library(nnet)
-library(rpart)
-library(e1071)
-library(caret)
+# library(raster) # raster functionalities
+# library(rgdal) # GDAL/OGR binding for R with functionalities
+# library(sf) # spatial objects classes
+# library(colorRamps) #contains matlab.like color palette
+# library(psych) #pca/eigenvector decomposition functionalities
+# library(plotrix) #various graphic functions e.g. draw.circle
+
+# library(sp) # spatial/geographfic objects and functions
+# library(spdep) #spatial analyses operations, functions etc.
+# library(gtools) # contains mixsort and other useful functions
+# library(maptools) # tools to manipulate spatial data
+# library(parallel) # parallel computation, part of base package no
+# library(rasterVis) # raster visualization operations
+# library(forecast) #ARIMA forecasting
+# library(xts) #extension for time series object and analyses
+# library(zoo) # time series object and analysis
+# library(lubridate) # dates functionality
+# library(rgeos) #contains topological operations
+# library(sphet) #contains spreg, spatial regression modeling
+# library(BMS) #contains hex2bin and bin2hex, Bayesian methods
+# library(bitops) # function for bitwise operations
+# library(foreign) # import datasets from SAS, spss, stata and other sources
+# #library(gdata) #read xls, dbf etc., not recently updated but useful
+# library(classInt) #methods to generate class limits
+# library(plyr) #data wrangling: various operations for splitting, combining data
+# #library(gstat) #spatial interpolation and kriging methods
+# library(readxl) #functionalities to read in excel type data
+# library(nnet)
+# library(rpart)
+# library(e1071)
+# library(caret)
 
 ###### Functions used in this script
 
