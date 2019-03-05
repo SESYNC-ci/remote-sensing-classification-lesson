@@ -14,7 +14,7 @@ Goal: Map hurricane flooding using reflectance data derived from MODIS.
 Goal: Analyze flooding including data provided by FEMA flood region.  
 
 
-
+## Concepts to be familiar with (that you'll learn during this lesson??????????????)
 
 
 
