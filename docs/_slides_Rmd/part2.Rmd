@@ -5,38 +5,35 @@ excerpt: Flood Mapping Analyses
 ---
 ### Load packages
 ```{r, title = "{{ site.handouts[1] }}"}
-# library(raster) # raster functionalities
-# library(rgdal) # GDAL/OGR binding for R with functionalities
-# library(sf) # spatial objects classes
-# library(colorRamps) #contains matlab.like color palette
-# library(psych) #pca/eigenvector decomposition functionalities
-# library(plotrix) #various graphic functions e.g. draw.circle
+library(raster) # raster functionalities
+library(sf) # spatial objects classes
+library(rpart) # regression and classification trees 
+library(e1071) # support vector machine
 
-# library(sp) # spatial/geographfic objects and functions
-# library(spdep) #spatial analyses operations, functions etc.
-# library(gtools) # contains mixsort and other useful functions
-# library(maptools) # tools to manipulate spatial data
-# library(parallel) # parallel computation, part of base package no
-# library(rasterVis) # raster visualization operations
-# library(forecast) #ARIMA forecasting
-# library(xts) #extension for time series object and analyses
-# library(zoo) # time series object and analysis
-# library(lubridate) # dates functionality
-# library(rgeos) #contains topological operations
-# library(sphet) #contains spreg, spatial regression modeling
-# library(BMS) #contains hex2bin and bin2hex, Bayesian methods
-# library(bitops) # function for bitwise operations
-# library(foreign) # import datasets from SAS, spss, stata and other sources
-# #library(gdata) #read xls, dbf etc., not recently updated but useful
-# library(classInt) #methods to generate class limits
-# library(plyr) #data wrangling: various operations for splitting, combining data
-# #library(gstat) #spatial interpolation and kriging methods
-# library(readxl) #functionalities to read in excel type data
-# library(nnet)
-# library(rpart)
-# library(e1071)
-# library(caret)
 ```
+
+REB NOTES: 
+lines 150 - 165 produces this error: 
+       Error in .local(x, filename, ...) : 
+       Attempting to write a file to a path that does not exist:
+       ./output_exercise6_03312018
+       
+line 251: where does histogram() function come from???  replaced with raster::hist() 
+
+line 260: Error in plot.window(xlim = xlim, ylim = ylim, log = log, yaxs = pars$yaxs) : 
+          need finite 'ylim' values
+          In addition: Warning messages:
+          1: In min(x) : no non-missing arguments to min; returning Inf
+          2: In max(x) : no non-missing arguments to max; returning -Inf
+          
+line 288: Error in `$<-.data.frame`(`*tmp*`, "pix_id", value = 1:0) : 
+          replacement has 2 rows, data has 0
+Entire chunk at 288 doesn't work.  dataframes are NULL.  
+
+Where is function levelplot() from?  Lattice package? But lattice is not listed in the "load packages".
+
+Where is function confusionMatrix() from?  Broom package?  But broom is not listed in the "load packages".
+
 
 ### Define functions used in this lesson
 ```{r}
@@ -78,7 +75,7 @@ file_format <- ".tif" # PARAM5
 
 NA_flag_val <- -9999 # PARAM6
 
-out_suffix <-"exercise6_03312018" # output suffix for the files and ouptu folder #PARAM 8
+out_suffix <-"exercise6_03312018" # output suffix for the files and ouptu folder # PARAM 8
 
 create_out_dir_param=TRUE # PARAM9
 
@@ -121,7 +118,7 @@ r_after <- brick(file.path(in_dir_var,infile_RITA_reflectance_date2))
 
 Read band information since it is more informative.
 ```{r}
-df_modis_band_info <- read.table(file.path(in_dir_var,infile_modis_bands_information),
+df_modis_band_info <- read.table(file.path(in_dir_var, infile_modis_bands_information),
                                  sep=",",
                                  stringsAsFactors = F)
 
@@ -129,8 +126,7 @@ print(df_modis_band_info)
 
 df_modis_band_info$band_number <- c(3,4,1,2,5,6,7)
 
-write.table(df_modis_band_info,file.path(in_dir_var,infile_modis_bands_information),
-            sep=",")
+write.table(df_modis_band_info,file.path(in_dir_var, infile_modis_bands_information), sep=",")
 
 band_refl_order <- df_modis_band_info$band_number
 
@@ -171,9 +167,9 @@ writeRaster(r_after_NDVI,
 #2) Flooded vegetation
 #3) Flooded area, or water (lake etc)
 
-class1_data_sf <- st_read(file.path(in_dir_var,"class1_sites"))
-class2_data_sf <- st_read(file.path(in_dir_var,"class2_sites"))
-class3_data_sf <- st_read(file.path(in_dir_var,"class3_sites"))
+class1_data_sf <- st_read(file.path(in_dir_var, "class1_sites"))
+class2_data_sf <- st_read(file.path(in_dir_var, "class2_sites"))
+class3_data_sf <- st_read(file.path(in_dir_var, "class3_sites"))
 ```
 
 Combine object, note they should be in the same projection system
@@ -219,6 +215,7 @@ legend("topleft",legend=names_vals,
 Let's use a palette that reflects wetness or level of water. 
 ```{r}
 col_palette <- c("green","blue","darkblue")
+
 plot(NDVI ~ MNDWI,
      xlim=c(-1,1),ylim=c(-1,1),
      cex=0.2,
@@ -242,11 +239,11 @@ legend("topright",legend=names_vals,
        pch=20, #add circle symbol to line
        bty="n")
 
-histogram(r_after)
+raster::hist(r_after) # histogram(r_after)
 
 pixels_df$class_ID <- factor(pixels_df$class_ID,
-                    levels = c(1,2,3),
-                    labels = names_vals)
+                      levels = c(1,2,3),
+                      labels = names_vals)
 
 boxplot(MNDWI~class_ID,
         pixels_df,
@@ -267,23 +264,23 @@ set.seed(100) # set random seed for reproducibility
 
 This is for one class: better to do this as a function but we use a loop for clarity here
 ```{r}
-list_data_df <- vector("list",length=3)
+list_data_df <- vector("list", length=3)
 level_labels <- names_vals
 
 for(i in 1:3){
-  data_df <- subset(pixels_df,class_ID==level_labels[i])
+  data_df <- subset(pixels_df, class_ID==level_labels[i])
   data_df$pix_id <- 1:nrow(data_df)
-  indices <- as.vector(createDataPartition(data_df$pix_ID,p=0.7,list=F))
-  data_df$training <-  as.numeric(data_df$pix_id %in% indices)
+  indices <- as.vector(createDataPartition(data_df$pix_ID, p=0.7, list=F))
+  data_df$training <- as.numeric(data_df$pix_id %in% indices)
   list_data_df[[i]] <- data_df
 }
 
-data_df <- do.call(rbind,list_data_df)
+data_df <- do.call(rbind, list_data_df)
 
 dim(data_df)
 head(data_df)
 
-data_training <- subset(data_df,training==1)
+data_training <- subset(data_df, training==1)
 ```
 
 
@@ -308,7 +305,7 @@ Now predict the subset data based on the model; prediction for entire area takes
 ```{r}
 raster_out_filename <- paste0("r_predicted_rpart_", out_suffix, file_format)
 
-r_predicted_rpart <- predict(r_stack,mod_rpart, 
+r_predicted_rpart <- predict(r_stack, mod_rpart, 
                              type='class',
                              filename=raster_out_filename,
                              progress = 'text',
@@ -320,6 +317,7 @@ r_predicted_rpart <- ratify(r_predicted_rpart)
 rat <- levels(r_predicted_rpart)[[1]]
 rat$legend <- c("vegetation","wetland","water")
 levels(r_predicted_rpart) <- rat
+
 levelplot(r_predicted_rpart, maxpixels = 1e6,
           col.regions = c("green","blue","darkblue"),
           scales=list(draw=FALSE),
@@ -354,6 +352,7 @@ r_predicted_svm <- ratify(r_predicted_svm)
 rat <- levels(r_predicted_svm)[[1]]
 rat$legend <- c("vegetation","wetland","water")
 levels(r_predicted_svm) <- rat
+
 levelplot(r_predicted_svm, maxpixels = 1e6,
           col.regions = c("green","blue","darkblue"),
           scales=list(draw=FALSE),
@@ -368,19 +367,19 @@ Set up testing data:
 dim(data_df) # full dataset, let's use data points for testing
 
 # omit values that contain NA, because may be problematic with SVM.
-data_testing <- na.omit(subset(data_df,training==0)) 
+data_testing <- na.omit(subset(data_df, training==0)) 
 
 dim(data_testing)
 ```
 
 Predict on testing data using rpart model fitted with training data.
 ```{r}
-testing_rpart <- predict(mod_rpart, data_testing,type='class')
+testing_rpart <- predict(mod_rpart, data_testing, type='class')
 ```
 
 Predict on testing data using SVM model fitted with training data
 ```{r}
-testing_svm <- predict(mod_svm,data_testing, type='class')
+testing_svm <- predict(mod_svm, data_testing, type='class')
 ```
 
 Predicted classes:
@@ -419,8 +418,8 @@ sum(diag(tb_rpart))/sum(table(testing_rpart))
 
 Generate more accurate measurements from CARET
 ```{r}
-accuracy_info_svm <- confusionMatrix(testing_svm,data_testing$class_ID, positive = NULL)
-accuracy_info_rpart <- confusionMatrix(testing_rpart,data_testing$class_ID, positive = NULL)
+accuracy_info_svm <- confusionMatrix(testing_svm, data_testing$class_ID, positive = NULL)
+accuracy_info_rpart <- confusionMatrix(testing_rpart, data_testing$class_ID, positive = NULL)
 
 accuracy_info_rpart$overall
 accuracy_info_svm$overall
@@ -428,6 +427,6 @@ accuracy_info_svm$overall
 
 Write out the results:
 ```{r}
-write.table(accuracy_info_rpart$table,"confusion_matrix_rpart.txt",sep=",")
-write.table(accuracy_info_svm$table,"confusion_matrix_svm.txt",sep=",")
+write.table(accuracy_info_rpart$table, "confusion_matrix_rpart.txt", sep=",")
+write.table(accuracy_info_svm$table, "confusion_matrix_svm.txt", sep=",")
 ```
