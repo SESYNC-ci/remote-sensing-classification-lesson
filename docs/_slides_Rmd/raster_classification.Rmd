@@ -35,6 +35,8 @@ Where is function levelplot() from?  Lattice package? But lattice is not listed 
 Where is function confusionMatrix() from?  Broom package?  But broom is not listed in the "load packages".
 
 
+
+
 ### Define functions used in this lesson
 ```{r}
 create_dir_fun <- function(outDir, out_suffix=NULL){
@@ -43,7 +45,7 @@ create_dir_fun <- function(outDir, out_suffix=NULL){
     out_name <- paste("output_", out_suffix,sep="")
     outDir <- file.path(outDir, out_name)
   }
-  # create if does not exists
+  # create if does not exist
   if(!file.exists(outDir)){
     dir.create(outDir)
   }

@@ -155,7 +155,7 @@ legend("topleft",legend=names_vals,
 ```
 
 
-## Part II: Examine spectral class signatures for land cover classes (from NLCD)
+## Part I: Examine spectral class signatures for land cover classes (from NLCD)
 
 Read in NLCD 2006; note that it was aggregated at 1km.
 ```{r}
@@ -200,7 +200,7 @@ lines(as.numeric(avg_reflectance_nlcd[6,col_ordering]),
 ```
 
 
-## Part II: Explore data in feature space
+## Part I: Explore data in feature space
 ```{r}
 plot(r_before$Red, r_before$NIR)
 plot(r_before$Green, r_before$Red)
@@ -369,7 +369,7 @@ plotRGB(r_after,
 Note: the effect of flooding is particularly visible in the false color composites.
 Let's examine different band combinations to enhance features in the image, including flooded areas.
 
-## Part III: Band combination - indices and thresholding for flood mapping
+## Part I: Band combination - indices and thresholding for flood mapping
 
 NIR experiment with threshold to map flooding (water)
 ```{r}
@@ -499,7 +499,7 @@ plot(r_overlap) # Flood map area of aggreement with FEMA
 ```
 
 
-## Part IV: Principal Component Analysis and band transformation
+## Part I: Principal Component Analysis and band transformation
 
 Another avenue to combine original bands into indices is to use linear transformation.
 We examine Principal Component Analysis and the Tassel Cap Transform.

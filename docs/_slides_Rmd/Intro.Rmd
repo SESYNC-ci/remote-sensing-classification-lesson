@@ -4,12 +4,60 @@ editor_options:
 excerpt: Introduction to Remote Sensing
 ---
 
-## Part 1: Map flooding from RITA hurricane  
+Remote Sensing allows for fast generation of maps before and after events. In this exercise, you will map flooding using machine learning methods and MODIS reflectance data (MOD09). Hurricanes can strongly impact vegetation and human settlements. Hurricane Rita made landfall on September 24, 2005 in Louisiana near the border with Texas. In addition to the rainfall, the hurricane was accompanied by a storm surge that generated flooding and a large amount of damage to ground infrastructure and vegetation. As a geospatial analyst, you will experiment with different classifiers for rapid mapping and examine their performance with training and testing data. All work must be repeatable and documented in a scripting environment to be shared with your team.
+
+===
+
+###Inputs
+  1. FEMA flood map are as vector data
+  2. MOD09 reflectance image after Hurricane Rita
+  3. Vector polygons of ground truth for training and testing classifiers
+  4. NLCD 2006 land cover aggregated at 1km.
+
+===
+
+###Outputs
+	1. classified map using rpart classifier
+	2. classified map using svm classifier
+  3. confusion matrices and overall accuracies by classifiers 
+  
+===
+             
+###Tools/Functions
+  1. brick
+	2. writeRaster
+	3. st_read
+  4. subset (raster)
+	5. extract
+  6. predict
+	7. levelplot
+	8. raster algebra: “*”,” /”,”+”,”-“
+  9. histogram
+	 
+===
+
+## Part 1: Read and map flooding from RITA hurricane  
 
 Goal: Map hurricane flooding using reflectance data derived from MODIS.  
-   
 
-## Part 2: Analyze flood mapping 
+Explore the datasets provided. Use ground truth vector datasets and extract values for pixels for the raster stack containing the original MOD09 bands and indices. Visualize ground truth pixels in feature space and using boxplots.
+
+Produce:
+1.	Scatterplot in feature space with the three ground classes.
+2.	Boxplots of values for MNDWI indices.
+
+===
+
+## Part 2: Split data into training and testing datasets 
+
+Assessment of classifications require splitting of the ground truth data into training and testing samples. The training data is used in the fitting of the model while the testing dataset is used accuracy assessment. Using the data provided randomly select 30% ground truth data for testing.
+
+Produce:
+1.	Training and testing datasets at 30%. Save these into shapefiles.
+
+From this product, the analyst should be able to answer the following question:
+1.	What is the frequency of observations in each class for training and testing data?
+
 
 Goal: Analyze flooding including data provided by FEMA flood region.  
 
