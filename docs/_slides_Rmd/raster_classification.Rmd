@@ -9,16 +9,20 @@ library(raster) # raster functionalities
 library(sf) # spatial objects classes
 library(rpart) # regression and classification trees 
 library(e1071) # support vector machine
-
+library(rasterViz) # raster visualization operations
+library(caret) # complex regression and classification models
 ```
 
+
 REB NOTES: 
+line 104 - 109 fails to change working directory.  
+
+
 lines 150 - 165 produces this error: 
        Error in .local(x, filename, ...) : 
        Attempting to write a file to a path that does not exist:
        ./output_exercise6_03312018
-       
-line 251: where does histogram() function come from???  replaced with raster::hist() 
+
 
 line 260: Error in plot.window(xlim = xlim, ylim = ylim, log = log, yaxs = pars$yaxs) : 
           need finite 'ylim' values
@@ -30,10 +34,7 @@ line 288: Error in `$<-.data.frame`(`*tmp*`, "pix_id", value = 1:0) :
           replacement has 2 rows, data has 0
 Entire chunk at 288 doesn't work.  dataframes are NULL.  
 
-Where is function levelplot() from?  Lattice package? But lattice is not listed in the "load packages".
-
-Where is function confusionMatrix() from?  Broom package?  But broom is not listed in the "load packages".
-
+Get rid of year-specific file names (line 77)!!!!!
 
 
 
@@ -103,8 +104,9 @@ if(is.null(out_dir)){
 }
 
 out_suffix_s <- out_suffix # can modify name of output suffix
+
 if(create_out_dir_param==TRUE){
-  out_dir <- create_dir_fun(out_dir,out_suffix_s)
+  out_dir <- create_dir_fun(out_dir, out_suffix_s)
   setwd(out_dir)
 }else{
   setwd(out_dir) # use previoulsy defined directory
@@ -148,7 +150,7 @@ data_type_str <- dataType(r_after_NDVI)
 
 NAvalue(r_after_MNDWI) <- NA_flag_val
 out_filename <- paste("mndwi_post_Rita","_",out_suffix,file_format,sep="")
-out_filename <- file.path(out_dir,out_filename)
+out_filename <- file.path(out_dir, out_filename)
 writeRaster(r_after_MNDWI,
             filename=out_filename,
             datatype=data_type_str,
@@ -241,7 +243,7 @@ legend("topright",legend=names_vals,
        pch=20, #add circle symbol to line
        bty="n")
 
-raster::hist(r_after) # histogram(r_after)
+rasterVis::rhistogram(r_after)
 
 pixels_df$class_ID <- factor(pixels_df$class_ID,
                       levels = c(1,2,3),
@@ -348,7 +350,7 @@ r_predicted_svm <- predict(r_stack, mod_svm,
 
 plot(r_predicted_svm)
 
-histogram(r_predicted_svm)
+rasterVis::histogram(r_predicted_svm)
 
 r_predicted_svm <- ratify(r_predicted_svm)
 rat <- levels(r_predicted_svm)[[1]]

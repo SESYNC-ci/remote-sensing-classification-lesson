@@ -17,7 +17,6 @@ output: html_document
 # library(gtools) # contains mixsort and other useful functions
 # library(maptools) # tools to manipulate spatial data
 # library(parallel) # parallel computation, part of base package no
-# library(rasterVis) # raster visualization operations
 # library(forecast) #ARIMA forecasting
 # library(xts) #extension for time series object and analyses
 # library(zoo) # time series object and analysis
@@ -33,6 +32,6 @@ output: html_document
 # #library(gstat) #spatial interpolation and kriging methods
 # library(readxl) #functionalities to read in excel type data
 # library(nnet)
-# library(caret)
+# 
 ```
 
