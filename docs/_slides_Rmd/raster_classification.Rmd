@@ -113,7 +113,9 @@ if(create_out_dir_param==TRUE){
 }
 ```
 
-## Part I: Display and explore the data
+## Part I: Read and map flooding from RITA hurricane 
+
+### Display and explore the data
 
 MOD09 raster image after hurricane Rita.
 ```{r}
@@ -256,7 +258,7 @@ boxplot(MNDWI~class_ID,
 ```
 
 
-## Part II: Split training and testing 
+## Part II: Split data into training and testing datasets 
 
 Let's keep 30% of data for testing for each class.
 ```{r}
@@ -288,7 +290,7 @@ data_training <- subset(data_df, training==1)
 ```
 
 
-## Part III: Generate classification using CART and SVM 
+## Part III: Generate classification using classification tree (CART) and support vector machine (SVM)
 
 ### Classification and Regression Tree model (CART) 
 
@@ -364,7 +366,7 @@ levelplot(r_predicted_svm, maxpixels = 1e6,
 ```
 
 
-## Part IV: Compare performance of methods 
+## Part IV: Assessment and comparison of model performance
 
 Set up testing data:
 ```{r}

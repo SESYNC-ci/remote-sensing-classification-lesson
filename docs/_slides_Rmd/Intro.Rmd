@@ -60,7 +60,7 @@ From this product, the analyst should be able to answer the following question:
 
 ===
 
-## Part III:  Generate classification using classification tree (CART) and support vector machine (SVM). 
+## Part III:  Generate classification using classification tree (CART) and support vector machine (SVM) 
 
 You will use MOD09 reflectance bands to generate a classification of three classes (“vegetation”, “wetland”, “water”). Fit a model with the training data for each method and generate a classification on a raster using the “predict” command.
  
@@ -72,6 +72,28 @@ Produce:
 1.	Model object for rpart with a predicted raster.
 2.	Model object for svm with a predicted raster
 
+===
+
+## Part IV: Assessment and comparison of model performance
+
+To validate the model, we use the testing data and generate new predictions for rpart and SVM. We compare the predictions with the original testing information.
+
+Overall accuracy: total number of correctly classified pixels for all classes combined over the total number of pixels. 
+
+Producer accuracy: is the fraction of correctly classified pixels with regard to all pixels of the ground truth class.
+
+Produce:
+1.	Overall accuracy and producer accuracy metrics.
+2.	Confusion matrix for rpart and SVM.
+
+From output answer the following questions:
+1.	What classifier had the best overall accuracy?
+
+Using the analyses performed above, and datasets provided answer to the following questions:
+
+1)	Modify the splitting of training and testing by using 40% and then 50% for testing. Compare predicted maps with previous results.
+2)	Generate confusion matrices for 40% and 50% testing.
+3)	Generate a classification prediction using randomForest and compare it to svm and rpart with 30% holdout.                           
 
 
 
