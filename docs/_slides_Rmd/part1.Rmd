@@ -97,8 +97,6 @@ infile_reflectance_date1 <- "mosaiced_MOD09A1_A2005265__006_reflectance_masked_R
 infile_reflectance_date2 <- "mosaiced_MOD09A1_A2005273__006_reflectance_masked_RITA_reg_1km.tif"
 ```
 
-## Part I: Read in data and prepare for analyses
-
 Create an ouput directory:
 ```{r}
 if(is.null(out_dir)){
