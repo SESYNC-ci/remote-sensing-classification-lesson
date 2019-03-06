@@ -1,7 +1,7 @@
 ---
 editor_options: 
   chunk_output_type: console
-excerpt: Introduction to Remote Sensing
+excerpt: Introduction to Raster Classification
 ---
 
 Remote Sensing allows for fast generation of maps before and after events. In this exercise, you will map flooding using machine learning methods and MODIS reflectance data (MOD09). Hurricanes can strongly impact vegetation and human settlements. Hurricane Rita made landfall on September 24, 2005 in Louisiana near the border with Texas. In addition to the rainfall, the hurricane was accompanied by a storm surge that generated flooding and a large amount of damage to ground infrastructure and vegetation. As a geospatial analyst, you will experiment with different classifiers for rapid mapping and examine their performance with training and testing data. All work must be repeatable and documented in a scripting environment to be shared with your team.

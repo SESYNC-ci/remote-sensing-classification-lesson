@@ -1,10 +1,10 @@
 ---
 editor_options: 
   chunk_output_type: console
-excerpt: Flood Mapping Analyses
+excerpt: Raster Classification using flood mapping analysis
 ---
 ### Load packages
-```{r, title = "{{ site.handouts[1] }}"}
+```{r, include=FALSE, echo=FALSE, results='hide'}
 library(raster) # raster functionalities
 library(sf) # spatial objects classes
 library(rpart) # regression and classification trees 
@@ -36,10 +36,12 @@ Entire chunk at 288 doesn't work.  dataframes are NULL.
 
 Get rid of year-specific file names (line 77)!!!!!
 
+load_obj() function is created in lines 61 - 65, but never used later in the script.  Remove it!
+
 
 
 ### Define functions used in this lesson
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 create_dir_fun <- function(outDir, out_suffix=NULL){
   # if out_suffix is not null then append out_suffix string
   if(!is.null(out_suffix)){
