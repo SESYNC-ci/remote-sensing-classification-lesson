@@ -36,7 +36,7 @@ Remote Sensing allows for fast generation of maps before and after events. In th
 	 
 ===
 
-## Part 1: Read and map flooding from RITA hurricane  
+## Part I: Read and map flooding from RITA hurricane  
 
 Goal: Map hurricane flooding using reflectance data derived from MODIS.  
 
@@ -48,7 +48,7 @@ Produce:
 
 ===
 
-## Part 2: Split data into training and testing datasets 
+## Part II: Split data into training and testing datasets 
 
 Assessment of classifications require splitting of the ground truth data into training and testing samples. The training data is used in the fitting of the model while the testing dataset is used accuracy assessment. Using the data provided randomly select 30% ground truth data for testing.
 
@@ -58,11 +58,21 @@ Produce:
 From this product, the analyst should be able to answer the following question:
 1.	What is the frequency of observations in each class for training and testing data?
 
+===
 
-Goal: Analyze flooding including data provided by FEMA flood region.  
+## Part III:  Generate classification using classification tree (CART) and support vector machine (SVM). 
+
+You will use MOD09 reflectance bands to generate a classification of three classes (“vegetation”, “wetland”, “water”). Fit a model with the training data for each method and generate a classification on a raster using the “predict” command.
+ 
+RPART: It is based on CART and generates classification by splitting data points into branches successively and generating classified pixels. The rules generated from the tree can then be applied to the full raster image to produce a prediction.
+
+SVM: Support Vector Machine  generate hyperplanes that maximize separabiltiy between classes.These hyperplanes boundaries are used in the classification process and generate predictions.
+
+Produce:
+1.	Model object for rpart with a predicted raster.
+2.	Model object for svm with a predicted raster
 
 
-## Concepts to be familiar with (that you'll learn during this lesson??????????????)
 
 
 
