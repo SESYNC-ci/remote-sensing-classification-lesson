@@ -3,42 +3,15 @@ editor_options:
   chunk_output_type: console
 excerpt: Raster Classification using flood mapping analysis
 ---
-### Load packages
+
 ```{r, include=FALSE, echo=FALSE, results='hide'}
 library(raster) # raster functionalities
 library(sf) # spatial objects classes
 library(rpart) # regression and classification trees 
 library(e1071) # support vector machine
-library(rasterViz) # raster visualization operations
+library(rasterVis) # raster visualization operations
 library(caret) # complex regression and classification models
 ```
-
-
-REB NOTES: 
-line 104 - 109 fails to change working directory.  
-
-
-lines 150 - 165 produces this error: 
-       Error in .local(x, filename, ...) : 
-       Attempting to write a file to a path that does not exist:
-       ./output_exercise6_03312018
-
-
-line 260: Error in plot.window(xlim = xlim, ylim = ylim, log = log, yaxs = pars$yaxs) : 
-          need finite 'ylim' values
-          In addition: Warning messages:
-          1: In min(x) : no non-missing arguments to min; returning Inf
-          2: In max(x) : no non-missing arguments to max; returning -Inf
-          
-line 288: Error in `$<-.data.frame`(`*tmp*`, "pix_id", value = 1:0) : 
-          replacement has 2 rows, data has 0
-Entire chunk at 288 doesn't work.  dataframes are NULL.  
-
-Get rid of year-specific file names (line 77)!!!!!
-
-load_obj() function is created in lines 61 - 65, but never used later in the script.  Remove it!
-
-
 
 ### Define functions used in this lesson
 ```{r, title = '{{ site.handouts[0] }}'}
@@ -56,40 +29,28 @@ create_dir_fun <- function(outDir, out_suffix=NULL){
 }
 ```
 
-Use this function to load the saved RData object  
-```{r}
-load_obj <- function(f){
-  env <- new.env()
-  nm <- load(f, env)[1]
-  env[[nm]]
-}
-```
-
 ### Set up arguments and parameters
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 in_dir_var <- "../data"
 out_dir <- "."
 ```
 
-Region coordinate reference system taken from: 
+Regional coordinate reference system taken from: 
 http://spatialreference.org/ref/epsg/nad83-texas-state-mapping-system/proj4/
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 CRS_reg <- "+proj=lcc +lat_1=27.41666666666667 +lat_2=34.91666666666666 +lat_0=31.16666666666667 +lon_0=-100 +x_0=1000000 +y_0=1000000 +ellps=GRS80 +datum=NAD83 +units=m +no_defs" 
 
-file_format <- ".tif" # PARAM5
+file_format <- ".tif" 
 
-NA_flag_val <- -9999 # PARAM6
+NA_flag_val <- -9999 
 
-out_suffix <-"exercise6_03312018" # output suffix for the files and ouptu folder # PARAM 8
+out_suffix <-"exercise6_03312018" # output suffix for the files and output folder
 
-create_out_dir_param=TRUE # PARAM9
-
-# ARG9
+create_out_dir_param = TRUE 
 ```
 
 ### Define input data file names
-```{r}
-
+```{r, title = '{{ site.handouts[0] }}'}
 infile_RITA_reflectance_date2 <- "mosaiced_MOD09A1_A2005273__006_reflectance_masked_RITA_reg_1km.tif"
 
 infile_reg_outline <- "new_strata_rita_10282017" # Region outline and FEMA zones
@@ -100,9 +61,9 @@ nlcd_2006_filename <- "nlcd_2006_RITA.tif" # NLCD2006 Land cover data aggregated
 ```
 
 Create an ouput directory:
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 if(is.null(out_dir)){
-  out_dir <- dirname(in_dir) # output will be created in the input dir
+  out_dir <- dirname(in_dir_var) # output will be created in the input directory
 }
 
 out_suffix_s <- out_suffix # can modify name of output suffix
@@ -111,7 +72,7 @@ if(create_out_dir_param==TRUE){
   out_dir <- create_dir_fun(out_dir, out_suffix_s)
   setwd(out_dir)
 }else{
-  setwd(out_dir) # use previoulsy defined directory
+  setwd(out_dir) # use previously defined directory
 }
 ```
 
@@ -120,12 +81,12 @@ if(create_out_dir_param==TRUE){
 ### Display and explore the data
 
 MOD09 raster image after hurricane Rita.
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 r_after <- brick(file.path(in_dir_var,infile_RITA_reflectance_date2))
 ```
 
 Read band information since it is more informative.
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 df_modis_band_info <- read.table(file.path(in_dir_var, infile_modis_bands_information),
                                  sep=",",
                                  stringsAsFactors = F)
@@ -142,7 +103,7 @@ names(r_after) <- df_modis_band_info$band_name
 ```
 
 Note: Use subset instead of $ if you want to wrap code into function.
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 r_after_MNDWI <- (subset(r_after,"Green") - subset(r_after,"SWIR2")) / (subset(r_after,"Green") + subset(r_after,"SWIR2"))
 plot(r_after_MNDWI,zlim=c(-1,1))
 
@@ -153,7 +114,7 @@ data_type_str <- dataType(r_after_NDVI)
 
 
 NAvalue(r_after_MNDWI) <- NA_flag_val
-out_filename <- paste("mndwi_post_Rita","_",out_suffix,file_format,sep="")
+out_filename <- paste("mndwi_post_Rita","_", out_suffix, file_format, sep="")
 out_filename <- file.path(out_dir, out_filename)
 writeRaster(r_after_MNDWI,
             filename=out_filename,
@@ -161,30 +122,32 @@ writeRaster(r_after_MNDWI,
             overwrite=T)
  
 NAvalue(r_after_NDVI) <- NA_flag_val
-out_filename <- paste("ndvi_post_Rita","_",out_suffix,file_format,sep="")
-out_filename <- file.path(out_dir,out_filename)
+out_filename <- paste("ndvi_post_Rita","_", out_suffix, file_format, sep="")
+out_filename <- file.path(out_dir, out_filename)
 writeRaster(r_after_NDVI,
             filename=out_filename,
             datatype=data_type_str,
             overwrite=T)
 ```
 
-```{r}
-#training_data_sf <- st_read("training1.shp")
-#1) vegetation and other (small water fraction)
-#2) Flooded vegetation
-#3) Flooded area, or water (lake etc)
+Class 1) vegetation and other (small water fraction)
+Class 2) Flooded vegetation
+Class 3) Flooded area, or water (lake etc)
 
+Make a dataframe for each class:
+```{r, title = '{{ site.handouts[0] }}'}
 class1_data_sf <- st_read(file.path(in_dir_var, "class1_sites"))
 class2_data_sf <- st_read(file.path(in_dir_var, "class2_sites"))
 class3_data_sf <- st_read(file.path(in_dir_var, "class3_sites"))
 ```
 
-Combine object, note they should be in the same projection system
-```{r}
+Combine objects; note they should be in the same projection system.
+```{r, title = '{{ site.handouts[0] }}'}
 class_data_sf <- rbind(class1_data_sf, class2_data_sf, class3_data_sf)
+
 class_data_sf$poly_ID <- 1:nrow(class_data_sf) # unique ID for each polygon
 nrow(class_data_sf) # 23 different polygons used at ground truth data
+
 class_data_sp <- as(class_data_sf, "Spatial")
 
 r_x <- init(r_after,"x") # raster with coordinates x
@@ -192,9 +155,9 @@ r_y <- init(r_after,"x") # raster with coordiates y
 
 r_stack <- stack(r_x, r_y, r_after, r_after_NDVI, r_after_MNDWI)
 names(r_stack) <- c("x","y","Red","NIR","Blue","Green","SWIR1","SWIR2","SWIR3","NDVI","MNDWI")
-pixels_extracted_df <- extract(r_stack, class_data_sp, df=T)
+pixels_extracted_df <- extract(r_stack, class_data_sf, df=T)
 
-dim(pixels_extracted_df) # We have 1547 pixels extracted
+dim(pixels_extracted_df) # We have 1547 pixels extracted.
 class_data_df <- class_data_sf
 st_geometry(class_data_df) <- NULL # This will coerce the sf object into a data.frame
 
@@ -206,7 +169,7 @@ table(pixels_df$class_ID) # count by class of pixels ground truth data
 
 ### Examining site data used for the classification
 Water
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 x_range <- range(pixels_df$Green,na.rm=T)
 y_range <- range(pixels_df$NIR,na.rm=T)
 
@@ -221,7 +184,7 @@ legend("topleft",legend=names_vals,
 ```
 
 Let's use a palette that reflects wetness or level of water. 
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 col_palette <- c("green","blue","darkblue")
 
 plot(NDVI ~ MNDWI,
@@ -229,25 +192,21 @@ plot(NDVI ~ MNDWI,
      cex=0.2,
      col=col_palette[1],
      subset(pixels_df,class_ID==1))
-
 points(NDVI ~ MNDWI,
        cex=0.2,
        col=col_palette[2],
        subset(pixels_df,class_ID==2))
-
 points(NDVI ~ MNDWI,
        cex=0.2,
        col=col_palette[3],
        subset(pixels_df,class_ID==3))
-
 names_vals <- c("vegetation","wetland","water")
-
 legend("topright",legend=names_vals,
        pt.cex=0.7,cex=0.7,col=col_palette,
-       pch=20, #add circle symbol to line
+       pch=20, # add circle symbol to line
        bty="n")
 
-rasterVis::rhistogram(r_after)
+rasterVis::histogram(r_after)
 
 pixels_df$class_ID <- factor(pixels_df$class_ID,
                       levels = c(1,2,3),
@@ -263,7 +222,7 @@ boxplot(MNDWI~class_ID,
 ## Part II: Split data into training and testing datasets 
 
 Let's keep 30% of data for testing for each class.
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 pixels_df$pix_ID <- 1:nrow(pixels_df)
 prop <- 0.3
 table(pixels_df$class_ID)
@@ -271,7 +230,7 @@ set.seed(100) # set random seed for reproducibility
 ```
 
 This is for one class: better to do this as a function but we use a loop for clarity here
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 list_data_df <- vector("list", length=3)
 level_labels <- names_vals
 
@@ -297,20 +256,20 @@ data_training <- subset(data_df, training==1)
 ### Classification and Regression Tree model (CART) 
 
 Fit model using training data for CART.
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 mod_rpart <- rpart(class_ID ~ Red + NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
                    method="class", 
                    data=data_training)
 ```
 
 Plot the fitted classification tree.
-```{r}
-plot(mod_rpart, uniform=TRUE, main="Classification Tree")
-text(mod_rpart, cex=.8)
+```{r, title = '{{ site.handouts[0] }}'}
+plot(mod_rpart, uniform = TRUE, main = "Classification Tree", mar = c(0.1, 0.1, 0.1, 0.1))
+text(mod_rpart, cex = .8)
 ```
 
 Now predict the subset data based on the model; prediction for entire area takes more time.
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 raster_out_filename <- paste0("r_predicted_rpart_", out_suffix, file_format)
 
 r_predicted_rpart <- predict(r_stack, mod_rpart, 
@@ -335,7 +294,7 @@ levelplot(r_predicted_rpart, maxpixels = 1e6,
 ### Support Vector Machine classification (SVM)
 
 Set class_ID as factor to generate classification
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 mod_svm <- svm(class_ID ~ Red +NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
                data=data_training,
                method="C-classification",
@@ -345,8 +304,9 @@ summary(mod_svm)
 ```
 
 Now predict the subset data based on the model; prediction for entire area takes longer time
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 raster_outfilename <- paste0("r_predicted_svm_", out_suffix, file_format)
+
 r_predicted_svm <- predict(r_stack, mod_svm,
                            progress = 'text',
                            filename = raster_outfilename,
@@ -371,7 +331,7 @@ levelplot(r_predicted_svm, maxpixels = 1e6,
 ## Part IV: Assessment and comparison of model performance
 
 Set up testing data:
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 dim(data_df) # full dataset, let's use data points for testing
 
 # omit values that contain NA, because may be problematic with SVM.
@@ -381,60 +341,61 @@ dim(data_testing)
 ```
 
 Predict on testing data using rpart model fitted with training data.
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 testing_rpart <- predict(mod_rpart, data_testing, type='class')
 ```
 
 Predict on testing data using SVM model fitted with training data
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 testing_svm <- predict(mod_svm, data_testing, type='class')
 ```
 
 Predicted classes:
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 table(testing_svm)
 ```
 
-### Generate confusion matrix to assess the performance of the model
-```{r}
+### Generate confusion matrix to assess the accuracy of the image classification
+More info on confusion matrices here: http://spatial-analyst.net/ILWIS/htm/ilwismen/confusion_matrix.htm
+
+Need to use: 
+testing_rpart: contains map prediction in the rows
+data_testing$class_ID: this column contains ground truth data 
+```{r, title = '{{ site.handouts[0] }}'}
 tb_rpart <- table(testing_rpart, data_testing$class_ID)
 tb_svm <- table(testing_svm, data_testing$class_ID)
-```
 
-testing_rpart: map prediction in the rows
-data_test$class_ID: ground truth data in the columns
-http://spatial-analyst.net/ILWIS/htm/ilwismen/confusion_matrix.htm
-
-Producer accuracy: it is the fraction of correctly classified pixels with regard to all pixels 
-of that ground truth class. 
-
-```{r}
 table(testing_rpart) # classification, map results
 table(data_testing$class_ID) # reference, ground truth in columns
+```
 
+Accuracy (producer's accuracy): the fraction of correctly classified pixels compared to all pixels 
+of that ground truth class. 
+```{r, title = '{{ site.handouts[0] }}'}
 tb_rpart[1]/sum(tb_rpart[,1]) # producer accuracy
 tb_svm[1]/sum(tb_svm[,1]) # producer accuracy
 ```
 
-Looking at accuracy
-```{r}
+Looking at accuracy more closely:
+```{r, title = '{{ site.handouts[0] }}'}
 # overall accuracy for svm
 sum(diag(tb_svm))/sum(table(testing_svm))
+
 # overall accuracy for rpart
 sum(diag(tb_rpart))/sum(table(testing_rpart))
 ```
 
-Generate more accurate measurements from CARET
-```{r}
+Generate more accurate measurements from functions in the caret R package:
+```{r, title = '{{ site.handouts[0] }}'}
 accuracy_info_svm <- confusionMatrix(testing_svm, data_testing$class_ID, positive = NULL)
 accuracy_info_rpart <- confusionMatrix(testing_rpart, data_testing$class_ID, positive = NULL)
 
-accuracy_info_rpart$overall
+accuracy_info_rpart$overall  # overall accuracy produced
 accuracy_info_svm$overall
 ```
 
 Write out the results:
-```{r}
+```{r, title = '{{ site.handouts[0] }}'}
 write.table(accuracy_info_rpart$table, "confusion_matrix_rpart.txt", sep=",")
 write.table(accuracy_info_svm$table, "confusion_matrix_svm.txt", sep=",")
 ```
