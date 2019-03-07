@@ -140,7 +140,9 @@ class3_data_sf <- st_read(file.path(in_dir_var, "class3_sites"))
 class_data_sf <- rbind(class1_data_sf, class2_data_sf, class3_data_sf)
 
 class_data_sf$poly_ID <- 1:nrow(class_data_sf) # unique ID for each polygon
-nrow(class_data_sf) # 23 different polygons used at ground truth data
+
+# 23 different polygons used as ground truth data
+nrow(class_data_sf) 
 
 class_data_sp <- as(class_data_sf,"Spatial")
 
@@ -354,7 +356,7 @@ sum(diag(tb_rpart))/sum(table(testing_rpart))
 
 
 
-### Generate more accuracy measurements from functions in the caret R package:
+### Generate more accuracy measurements from functions in the caret package:
 accuracy_info_svm <- confusionMatrix(testing_svm, data_testing$class_ID, positive = NULL)
 accuracy_info_rpart <- confusionMatrix(testing_rpart, data_testing$class_ID, positive = NULL)
 

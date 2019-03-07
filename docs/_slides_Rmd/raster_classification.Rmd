@@ -29,6 +29,8 @@ create_dir_fun <- function(outDir, out_suffix=NULL){
 }
 ```
 
+===
+
 ### Set up arguments and parameters
 ```{r, title = '{{ site.handouts[0] }}'}
 in_dir_var <- "../data"
@@ -49,6 +51,8 @@ out_suffix <-"exercise6_03312018" # output suffix for the files and output folde
 create_out_dir_param = TRUE 
 ```
 
+===
+
 ### Define input data file names
 ```{r, title = '{{ site.handouts[0] }}'}
 infile_RITA_reflectance_date2 <- "mosaiced_MOD09A1_A2005273__006_reflectance_masked_RITA_reg_1km.tif"
@@ -59,6 +63,8 @@ infile_modis_bands_information <- "df_modis_band_info.txt" # MOD09 bands informa
 
 nlcd_2006_filename <- "nlcd_2006_RITA.tif" # NLCD2006 Land cover data aggregated at ~ 1km.
 ```
+
+===
 
 Create an ouput directory:
 ```{r, title = '{{ site.handouts[0] }}'}
@@ -76,6 +82,8 @@ if(create_out_dir_param==TRUE){
 }
 ```
 
+===
+
 ## Part I: Read and map flooding from RITA hurricane 
 
 ### Display and explore the data
@@ -84,6 +92,8 @@ MOD09 raster image after hurricane Rita.
 ```{r, title = '{{ site.handouts[0] }}'}
 r_after <- brick(file.path(in_dir_var,infile_RITA_reflectance_date2))
 ```
+
+===
 
 Read band information since it is more informative.
 ```{r, title = '{{ site.handouts[0] }}'}
@@ -101,6 +111,8 @@ band_refl_order <- df_modis_band_info$band_number
 
 names(r_after) <- df_modis_band_info$band_name
 ```
+
+===
 
 Note: Use subset instead of $ if you want to wrap code into function.
 ```{r, title = '{{ site.handouts[0] }}'}
@@ -130,6 +142,8 @@ writeRaster(r_after_NDVI,
             overwrite=T)
 ```
 
+===
+
 Class 1) vegetation and other (small water fraction)
 Class 2) Flooded vegetation
 Class 3) Flooded area, or water (lake etc)
@@ -141,13 +155,23 @@ class2_data_sf <- st_read(file.path(in_dir_var, "class2_sites"))
 class3_data_sf <- st_read(file.path(in_dir_var, "class3_sites"))
 ```
 
+===
+
 Combine objects; note they should be in the same projection system.
 ```{r, title = '{{ site.handouts[0] }}'}
 class_data_sf <- rbind(class1_data_sf, class2_data_sf, class3_data_sf)
 
 class_data_sf$poly_ID <- 1:nrow(class_data_sf) # unique ID for each polygon
-nrow(class_data_sf) # 23 different polygons used at ground truth data
+```
 
+23 different polygons used as ground truth data.
+```{r}
+nrow(class_data_sf) 
+```
+
+===
+
+```{r, title = '{{ site.handouts[0] }}'}
 class_data_sp <- as(class_data_sf, "Spatial")
 
 r_x <- init(r_after,"x") # raster with coordinates x
@@ -156,16 +180,31 @@ r_y <- init(r_after,"x") # raster with coordiates y
 r_stack <- stack(r_x, r_y, r_after, r_after_NDVI, r_after_MNDWI)
 names(r_stack) <- c("x","y","Red","NIR","Blue","Green","SWIR1","SWIR2","SWIR3","NDVI","MNDWI")
 pixels_extracted_df <- extract(r_stack, class_data_sf, df=T)
+```
 
-dim(pixels_extracted_df) # We have 1547 pixels extracted.
+```{r}
+dim(pixels_extracted_df) 
+```
+We have 1547 pixels extracted.
+
+===
+
+```{r, title = '{{ site.handouts[0] }}'}
 class_data_df <- class_data_sf
 st_geometry(class_data_df) <- NULL # This will coerce the sf object into a data.frame
 
 pixels_df <- merge(pixels_extracted_df, class_data_df, by.x="ID", by.y="poly_ID")
-head(pixels_df)
+```
 
+```{r}
+head(pixels_df)
+```
+
+```{r, title = '{{ site.handouts[0] }}'}
 table(pixels_df$class_ID) # count by class of pixels ground truth data
 ```
+
+===
 
 ### Examining site data used for the classification
 Water
@@ -182,6 +221,8 @@ legend("topleft",legend=names_vals,
        pch=20, # add circle symbol to line
        bty="n")
 ```
+
+===
 
 Let's use a palette that reflects wetness or level of water. 
 ```{r, title = '{{ site.handouts[0] }}'}
@@ -218,6 +259,7 @@ boxplot(MNDWI~class_ID,
         main="Boxplot for MNDWI per class")
 ```
 
+===
 
 ## Part II: Split data into training and testing datasets 
 
@@ -229,7 +271,9 @@ table(pixels_df$class_ID)
 set.seed(100) # set random seed for reproducibility
 ```
 
-This is for one class: better to do this as a function but we use a loop for clarity here
+===
+
+This is for one class: better to do this as a function but we use a loop for clarity here.
 ```{r, title = '{{ site.handouts[0] }}'}
 list_data_df <- vector("list", length=3)
 level_labels <- names_vals
@@ -243,13 +287,18 @@ for(i in 1:3){
 }
 
 data_df <- do.call(rbind, list_data_df)
+```
 
+```{r}
 dim(data_df)
 head(data_df)
+```
 
+```{r, title = '{{ site.handouts[0] }}'}
 data_training <- subset(data_df, training==1)
 ```
 
+===
 
 ## Part III: Generate classification using classification tree (CART) and support vector machine (SVM)
 
@@ -267,6 +316,8 @@ Plot the fitted classification tree.
 plot(mod_rpart, uniform = TRUE, main = "Classification Tree", mar = c(0.1, 0.1, 0.1, 0.1))
 text(mod_rpart, cex = .8)
 ```
+
+===
 
 Now predict the subset data based on the model; prediction for entire area takes more time.
 ```{r, title = '{{ site.handouts[0] }}'}
@@ -291,6 +342,8 @@ levelplot(r_predicted_rpart, maxpixels = 1e6,
           main = "Classification Tree")
 ```
 
+===
+
 ### Support Vector Machine classification (SVM)
 
 Set class_ID as factor to generate classification
@@ -302,6 +355,8 @@ mod_svm <- svm(class_ID ~ Red +NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
 
 summary(mod_svm)
 ```
+
+===
 
 Now predict the subset data based on the model; prediction for entire area takes longer time
 ```{r, title = '{{ site.handouts[0] }}'}
@@ -327,6 +382,7 @@ levelplot(r_predicted_svm, maxpixels = 1e6,
           main = "SVM classification")
 ```
 
+===
 
 ## Part IV: Assessment and comparison of model performance
 
@@ -336,9 +392,13 @@ dim(data_df) # full dataset, let's use data points for testing
 
 # omit values that contain NA, because may be problematic with SVM.
 data_testing <- na.omit(subset(data_df, training==0)) 
+```
 
+```{r}
 dim(data_testing)
 ```
+
+===
 
 Predict on testing data using rpart model fitted with training data.
 ```{r, title = '{{ site.handouts[0] }}'}
@@ -355,6 +415,8 @@ Predicted classes:
 table(testing_svm)
 ```
 
+===
+
 ### Generate confusion matrix to assess the accuracy of the image classification
 More info on confusion matrices here: http://spatial-analyst.net/ILWIS/htm/ilwismen/confusion_matrix.htm
 
@@ -368,6 +430,8 @@ tb_svm <- table(testing_svm, data_testing$class_ID)
 table(testing_rpart) # classification, map results
 table(data_testing$class_ID) # reference, ground truth in columns
 ```
+
+===
 
 Accuracy (producer's accuracy): the fraction of correctly classified pixels compared to all pixels 
 of that ground truth class. 
@@ -385,7 +449,9 @@ sum(diag(tb_svm))/sum(table(testing_svm))
 sum(diag(tb_rpart))/sum(table(testing_rpart))
 ```
 
-Generate more accurate measurements from functions in the caret R package:
+===
+
+Generate more accurate measurements from functions in the caret package:
 ```{r, title = '{{ site.handouts[0] }}'}
 accuracy_info_svm <- confusionMatrix(testing_svm, data_testing$class_ID, positive = NULL)
 accuracy_info_rpart <- confusionMatrix(testing_rpart, data_testing$class_ID, positive = NULL)
