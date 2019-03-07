@@ -130,9 +130,10 @@ writeRaster(r_after_NDVI,
 # Class 3) Flooded area, or water (lake etc)
 
 # Make a dataframe for each class:
-class1_data_sf <- st_read(file.path(in_dir_var, "class1_sites.shp"))
-class2_data_sf <- st_read(file.path(in_dir_var, "class2_sites.shp"))
-class3_data_sf <- st_read(file.path(in_dir_var, "class3_sites.shp"))
+class1_data_sf <- st_read(file.path(in_dir_var, "class1_sites"))
+class2_data_sf <- st_read(file.path(in_dir_var, "class2_sites"))
+class3_data_sf <- st_read(file.path(in_dir_var, "class3_sites"))
+
 
 
 # Combine objects; note they should be in the same projection system.
@@ -155,8 +156,8 @@ class_data_df <- class_data_sf
 st_geometry(class_data_df) <- NULL # This will coerce the sf object into a data.frame
 
 pixels_df <- merge(pixels_extracted_df, class_data_df, by.x="ID", by.y="poly_ID")
-
 head(pixels_df)
+
 table(pixels_df$class_ID) # count by class of pixels ground truth data
 
 
@@ -294,7 +295,7 @@ r_predicted_svm <- predict(r_stack, mod_svm,
 
 plot(r_predicted_svm)
 
-histogram(r_predicted_svm)
+rasterVis::histogram(r_predicted_svm)   
 
 r_predicted_svm <- ratify(r_predicted_svm)
 rat <- levels(r_predicted_svm)[[1]]

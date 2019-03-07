@@ -162,8 +162,8 @@ class_data_df <- class_data_sf
 st_geometry(class_data_df) <- NULL # This will coerce the sf object into a data.frame
 
 pixels_df <- merge(pixels_extracted_df, class_data_df, by.x="ID", by.y="poly_ID")
-
 head(pixels_df)
+
 table(pixels_df$class_ID) # count by class of pixels ground truth data
 ```
 
