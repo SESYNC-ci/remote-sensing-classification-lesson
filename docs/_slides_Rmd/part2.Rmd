@@ -5,24 +5,7 @@ excerpt: Flood Mapping Analyses
 ---
 
 ```{r, title = "{{ site.handouts[1] }}"}
-####################################    Flood Mapping Analyses   #######################################
-############################  Analyze and map flooding from RITA hurricane  #######################################
-#This script performs analyses for the Exercise 6 of the Short Course using reflectance data derived from MODIS.
-#The goal is to map flooding from RITA using various reflectance bands from Remote Sensing platforms.
-#Additional data is provided including FEMA flood region. 
-#
-#AUTHORS: Benoit Parmentier                                             
-#DATE CREATED: 03/13/2018 
-#DATE MODIFIED: 04/01/2018
-#Version: 1
-#PROJECT: SESYNC and AAG 2018 workshop/Short Course preparation
-#TO DO:
-#
-#COMMIT: setting up input data
-#
-#################################################################################################
-
-###Loading R library and packages                                                      
+# Load packages 
 
 library(sp) # spatial/geographfic objects and functions
 library(rgdal) #GDAL/OGR binding for R with functionalities

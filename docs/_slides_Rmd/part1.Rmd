@@ -3,27 +3,8 @@ editor_options:
   chunk_output_type: console
 excerpt: Introduction to Remote Sensing
 ---
-
+### Load packages
 ```{r, title = "{{ site.handouts[0] }}"}
-####################################  Introduction to Remote Sensing   #######################################
-############################  Analyze and map flooding from RITA hurricane  #######################################
-#This script performs analyses for the Exercise 5 of the Short Course using reflectance data derived from MODIS.
-#The goal is to map flooding from RITA using various reflectance bands from Remote Sensing platforms.
-#Additional data is provided including FEMA flood region. 
-#
-#AUTHORS: Benoit Parmentier                                             
-#DATE CREATED: 03/05/2018 
-#DATE MODIFIED: 03/31/2018
-#Version: 1
-#PROJECT: SESYNC and AAG 2018 Geospatial Short Course and workshop preparation
-#TO DO:
-#
-#COMMIT: clean up of code
-#
-#################################################################################################
-
-###Loading R library and packages                                                      
-
 library(sp) # spatial/geographfic objects and functions
 library(rgdal) #GDAL/OGR binding for R with functionalities
 library(spdep) #spatial analyses operations, functions etc.
@@ -50,9 +31,10 @@ library(readxl) #functionalities to read in excel type data
 library(psych) #pca/eigenvector decomposition functionalities
 library(sf) # spatial objects classes
 library(plotrix) #various graphic functions e.g. draw.circle
+```
 
-###### Functions used in this script
-
+### Define functions used in this lesson
+```{r}
 create_dir_fun <- function(outDir,out_suffix=NULL){
   #if out_suffix is not null then append out_suffix string
   if(!is.null(out_suffix)){
@@ -65,7 +47,10 @@ create_dir_fun <- function(outDir,out_suffix=NULL){
   }
   return(outDir)
 }
+```
 
+### Set up arguments and parameters
+```{r}
 #####  Parameters and argument set up ###########
 
 #in_dir_reflectance <- "data/reflectance_RITA"
@@ -79,7 +64,10 @@ file_format <- ".tif" # Output format for raster images that are written out.
 NA_flag_val <- -9999
 out_suffix <-"exercise5_03312018" #output suffix for the files and ouptu folder #PARAM 8
 create_out_dir_param <- TRUE 
+```
 
+### Define data file names
+```{r}
 ### Input data files used:
 infile_reg_outline <- "new_strata_rita_10282017" # Region outline and FEMA zones
 infile_modis_bands_information <- "df_modis_band_info.txt" # MOD09 bands information.
@@ -89,11 +77,10 @@ infile_name_nlcd_legend <- "nlcd_legend.txt" #Legend information for 2006 NLCD.
 infile_reflectance_date1 <- "mosaiced_MOD09A1_A2005265__006_reflectance_masked_RITA_reg_1km.tif"
 #MOD09 surface reflectance product on 2005-09-30 or day of year 2005273
 infile_reflectance_date2 <- "mosaiced_MOD09A1_A2005273__006_reflectance_masked_RITA_reg_1km.tif"
+```
 
-################# START SCRIPT ###############################
-
-### PART I: READ AND PREPARE DATA FOR ANALYSES #######
-
+## Part I: Read in data and prepare for analyses
+```{r}
 ## First create an output directory
 
 if(is.null(out_dir)){
@@ -107,9 +94,10 @@ if(create_out_dir_param==TRUE){
 }else{
   setwd(out_dir) #use previoulsy defined directory
 }
+```
 
-##### PART I: DISPLAY AND EXPLORE DATA ##############
-
+## Part I: Display and explore the data
+```{r}
 ###### Read in MOD09 reflectance images before and after Hurrican Rita.
 r_before <- brick(file.path(in_dir_var,infile_reflectance_date1)) # Before RITA, Sept. 22, 2005.
 r_after <- brick(file.path(in_dir_var,infile_reflectance_date2)) # After RITA, Sept 30, 2005.
@@ -162,11 +150,11 @@ legend("topleft",legend=names_vals,
        pt.cex=0.7,cex=0.7,col=c("black","red"),
        lty=1, #add circle symbol to line
        bty="n")
+```
 
-###############################################
-##### PART II: Examine spectral class signatures for land cover NLCD classes ##############
-
-###### Read in NLDC 2006, note that it was aggregated at 1km.
+## Part II: Examine spectral class signatures for land cover classes (from NLCD)
+```{r}
+###### Read in NLCD 2006, note that it was aggregated at 1km.
 nlcd2006_reg <- raster(file.path(in_dir_var,nlcd_2006_filename))
 #### Extract zonal averages by NLCD classes using zonal raster
 avg_reflectance_nlcd <- as.data.frame(zonal(r_before,nlcd2006_reg,fun="mean"))
@@ -196,10 +184,10 @@ plot(as.numeric(avg_reflectance_nlcd[9,col_ordering]),
 lines(as.numeric(avg_reflectance_nlcd[6,col_ordering]),
       type="l",
       col="darkred") #22 developed,High intensity
+```
 
-####### Explore data in Feature space:
-
-#Feature space NIR1 and Red
+## Part II: Explore data in feature space
+```{r}
 plot(r_before$Red, r_before$NIR)
 plot(r_before$Green,r_before$Red)
 plot(r_before$SWIR1,r_before$NIR)
@@ -207,7 +195,10 @@ plot(r_before$Red,r_before$SWIR1)
 
 df_r_before_nlcd <- as.data.frame(stack(r_before,nlcd2006_reg))
 head(df_r_before_nlcd)
+```
 
+### Feature space NIR1 and Red
+```{r}
 #Evergreen Forest:
 df_subset <- subset(df_r_before_nlcd,nlcd_2006_RITA==42)
 plot(df_subset$Green,
@@ -238,9 +229,10 @@ legend("topright",legend=names_vals,
        pt.cex=0.7,cex=0.7,col=c("green","darkred","blue"),
        pch=1, #add circle symbol to line
        bty="n")
+```
 
-#### Feature space Red and NIR
-
+### Feature space Red and NIR
+```{r}
 #Evergreen Forest:
 df_subset <- subset(df_r_before_nlcd,nlcd_2006_RITA==42)
 plot(df_subset$Red,
@@ -270,9 +262,10 @@ legend("topright",legend=names_vals,
        pt.cex=0.7,cex=0.7,col=c("green","darkred","blue"),
        pch=1, #add circle symbol to line
        bty="n")
+```
 
-#### Feature space Blue and Red
-
+### Feature space Blue and Red
+```{r}
 #Water:
 df_subset <- subset(df_r_before_nlcd,nlcd_2006_RITA==11)
 plot(df_subset$Blue,
@@ -302,8 +295,10 @@ legend("topright",legend=names_vals,
        pt.cex=0.7,cex=0.7,col=c("green","darkred","blue"),
        pch=1, #add circle symbol to line
        bty="n")
+```
 
-#### Generate Color composites
+### Generate Color composites
+```{r}
 ### True color composite
 
 plotRGB(r_before,
@@ -328,15 +323,13 @@ plotRGB(r_after,
         b=4,
         scale=0.6,
         stretch="hist")
+```
+Note: the effect of flooding is particularly visible in the false color composites.
+Let's examine different band combinations to enhance features in the image, including flooded areas.
 
-### Note the effect of flooding is particularly visible in the false color composites.
-### Let's examine different band combination to enhance features in the image, including flooded areas.
-
-###############################################
-##### PART III: Band combination: Indices and thresholding for flood mapping ##############
-
+## Part III: Band combination - indices and thresholding for flood mapping
+```{r}
 ### NIR experiment with threshold to  map water/flooding
-
 plot(subset(r_before,"NIR"))
 plot(subset(r_after,"NIR"))
 
@@ -354,25 +347,27 @@ xtab_threshold <- crosstab(r_ref,r_rec_NIR_after,long=T)
 
 ## % overlap between the flooded area and values below 0.2 in NIR
 (xtab_threshold[5,3]/freq_fema_zones[2,2])*100 #agreement with FEMA flooded area in %.
+```
 
-############## Generating indices based on raster algebra of original bands
-## Let's generate a series of indices, we list a few possibility from the literature.
-#1) NDVI = (NIR - Red)/(NIR+Red)
-#2) NDWI = (Green - NIR)/(Green + NIR)
-#3) MNDWI = Green - SWIR2 / Green + SWIR2
-#4) NDWI2 (LSWIB5) =  (NIR - SWIR1)/(NIR + SWIR1)
-#5) LSWI (LSWIB5) =  (NIR - SWIR2)/(NIR + SWIR2)
+### Generating indices based on raster algebra of original bands
+Let's generate a series of indices, we list a few possibility from the literature.
+1) NDVI = (NIR - Red)/(NIR+Red)
+2) NDWI = (Green - NIR)/(Green + NIR)
+3) MNDWI = Green - SWIR2 / Green + SWIR2
+4) NDWI2 (LSWIB5) =  (NIR - SWIR1)/(NIR + SWIR1)
+5) LSWI (LSWIB5) =  (NIR - SWIR2)/(NIR + SWIR2)
 
+```{r}
 names(r_before)
 r_before_NDVI <- (r_before$NIR - r_before$Red) / (r_before$NIR + r_before$Red)
 r_after_NDVI <- subset(r_after,"NIR") - subset(r_after,"Red")/(subset(r_after,"NIR") + subset(r_after,"Red"))
 
 plot(r_before_NDVI,zlim=c(-1,1),col=matlab.like(255))
 plot(r_after_NDVI,zlim=c(-1,1),col=matlab.like2(255))
+```
+Experiment with different threshold values: this is suggesting flooding!!!
 
-### Experiment with different threshold values:
-# THis is suggesting flooding!!!
-
+```{r}
 histogram(r_before_NDVI) # Examine histogram to look for potential threshold values
 histogram(r_after_NDVI) # Examine histogram to look for poential threshold values
 
@@ -380,24 +375,26 @@ plot(r_before_NDVI < -0.5)
 plot(r_after_NDVI < -0.5)
 plot(r_before_NDVI < -0.1)
 plot(r_after_NDVI < -0.1)
+```
 
-#2) NDWI = (Green - NIR)/(Green + NIR)
-#3) MNDWI = Green - SWIR2 / Green + SWIR2
+2) NDWI = (Green - NIR)/(Green + NIR)
+3) MNDWI = Green - SWIR2 / Green + SWIR2
 
-#Modified NDWI known as MNDWI : Green - SWIR2/(Green + SWIR2)
+Modified NDWI known as MNDWI : Green - SWIR2/(Green + SWIR2)
 
-#According to Gao (1996), NDWI is a good indicator for vegetation liquid water content and 
-# is less sensitive to atmospheric scattering effects than NDVI. In some studies, MODIS band 6 
-# is used for the NDWI calculation, because it is sensitive to water types and contents 
-# (Li et al., 2011), while band 5 is sensitive to vegetation liquid water content (Gao, 1996).
+According to Gao (1996), NDWI is a good indicator for vegetation liquid water content and 
+is less sensitive to atmospheric scattering effects than NDVI. In some studies, MODIS band 6 
+is used for the NDWI calculation, because it is sensitive to water types and contents 
+(Li et al., 2011), while band 5 is sensitive to vegetation liquid water content (Gao, 1996).
 
+```{r}
 r_before_MNDWI <- (r_before$Green - r_before$SWIR2) / (r_before$Green + r_before$SWIR2)
 r_after_MNDWI <- (r_after$Green - r_after$SWIR2) / (r_after$Green + r_after$SWIR2)
 
 plot(r_before_MNDWI,zlim=c(-1,1),col=rev(matlab.like(255)))
 plot(r_after_MNDWI,zlim=c(-1,1),col=rev(matlab.like(255)))
 
-### THis is suggesting flooding!!!
+### This is suggesting flooding!!!
 plot(r_before_MNDWI > 0.5)
 plot(r_after_MNDWI > 0.5)
 plot(r_before_MNDWI > 0.1)
@@ -416,9 +413,11 @@ plot(r_diff_std)
 histogram(r_diff_std) 
 plot(r_diff_std > 2) ## increase in MNDWI 2 standard deiation away
 plot(r_diff_std > 1) ## increase in MNDWI 2 standard deiation away
+```
 
-### Generate a map of flooding with MNDWI and compare to FEMA map:
+Generate a map of flooding with MNDWI and compare to FEMA map:
 
+```{r}
 r_after_flood <- r_diff_std > 1 
 plot(r_after_flood)
 
@@ -428,18 +427,20 @@ df <- data.frame(id=c(1,2), v=c(0,1))
 r_ref_rec <- subs(r_ref, df)
 plot(r_ref_rec)
 xtab_tb <- crosstab(r_after_flood,r_ref_rec)
+```
 
-## Examine overlap between flooded area and FEMA:
+Examine overlap between flooded area and FEMA:
 
+```{r}
 plot(r_after_flood)
 r_overlap <- r_ref_rec * r_after_flood
 plot(r_overlap) ## Flood map area of aggreement with FEMA
+```
 
-###############################################
-##### PART IV: Principal Component Analysis and band transformation
-## Another avenue to combine original bands into indices is to use linear transformation.
-## We examine Principal Component Analysis and the Tassel Cap Transform.
-
+## Part IV: Principal Component Analysis and band transformation
+Another avenue to combine original bands into indices is to use linear transformation.
+We examine Principal Component Analysis and the Tassel Cap Transform.
+```{r}
 #Correlate long term mean to PC!
 cor_mat_layerstats <- layerStats(r_before, 'pearson', na.rm=T)
 cor_matrix <- cor_mat_layerstats$`pearson correlation coefficient`
@@ -481,9 +482,11 @@ plot(r_pca,y=3,zlim=c(-2,2))
 
 plot(subset(r_pca,1),subset(r_pca,2))
 plot(subset(r_pca,2),subset(r_pca,3))
+```
 
-#### Generate a plot for PCA with loadings and compare to Tassel Cap
+Generate a plot for PCA with loadings and compare to Tassel Cap:
 
+```{r}
 var_labels <- rownames(loadings_df)
 
 plot(loadings_df[,1],loadings_df[,2],
@@ -505,9 +508,11 @@ title(paste0("Loadings for component ", names(loadings_df)[1]," and " ,names(loa
 draw.circle(0,0,c(1.0,1.0),nv=500)#,border="purple",
 text(loadings_df[,1],loadings_df[,2],var_labels,pos=1,cex=1)            
 grid(2,2)
+```
 
-##### plot feature space:
+Plot feature space:
 
+```{r}
 df_raster_val <- as.data.frame(stack(r_after,r_pca,nlcd2006_reg))
 head(df_raster_val)
 
@@ -590,5 +595,5 @@ text(cor_r_TC$pc_scores.1[1],cor_r_TC$pc_scores.2[1],"TCWI",pos=1,cex=1)
 text(cor_r_TC$pc_scores.1[2],cor_r_TC$pc_scores.2[2],"TCBI",pos=1,cex=1)
 grid(2,2)
 
-########################## End of Script ###################################
+
 ```
