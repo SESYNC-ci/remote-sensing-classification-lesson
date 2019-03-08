@@ -14,39 +14,30 @@ library(caret) # complex regression and classification models
 ```
 
 ### Define functions used in this lesson
-```{r, title = '{{ site.handouts[0] }}'}
-create_dir_fun <- function(outDir, out_suffix=NULL){
-  # if out_suffix is not null then append out_suffix string
-  if(!is.null(out_suffix)){
-    out_name <- paste("output_", out_suffix,sep="")
-    outDir <- file.path(outDir, out_name)
-  }
-  # create if does not exist
-  if(!file.exists(outDir)){
-    dir.create(outDir)
-  }
-  return(outDir)
-}
-```
 
 ===
 
 ### Set up arguments and parameters
+
 ```{r, title = '{{ site.handouts[0] }}'}
-in_dir_var <- "../data"
-out_dir <- "."
+in_dir <- "data"
+
+out_dir_suffix <- "rsc_lesson"
+out_dir <- paste("output_", out_dir_suffix, sep="")
+dir.create(out_dir, showWarnings = FALSE)
 ```
 
 Regional coordinate reference system taken from: 
 http://spatialreference.org/ref/epsg/nad83-texas-state-mapping-system/proj4/
+
 ```{r, title = '{{ site.handouts[0] }}'}
 CRS_reg <- "+proj=lcc +lat_1=27.41666666666667 +lat_2=34.91666666666666 +lat_0=31.16666666666667 +lon_0=-100 +x_0=1000000 +y_0=1000000 +ellps=GRS80 +datum=NAD83 +units=m +no_defs" 
 
 file_format <- ".tif" 
 
-NA_flag_val <- -9999 
+NA_flag_val <- -9999
 
-out_suffix <-"exercise6_03312018" # output suffix for the files and output folder
+out_suffix <- "exercise6_03312018" # output suffix for the files and output folder  ## FIXME
 
 create_out_dir_param = TRUE 
 ```
@@ -54,6 +45,7 @@ create_out_dir_param = TRUE
 ===
 
 ### Define input data file names
+
 ```{r, title = '{{ site.handouts[0] }}'}
 infile_RITA_reflectance_date2 <- "mosaiced_MOD09A1_A2005273__006_reflectance_masked_RITA_reg_1km.tif"
 
@@ -66,38 +58,21 @@ nlcd_2006_filename <- "nlcd_2006_RITA.tif" # NLCD2006 Land cover data aggregated
 
 ===
 
-Create an ouput directory:
-```{r, title = '{{ site.handouts[0] }}'}
-if(is.null(out_dir)){
-  out_dir <- dirname(in_dir_var) # output will be created in the input directory
-}
-
-out_suffix_s <- out_suffix # can modify name of output suffix
-
-if(create_out_dir_param==TRUE){
-  out_dir <- create_dir_fun(out_dir, out_suffix_s)
-  setwd(out_dir)
-}else{
-  setwd(out_dir) # use previously defined directory
-}
-```
-
-===
-
 ## Part I: Read and map flooding from RITA hurricane 
 
 ### Display and explore the data
 
 MOD09 raster image after hurricane Rita.
 ```{r, title = '{{ site.handouts[0] }}'}
-r_after <- brick(file.path(in_dir_var,infile_RITA_reflectance_date2))
+r_after <- brick(file.path(in_dir,infile_RITA_reflectance_date2))
 ```
 
 ===
 
 Read band information since it is more informative.
+
 ```{r, title = '{{ site.handouts[0] }}'}
-df_modis_band_info <- read.table(file.path(in_dir_var, infile_modis_bands_information),
+df_modis_band_info <- read.table(file.path(in_dir, infile_modis_bands_information),
                                  sep=",",
                                  stringsAsFactors = F)
 
@@ -105,7 +80,7 @@ print(df_modis_band_info)
 
 df_modis_band_info$band_number <- c(3,4,1,2,5,6,7)
 
-write.table(df_modis_band_info,file.path(in_dir_var, infile_modis_bands_information), sep=",")
+# write.table(df_modis_band_info, file.path(in_dir, infile_modis_bands_information), sep=",")  ## FIXME
 
 band_refl_order <- df_modis_band_info$band_number
 
@@ -150,9 +125,9 @@ Class 3) Flooded area, or water (lake etc)
 
 Make a dataframe for each class:
 ```{r, title = '{{ site.handouts[0] }}'}
-class1_data_sf <- st_read(file.path(in_dir_var, "class1_sites"))
-class2_data_sf <- st_read(file.path(in_dir_var, "class2_sites"))
-class3_data_sf <- st_read(file.path(in_dir_var, "class3_sites"))
+class1_data_sf <- st_read(file.path(in_dir, "class1_sites"))
+class2_data_sf <- st_read(file.path(in_dir, "class2_sites"))
+class3_data_sf <- st_read(file.path(in_dir, "class3_sites"))
 ```
 
 ===
@@ -322,6 +297,7 @@ text(mod_rpart, cex = .8)
 Now predict the subset data based on the model; prediction for entire area takes more time.
 ```{r, title = '{{ site.handouts[0] }}'}
 raster_out_filename <- paste0("r_predicted_rpart_", out_suffix, file_format)
+raster_out_filename <- file.path(out_dir, raster_out_filename)
 
 r_predicted_rpart <- predict(r_stack, mod_rpart, 
                              type='class',
@@ -360,11 +336,12 @@ summary(mod_svm)
 
 Now predict the subset data based on the model; prediction for entire area takes longer time
 ```{r, title = '{{ site.handouts[0] }}'}
-raster_outfilename <- paste0("r_predicted_svm_", out_suffix, file_format)
-
+raster_out_filename <- paste0("r_predicted_svm_", out_suffix, file_format)
+raster_out_filename <- file.path(out_dir, raster_out_filename)
+  
 r_predicted_svm <- predict(r_stack, mod_svm,
                            progress = 'text',
-                           filename = raster_outfilename,
+                           filename = raster_out_filename,
                            overwrite = T)
 
 plot(r_predicted_svm)
@@ -373,12 +350,12 @@ rasterVis::histogram(r_predicted_svm)
 
 r_predicted_svm <- ratify(r_predicted_svm)
 rat <- levels(r_predicted_svm)[[1]]
-rat$legend <- c("vegetation","wetland","water")
+rat$legend <- c("vegetation", "wetland", "water")
 levels(r_predicted_svm) <- rat
 
 levelplot(r_predicted_svm, maxpixels = 1e6,
           col.regions = c("green","blue","darkblue"),
-          scales=list(draw=FALSE),
+          scales = list(draw = FALSE),
           main = "SVM classification")
 ```
 
@@ -452,6 +429,7 @@ sum(diag(tb_rpart))/sum(table(testing_rpart))
 ===
 
 Generate more accurate measurements from functions in the caret package:
+
 ```{r, title = '{{ site.handouts[0] }}'}
 accuracy_info_svm <- confusionMatrix(testing_svm, data_testing$class_ID, positive = NULL)
 accuracy_info_rpart <- confusionMatrix(testing_rpart, data_testing$class_ID, positive = NULL)
@@ -461,7 +439,11 @@ accuracy_info_svm$overall
 ```
 
 Write out the results:
+
 ```{r, title = '{{ site.handouts[0] }}'}
-write.table(accuracy_info_rpart$table, "confusion_matrix_rpart.txt", sep=",")
-write.table(accuracy_info_svm$table, "confusion_matrix_svm.txt", sep=",")
+table_out_filename <- file.path(out_dir, "confusion_matrix_rpart.txt")
+write.table(accuracy_info_rpart$table, table_out_filename, sep=",")
+
+table_out_filename <- file.path(out_dir, "confusion_matrix_svm.txt")
+write.table(accuracy_info_svm$table, table_out_filename, sep=",")
 ```

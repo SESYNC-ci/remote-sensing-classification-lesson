@@ -8,7 +8,7 @@ Remote Sensing allows for fast generation of maps before and after events. In th
 
 ===
 
-###Inputs
+## Inputs
   1. FEMA flood map are as vector data
   2. MOD09 reflectance image after Hurricane Rita
   3. Vector polygons of ground truth for training and testing classifiers
@@ -16,14 +16,14 @@ Remote Sensing allows for fast generation of maps before and after events. In th
 
 ===
 
-###Outputs
+## Outputs
 	1. classified map using rpart classifier
 	2. classified map using svm classifier
   3. confusion matrices and overall accuracies by classifiers 
   
 ===
              
-###Tools/Functions
+## Tools/Functions
   1. brick
 	2. writeRaster
 	3. st_read
@@ -94,9 +94,3 @@ Using the analyses performed above, and datasets provided answer to the followin
 1)	Modify the splitting of training and testing by using 40% and then 50% for testing. Compare predicted maps with previous results.
 2)	Generate confusion matrices for 40% and 50% testing.
 3)	Generate a classification prediction using randomForest and compare it to svm and rpart with 30% holdout.                           
-
-
-
-
-
-
