@@ -9,6 +9,7 @@ Remote Sensing allows for fast generation of maps before and after events. In th
 ===
 
 ## Inputs
+
   1. FEMA flood map are as vector data
   2. MOD09 reflectance image after Hurricane Rita
   3. Vector polygons of ground truth for training and testing classifiers
@@ -17,13 +18,15 @@ Remote Sensing allows for fast generation of maps before and after events. In th
 ===
 
 ## Outputs
-	1. classified map using rpart classifier
-	2. classified map using svm classifier
-  3. confusion matrices and overall accuracies by classifiers 
+
+  1. classified map using rpart classifier  
+	2. classified map using svm classifier  
+	3. confusion matrices and overall accuracies by classifiers   
   
 ===
              
 ## Tools/Functions
+
   1. brick
 	2. writeRaster
 	3. st_read
