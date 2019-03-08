@@ -3,8 +3,7 @@
 title: "Remote Sensing & Classification"
 subtitle: Hurricane Inundation
 handouts:
- - worksheet-1.R
- - worksheet-2.R
+ - worksheet.R
  - data/new_strata_rita_10282017
  - data/df_modis_band_info.txt
  - data/nlcd_2006_RITA.tif
@@ -17,15 +16,15 @@ handouts:
  - data/README.md
 tag: v0.0
 lesson: 3
-instructor: Benoit Parmentier
+instructor: Rachael Blake
 authors:
  - Benoit Parmentier
 
 # Slides
 
 slide_sorter:
- - part1
- - part2
+ - Intro
+ - raster_classification
 
 #####################################
 # Only modify content above or risk #
