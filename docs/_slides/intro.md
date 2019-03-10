@@ -13,7 +13,7 @@ Remote Sensing allows for fast generation of maps before and after events. In th
 - FEMA flood map are as vector data
 - MOD09 reflectance image after Hurricane Rita
 - Vector polygons of ground truth for training and testing classifiers
-- NLCD 2006 land cover aggregated at 1km.
+- NLCD 2006 land cover aggregated at 1km
 
 ===
 
