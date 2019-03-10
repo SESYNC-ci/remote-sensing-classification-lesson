@@ -9,31 +9,34 @@ Remote Sensing allows for fast generation of maps before and after events. In th
 ===
 
 ## Inputs
-  1. FEMA flood map are as vector data
-  2. MOD09 reflectance image after Hurricane Rita
-  3. Vector polygons of ground truth for training and testing classifiers
-  4. NLCD 2006 land cover aggregated at 1km.
+
+- FEMA flood map are as vector data
+- MOD09 reflectance image after Hurricane Rita
+- Vector polygons of ground truth for training and testing classifiers
+- NLCD 2006 land cover aggregated at 1km.
 
 ===
 
 ## Outputs
-	1. classified map using rpart classifier
-	2. classified map using svm classifier
-  3. confusion matrices and overall accuracies by classifiers 
-  
+
+- classified map using rpart classifier
+- classified map using svm classifier
+- confusion matrices and overall accuracies by classifiers
+ 
 ===
              
 ## Tools/Functions
-  1. brick
-	2. writeRaster
-	3. st_read
-  4. subset (raster)
-	5. extract
-  6. predict
-	7. levelplot
-	8. raster algebra: “*”,” /”,”+”,”-“
-  9. histogram
-	 
+
+- brick
+- writeRaster
+- st_read
+- subset (raster)
+- extract
+- predict
+- levelplot
+- raster algebra: “*”,” /”,”+”,”-“
+- histogram
+ 
 ===
 
 ## Part I: Read and map flooding from RITA hurricane  
@@ -41,10 +44,11 @@ Remote Sensing allows for fast generation of maps before and after events. In th
 Goal: Map hurricane flooding using reflectance data derived from MODIS.  
 
 Explore the datasets provided. Use ground truth vector datasets and extract values for pixels for the raster stack containing the original MOD09 bands and indices. Visualize ground truth pixels in feature space and using boxplots.
+{:.notes}
 
-Produce:
-1.	Scatterplot in feature space with the three ground classes.
-2.	Boxplots of values for MNDWI indices.
+Products:
+- Scatterplot in feature space with the three ground classes.
+- Boxplots of values for MNDWI indices.
 
 ===
 
@@ -52,11 +56,11 @@ Produce:
 
 Assessment of classifications require splitting of the ground truth data into training and testing samples. The training data is used in the fitting of the model while the testing dataset is used accuracy assessment. Using the data provided randomly select 30% ground truth data for testing.
 
-Produce:
-1.	Training and testing datasets at 30%. Save these into shapefiles.
+Products:
+- Training and testing datasets at 30%. Save these into shapefiles.
 
 From this product, the analyst should be able to answer the following question:
-1.	What is the frequency of observations in each class for training and testing data?
+- What is the frequency of observations in each class for training and testing data?
 
 ===
 
@@ -68,9 +72,9 @@ RPART: It is based on CART and generates classification by splitting data points
 
 SVM: Support Vector Machine  generate hyperplanes that maximize separabiltiy between classes.These hyperplanes boundaries are used in the classification process and generate predictions.
 
-Produce:
-1.	Model object for rpart with a predicted raster.
-2.	Model object for svm with a predicted raster
+Products:
+- Model object for rpart with a predicted raster.
+- Model object for svm with a predicted raster
 
 ===
 
@@ -82,15 +86,17 @@ Overall accuracy: total number of correctly classified pixels for all classes co
 
 Producer accuracy: is the fraction of correctly classified pixels with regard to all pixels of the ground truth class.
 
-Produce:
-1.	Overall accuracy and producer accuracy metrics.
-2.	Confusion matrix for rpart and SVM.
+Products:
+- Overall accuracy and producer accuracy metrics.
+- Confusion matrix for rpart and SVM.
 
 From output answer the following questions:
-1.	What classifier had the best overall accuracy?
+- What classifier had the best overall accuracy?
+
+===
 
 Using the analyses performed above, and datasets provided answer to the following questions:
 
-1)	Modify the splitting of training and testing by using 40% and then 50% for testing. Compare predicted maps with previous results.
-2)	Generate confusion matrices for 40% and 50% testing.
-3)	Generate a classification prediction using randomForest and compare it to svm and rpart with 30% holdout.                           
+- Modify the splitting of training and testing by using 40% and then 50% for testing. Compare predicted maps with previous results.
+- Generate confusion matrices for 40% and 50% testing.
+- Generate a classification prediction using randomForest and compare it to svm and rpart with 30% holdout.
