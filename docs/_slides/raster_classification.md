@@ -70,6 +70,7 @@ nlcd_2006_filename <- "nlcd_2006_RITA.tif" # NLCD2006 Land cover data aggregated
 MOD09 raster image after hurricane Rita.
 
 
+
 ~~~r
 r_after <- brick(file.path(in_dir,infile_RITA_reflectance_date2))
 ~~~
@@ -86,10 +87,16 @@ Read band information since it is more informative.
 df_modis_band_info <- read.table(file.path(in_dir, infile_modis_bands_information),
                                  sep=",",
                                  stringsAsFactors = F)
-
-print(df_modis_band_info)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
+
+
+
+
+~~~r
+> df_modis_band_info
+~~~
+{:.input title="Console"}
 
 
 ~~~
@@ -103,6 +110,10 @@ print(df_modis_band_info)
 7     SWIR3           7          2105        2155
 ~~~
 {:.output}
+
+
+===
+
 
 
 ~~~r
@@ -122,23 +133,31 @@ names(r_after) <- df_modis_band_info$band_name
 Note: Use subset instead of $ if you want to wrap code into function.
 
 
+
 ~~~r
 r_after_MNDWI <- (subset(r_after,"Green") - subset(r_after,"SWIR2")) / (subset(r_after,"Green") + subset(r_after,"SWIR2"))
 plot(r_after_MNDWI,zlim=c(-1,1))
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-7-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-9-1.png)
+{:.captioned}
 
-{:.captioned}~~~r
+===
+
+
+
+~~~r
 r_after_NDVI <- (subset(r_after,"NIR") - subset(r_after,"Red")) / (subset(r_after,"NIR") + subset(r_after,"Red"))
 plot(r_after_NDVI)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-7-2.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-10-1.png)
+{:.captioned}
 
-{:.captioned}~~~r
+
+
+~~~r
 data_type_str <- dataType(r_after_NDVI)
-
 
 NAvalue(r_after_MNDWI) <- NA_flag_val
 out_filename <- paste("mndwi_post_Rita","_", out_suffix, file_format, sep="")
@@ -161,11 +180,16 @@ writeRaster(r_after_NDVI,
 
 ===
 
-Class 1) vegetation and other (small water fraction)
-Class 2) Flooded vegetation
-Class 3) Flooded area, or water (lake etc)
+Classes for Classification:
+
+1. vegetation and other (small water fraction)
+2. Flooded vegetation
+3. Flooded area, or water (lake etc)
+
+===
 
 Make a dataframe for each class:
+
 
 
 ~~~r
@@ -236,6 +260,7 @@ class_data_sf$poly_ID <- 1:nrow(class_data_sf) # unique ID for each polygon
 
 
 23 different polygons used as ground truth data.
+
 
 
 ~~~r
@@ -414,7 +439,9 @@ table(pixels_df$class_ID) # count by class of pixels ground truth data
 ===
 
 ### Examining site data used for the classification
+
 Water
+
 
 
 ~~~r
@@ -431,12 +458,13 @@ legend("topleft",legend=names_vals,
        bty="n")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-16-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-20-1.png)
 {:.captioned}
 
 ===
 
 Let's use a palette that reflects wetness or level of water. 
+
 
 
 ~~~r
@@ -462,37 +490,48 @@ legend("topright",legend=names_vals,
        bty="n")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-17-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-21-1.png)
+{:.captioned}
 
-{:.captioned}~~~r
+===
+
+
+
+~~~r
 rasterVis::histogram(r_after)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-17-2.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-22-1.png)
+{:.captioned}
 
-{:.captioned}~~~r
+===
+
+
+
+~~~r
 pixels_df$class_ID <- factor(pixels_df$class_ID,
                       levels = c(1,2,3),
                       labels = names_vals)
-
 boxplot(MNDWI~class_ID,
         pixels_df,
         xlab="category",
         main="Boxplot for MNDWI per class")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-17-3.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-23-1.png)
 {:.captioned}
 
 ===
 
 ## Part II: Split data into training and testing datasets 
 
-Let's keep 30% of data for testing for each class.
+Let's keep 30% of data for testing for each class, and set a fixed seed for reproducibility.
+
 
 
 ~~~r
 pixels_df$pix_ID <- 1:nrow(pixels_df)
+set.seed(100)
 prop <- 0.3
 table(pixels_df$class_ID)
 ~~~
@@ -507,15 +546,10 @@ vegetation    wetland      water
 {:.output}
 
 
-~~~r
-set.seed(100) # set random seed for reproducibility
-~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-
-
 ===
 
 This is for one class: better to do this as a function but we use a loop for clarity here.
+
 
 
 ~~~r
@@ -593,9 +627,12 @@ data_training <- subset(data_df, training==1)
 
 ## Part III: Generate classification using classification tree (CART) and support vector machine (SVM)
 
+===
+
 ### Classification and Regression Tree model (CART) 
 
 Fit model using training data for CART.
+
 
 
 ~~~r
@@ -609,12 +646,13 @@ mod_rpart <- rpart(class_ID ~ Red + NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
 Plot the fitted classification tree.
 
 
+
 ~~~r
 plot(mod_rpart, uniform = TRUE, main = "Classification Tree", mar = c(0.1, 0.1, 0.1, 0.1))
 text(mod_rpart, cex = .8)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-23-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-29-1.png)
 {:.captioned}
 
 ===
@@ -622,33 +660,19 @@ text(mod_rpart, cex = .8)
 Now predict the subset data based on the model; prediction for entire area takes more time.
 
 
-~~~r
-raster_out_filename <- paste0("r_predicted_rpart_", out_suffix, file_format)
-raster_out_filename <- file.path(out_dir, raster_out_filename)
 
-r_predicted_rpart <- predict(r_stack, mod_rpart, 
-                             type='class',
-                             filename=raster_out_filename,
-                             progress = 'text',
-                             overwrite=T)
-~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-
-
-~~~
-  |                                                                         |                                                                 |   0%  |                                                                         |================                                                 |  25%  |                                                                         |================================                                 |  50%  |                                                                         |=================================================                |  75%  |                                                                         |=================================================================| 100%
-
-~~~
-{:.output}
 
 
 ~~~r
-plot(r_predicted_rpart)
+> plot(r_predicted_rpart)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-24-1.png)
+{:.input title="Console"}
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-31-1.png)
+{:.captioned}
 
-{:.captioned}~~~r
+
+
+~~~r
 r_predicted_rpart <- ratify(r_predicted_rpart)
 rat <- levels(r_predicted_rpart)[[1]]
 rat$legend <- c("vegetation","wetland","water")
@@ -660,14 +684,15 @@ levelplot(r_predicted_rpart, maxpixels = 1e6,
           main = "Classification Tree")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-24-2.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-32-1.png)
 {:.captioned}
 
 ===
 
 ### Support Vector Machine classification (SVM)
 
-Set class_ID as factor to generate classification
+Set class_ID as factor to generate classification.
+
 
 
 ~~~r
@@ -710,41 +735,31 @@ Levels:
 
 ===
 
-Now predict the subset data based on the model; prediction for entire area takes longer time
+Now predict the subset data based on the model; prediction for entire area takes longer time.
 
 
-~~~r
-raster_out_filename <- paste0("r_predicted_svm_", out_suffix, file_format)
-raster_out_filename <- file.path(out_dir, raster_out_filename)
-  
-r_predicted_svm <- predict(r_stack, mod_svm,
-                           progress = 'text',
-                           filename = raster_out_filename,
-                           overwrite = T)
-~~~
-{:.text-document title="{{ site.handouts[0] }}"}
 
-
-~~~
-  |                                                                         |                                                                 |   0%  |                                                                         |================                                                 |  25%  |                                                                         |================================                                 |  50%  |                                                                         |=================================================                |  75%  |                                                                         |=================================================================| 100%
-
-~~~
-{:.output}
 
 
 ~~~r
-plot(r_predicted_svm)
+> plot(r_predicted_svm)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-26-1.png)
+{:.input title="Console"}
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-35-1.png)
+{:.captioned}
 
-{:.captioned}~~~r
-rasterVis::histogram(r_predicted_svm)
+
+
+~~~r
+> rasterVis::histogram(r_predicted_svm)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-26-2.png)
+{:.input title="Console"}
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-36-1.png)
+{:.captioned}
 
-{:.captioned}~~~r
+
+
+~~~r
 r_predicted_svm <- ratify(r_predicted_svm)
 rat <- levels(r_predicted_svm)[[1]]
 rat$legend <- c("vegetation", "wetland", "water")
@@ -756,7 +771,7 @@ levelplot(r_predicted_svm, maxpixels = 1e6,
           main = "SVM classification")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-26-3.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-37-1.png)
 {:.captioned}
 
 ===
@@ -764,6 +779,7 @@ levelplot(r_predicted_svm, maxpixels = 1e6,
 ## Part IV: Assessment and comparison of model performance
 
 Set up testing data:
+
 
 
 ~~~r
@@ -804,6 +820,7 @@ data_testing <- na.omit(subset(data_df, training==0))
 Predict on testing data using rpart model fitted with training data.
 
 
+
 ~~~r
 testing_rpart <- predict(mod_rpart, data_testing, type='class')
 ~~~
@@ -813,6 +830,7 @@ testing_rpart <- predict(mod_rpart, data_testing, type='class')
 Predict on testing data using SVM model fitted with training data
 
 
+
 ~~~r
 testing_svm <- predict(mod_svm, data_testing, type='class')
 ~~~
@@ -820,6 +838,7 @@ testing_svm <- predict(mod_svm, data_testing, type='class')
 
 
 Predicted classes:
+
 
 
 ~~~r
@@ -839,20 +858,30 @@ vegetation    wetland      water
 ===
 
 ### Generate confusion matrix to assess the accuracy of the image classification
+
 More info on confusion matrices here: http://spatial-analyst.net/ILWIS/htm/ilwismen/confusion_matrix.htm
 
 Need to use: 
 testing_rpart: contains map prediction in the rows
-data_testing$class_ID: this column contains ground truth data 
+data_testing$class_ID: this column contains ground truth data
+
 
 
 ~~~r
 tb_rpart <- table(testing_rpart, data_testing$class_ID)
 tb_svm <- table(testing_svm, data_testing$class_ID)
-
-table(testing_rpart) # classification, map results
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
+
+
+classification, map results
+
+
+
+~~~r
+> table(testing_rpart)
+~~~
+{:.input title="Console"}
 
 
 ~~~
@@ -863,10 +892,14 @@ vegetation    wetland      water
 {:.output}
 
 
+reference, ground truth in columns
+
+
+
 ~~~r
-table(data_testing$class_ID) # reference, ground truth in columns
+> table(data_testing$class_ID)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:.input title="Console"}
 
 
 ~~~
@@ -879,8 +912,8 @@ vegetation    wetland      water
 
 ===
 
-Accuracy (producer's accuracy): the fraction of correctly classified pixels compared to all pixels 
-of that ground truth class. 
+Accuracy (producer's accuracy): the fraction of correctly classified pixels compared to all pixels of that ground truth class.
+
 
 
 ~~~r
@@ -908,6 +941,7 @@ tb_svm[1]/sum(tb_svm[,1]) # producer accuracy
 
 
 Looking at accuracy more closely:
+
 
 
 ~~~r
@@ -945,10 +979,18 @@ Generate more accurate measurements from functions in the caret package:
 ~~~r
 accuracy_info_svm <- confusionMatrix(testing_svm, data_testing$class_ID, positive = NULL)
 accuracy_info_rpart <- confusionMatrix(testing_rpart, data_testing$class_ID, positive = NULL)
-
-accuracy_info_rpart$overall  # overall accuracy produced
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
+
+
+overall accuracy produced
+
+
+
+~~~r
+> accuracy_info_rpart$overall
+~~~
+{:.input title="Console"}
 
 
 ~~~
@@ -960,10 +1002,12 @@ AccuracyPValue  McnemarPValue
 {:.output}
 
 
+
+
 ~~~r
-accuracy_info_svm$overall
+> accuracy_info_svm$overall
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:.input title="Console"}
 
 
 ~~~
