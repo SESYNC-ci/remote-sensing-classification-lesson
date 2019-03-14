@@ -13,25 +13,12 @@ library(caret) # complex regression and classification models
 
 
 
-### Define functions used in this lesson
-create_dir_fun <- function(outDir, out_suffix=NULL){
-  # if out_suffix is not null then append out_suffix string
-  if(!is.null(out_suffix)){
-    out_name <- paste("output_", out_suffix,sep="")
-    outDir <- file.path(outDir, out_name)
-  }
-  # create if does not exists
-  if(!file.exists(outDir)){
-    dir.create(outDir)
-  }
-  return(outDir)
-}
-
-
-
 ### Set up arguments and parameters
-in_dir_var <- "data/"
-out_dir <- "."
+in_dir <- "data"
+
+out_dir_suffix <- "rsc_lesson"
+out_dir <- paste("output_", out_dir_suffix, sep="")
+dir.create(out_dir, showWarnings = FALSE)
 
 # Regional coordinate reference system taken from:
 # http://spatialreference.org/ref/epsg/nad83-texas-state-mapping-system/proj4/
@@ -41,9 +28,7 @@ file_format <- ".tif"
 
 NA_flag_val <- -9999 
 
-out_suffix <-"exercise6_03312018" 
-
-create_out_dir_param=TRUE 
+out_suffix <- "raster_classification" 
 
 
 
@@ -90,9 +75,6 @@ df_modis_band_info <- read.table(file.path(in_dir_var, infile_modis_bands_inform
 print(df_modis_band_info)
 
 df_modis_band_info$band_number <- c(3,4,1,2,5,6,7)
-
-write.table(df_modis_band_info,file.path(in_dir_var, infile_modis_bands_information),
-            sep=",")
 
 band_refl_order <- df_modis_band_info$band_number
 

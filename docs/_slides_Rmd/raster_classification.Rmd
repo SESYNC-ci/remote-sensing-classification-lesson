@@ -13,9 +13,6 @@ library(rasterVis) # raster visualization operations
 library(caret) # complex regression and classification models
 ```
 
-### Define functions used in this lesson
-
-===
 
 ### Set up arguments and parameters
 
@@ -27,6 +24,8 @@ out_dir <- paste("output_", out_dir_suffix, sep="")
 dir.create(out_dir, showWarnings = FALSE)
 ```
 
+===
+
 Regional coordinate reference system taken from: 
 http://spatialreference.org/ref/epsg/nad83-texas-state-mapping-system/proj4/
 
@@ -37,9 +36,8 @@ file_format <- ".tif"
 
 NA_flag_val <- -9999
 
-out_suffix <- "exercise6_03312018" # output suffix for the files and output folder  ## FIXME
+out_suffix <- "raster_classification" # output suffix for the files and output folder  
 
-create_out_dir_param = TRUE 
 ```
 
 ===
@@ -79,8 +77,6 @@ df_modis_band_info <- read.table(file.path(in_dir, infile_modis_bands_informatio
 print(df_modis_band_info)
 
 df_modis_band_info$band_number <- c(3,4,1,2,5,6,7)
-
-# write.table(df_modis_band_info, file.path(in_dir, infile_modis_bands_information), sep=",")  ## FIXME
 
 band_refl_order <- df_modis_band_info$band_number
 
