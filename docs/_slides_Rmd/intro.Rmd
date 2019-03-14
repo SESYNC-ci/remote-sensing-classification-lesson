@@ -10,9 +10,9 @@ Remote Sensing allows for fast generation of maps before and after events. In th
 
 ## Inputs
 
-- FEMA flood map are as vector data
+- FEMA flood map (stored as vector data)
 - MOD09 reflectance image after Hurricane Rita
-- Vector polygons of ground truth for training and testing classifiers
+- Vector polygons of ground truth (for training and testing classifiers)
 - NLCD 2006 land cover aggregated at 1km
 
 ===
@@ -27,24 +27,21 @@ Remote Sensing allows for fast generation of maps before and after events. In th
              
 ## Tools/Functions
 
-- brick
-- writeRaster
-- st_read
-- subset (raster)
-- extract
-- predict
-- levelplot
+- raster::brick
+- raster::writeRaster
+- sf::st_read
+- raster::subset
+- raster::extract
+- raster::predict
 - raster algebra: “*”,” /”,”+”,”-“
-- histogram
+- rasterVis::levelplot 
+- rasterVis::histogram
  
 ===
 
 ## Part I: Read and map flooding from RITA hurricane  
 
-Goal: Map hurricane flooding using reflectance data derived from MODIS.  
-
 Explore the datasets provided. Use ground truth vector datasets and extract values for pixels for the raster stack containing the original MOD09 bands and indices. Visualize ground truth pixels in feature space and using boxplots.
-{:.notes}
 
 Products:
 - Scatterplot in feature space with the three ground classes.
@@ -59,7 +56,7 @@ Assessment of classifications require splitting of the ground truth data into tr
 Products:
 - Training and testing datasets at 30%. Save these into shapefiles.
 
-From this product, the analyst should be able to answer the following question:
+Be able to answer the following question:
 - What is the frequency of observations in each class for training and testing data?
 
 ===
@@ -82,7 +79,7 @@ Products:
 
 To validate the model, we use the testing data and generate new predictions for rpart and SVM. We compare the predictions with the original testing information.
 
-Overall accuracy: total number of correctly classified pixels for all classes combined over the total number of pixels. 
+Overall accuracy: total number of correctly classified pixels for all classes combined over the total number of pixels.
 
 Producer accuracy: is the fraction of correctly classified pixels with regard to all pixels of the ground truth class.
 
@@ -90,7 +87,7 @@ Products:
 - Overall accuracy and producer accuracy metrics.
 - Confusion matrix for rpart and SVM.
 
-From output answer the following questions:
+Be able to answer the following question:
 - What classifier had the best overall accuracy?
 
 ===

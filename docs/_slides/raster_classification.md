@@ -6,9 +6,6 @@ excerpt: Raster Classification using flood mapping analysis
 
 
 
-### Define functions used in this lesson
-
-===
 
 ### Set up arguments and parameters
 
@@ -24,6 +21,8 @@ dir.create(out_dir, showWarnings = FALSE)
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+===
+
 Regional coordinate reference system taken from: 
 http://spatialreference.org/ref/epsg/nad83-texas-state-mapping-system/proj4/
 
@@ -36,9 +35,7 @@ file_format <- ".tif"
 
 NA_flag_val <- -9999
 
-out_suffix <- "exercise6_03312018" # output suffix for the files and output folder  ## FIXME
-
-create_out_dir_param = TRUE 
+out_suffix <- "raster_classification" # output suffix for the files and output folder  
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
@@ -65,6 +62,8 @@ nlcd_2006_filename <- "nlcd_2006_RITA.tif" # NLCD2006 Land cover data aggregated
 
 ## Part I: Read and map flooding from RITA hurricane 
 
+===
+
 ### Display and explore the data
 
 MOD09 raster image after hurricane Rita.
@@ -72,7 +71,7 @@ MOD09 raster image after hurricane Rita.
 
 
 ~~~r
-r_after <- brick(file.path(in_dir,infile_RITA_reflectance_date2))
+r_after <- brick(file.path(in_dir, infile_RITA_reflectance_date2))
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
@@ -119,13 +118,25 @@ df_modis_band_info <- read.table(file.path(in_dir, infile_modis_bands_informatio
 ~~~r
 df_modis_band_info$band_number <- c(3,4,1,2,5,6,7)
 
-# write.table(df_modis_band_info, file.path(in_dir, infile_modis_bands_information), sep=",")  ## FIXME
-
 band_refl_order <- df_modis_band_info$band_number
 
 names(r_after) <- df_modis_band_info$band_name
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
+
+
+
+
+~~~r
+> names(r_after)
+~~~
+{:.input title="Console"}
+
+
+~~~
+[1] "Red"   "NIR"   "Blue"  "Green" "SWIR1" "SWIR2" "SWIR3"
+~~~
+{:.output}
 
 
 ===
@@ -135,11 +146,12 @@ Note: Use subset instead of $ if you want to wrap code into function.
 
 
 ~~~r
-r_after_MNDWI <- (subset(r_after,"Green") - subset(r_after,"SWIR2")) / (subset(r_after,"Green") + subset(r_after,"SWIR2"))
-plot(r_after_MNDWI,zlim=c(-1,1))
+r_after_MNDWI <- (subset(r_after, "Green") - subset(r_after, "SWIR2")) / (subset(r_after, "Green") + subset(r_after, "SWIR2"))
+
+plot(r_after_MNDWI, zlim = c(-1,1))
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-9-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-10-1.png)
 {:.captioned}
 
 ===
@@ -148,10 +160,11 @@ plot(r_after_MNDWI,zlim=c(-1,1))
 
 ~~~r
 r_after_NDVI <- (subset(r_after,"NIR") - subset(r_after,"Red")) / (subset(r_after,"NIR") + subset(r_after,"Red"))
+
 plot(r_after_NDVI)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-10-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-11-1.png)
 {:.captioned}
 
 
@@ -163,17 +176,17 @@ NAvalue(r_after_MNDWI) <- NA_flag_val
 out_filename <- paste("mndwi_post_Rita","_", out_suffix, file_format, sep="")
 out_filename <- file.path(out_dir, out_filename)
 writeRaster(r_after_MNDWI,
-            filename=out_filename,
-            datatype=data_type_str,
-            overwrite=T)
+            filename = out_filename,
+            datatype = data_type_str,
+            overwrite = T)
  
 NAvalue(r_after_NDVI) <- NA_flag_val
 out_filename <- paste("ndvi_post_Rita","_", out_suffix, file_format, sep="")
 out_filename <- file.path(out_dir, out_filename)
 writeRaster(r_after_NDVI,
-            filename=out_filename,
-            datatype=data_type_str,
-            overwrite=T)
+            filename = out_filename,
+            datatype = data_type_str,
+            overwrite = T)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
@@ -184,7 +197,7 @@ Classes for Classification:
 
 1. vegetation and other (small water fraction)
 2. Flooded vegetation
-3. Flooded area, or water (lake etc)
+3. Flooded area, or water (lake, etc.)
 
 ===
 
@@ -262,7 +275,6 @@ class_data_sf$poly_ID <- 1:nrow(class_data_sf) # unique ID for each polygon
 23 different polygons used as ground truth data.
 
 
-
 ~~~r
 > nrow(class_data_sf) 
 ~~~
@@ -282,11 +294,11 @@ class_data_sf$poly_ID <- 1:nrow(class_data_sf) # unique ID for each polygon
 ~~~r
 class_data_sp <- as(class_data_sf, "Spatial")
 
-r_x <- init(r_after,"x") # raster with coordinates x
-r_y <- init(r_after,"x") # raster with coordiates y
+r_x <- init(r_after, "x") # raster with coordinates x
+r_y <- init(r_after, "x") # raster with coordiates y
 
 r_stack <- stack(r_x, r_y, r_after, r_after_NDVI, r_after_MNDWI)
-names(r_stack) <- c("x","y","Red","NIR","Blue","Green","SWIR1","SWIR2","SWIR3","NDVI","MNDWI")
+names(r_stack) <- c("x", "y", "Red", "NIR", "Blue", "Green", "SWIR1", "SWIR2", "SWIR3", "NDVI", "MNDWI")
 pixels_extracted_df <- extract(r_stack, class_data_sf, df=T)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
@@ -445,20 +457,20 @@ Water
 
 
 ~~~r
-x_range <- range(pixels_df$Green,na.rm=T)
-y_range <- range(pixels_df$NIR,na.rm=T)
+x_range <- range(pixels_df$Green, na.rm=T)
+y_range <- range(pixels_df$NIR, na.rm=T)
 
-plot(NIR~Green,xlim=x_range,ylim=y_range,cex=0.2,col="blue",subset(pixels_df,class_ID==1))
-points(NIR~Green,col="green",cex=0.2,subset(pixels_df,class_ID==2))
-points(NIR~Green,col="red",cex=0.2,subset(pixels_df,class_ID==3))
-names_vals <- c("water class 1","water class 2","water class 3")
-legend("topleft",legend=names_vals,
-       pt.cex=0.7,cex=0.7,col=c("blue","green","red"),
+plot(NIR~Green, xlim=x_range, ylim=y_range, cex=0.2, col="blue", subset(pixels_df, class_ID==1))
+points(NIR~Green, col="green", cex=0.2, subset(pixels_df, class_ID==2))
+points(NIR~Green, col="red", cex=0.2, subset(pixels_df, class_ID==3))
+names_vals <- c("water class 1", "water class 2", "water class 3")
+legend("topleft", legend=names_vals,
+       pt.cex=0.7, cex=0.7, col=c("blue", "green", "red"),
        pch=20, # add circle symbol to line
        bty="n")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-20-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-21-1.png)
 {:.captioned}
 
 ===
@@ -470,35 +482,14 @@ Let's use a palette that reflects wetness or level of water.
 ~~~r
 col_palette <- c("green","blue","darkblue")
 
-plot(NDVI ~ MNDWI,
-     xlim=c(-1,1),ylim=c(-1,1),
-     cex=0.2,
-     col=col_palette[1],
-     subset(pixels_df,class_ID==1))
-points(NDVI ~ MNDWI,
-       cex=0.2,
-       col=col_palette[2],
-       subset(pixels_df,class_ID==2))
-points(NDVI ~ MNDWI,
-       cex=0.2,
-       col=col_palette[3],
-       subset(pixels_df,class_ID==3))
+plot(NDVI ~ MNDWI, xlim=c(-1,1), ylim=c(-1,1), cex=0.2, col=col_palette[1], subset(pixels_df,class_ID==1))
+points(NDVI ~ MNDWI, cex=0.2, col=col_palette[2], subset(pixels_df,class_ID==2))
+points(NDVI ~ MNDWI, cex=0.2, col=col_palette[3], subset(pixels_df,class_ID==3))
 names_vals <- c("vegetation","wetland","water")
 legend("topright",legend=names_vals,
        pt.cex=0.7,cex=0.7,col=col_palette,
        pch=20, # add circle symbol to line
        bty="n")
-~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-21-1.png)
-{:.captioned}
-
-===
-
-
-
-~~~r
-rasterVis::histogram(r_after)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 ![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-22-1.png)
@@ -509,13 +500,7 @@ rasterVis::histogram(r_after)
 
 
 ~~~r
-pixels_df$class_ID <- factor(pixels_df$class_ID,
-                      levels = c(1,2,3),
-                      labels = names_vals)
-boxplot(MNDWI~class_ID,
-        pixels_df,
-        xlab="category",
-        main="Boxplot for MNDWI per class")
+rasterVis::histogram(r_after)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 ![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-23-1.png)
@@ -523,7 +508,27 @@ boxplot(MNDWI~class_ID,
 
 ===
 
+
+
+~~~r
+pixels_df$class_ID <- factor(pixels_df$class_ID,
+                      levels = c(1,2,3),
+                      labels = names_vals)
+
+boxplot(MNDWI~class_ID,
+        pixels_df,
+        xlab="category",
+        main="Boxplot for MNDWI per class")
+~~~
+{:.text-document title="{{ site.handouts[0] }}"}
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-24-1.png)
+{:.captioned}
+
+===
+
 ## Part II: Split data into training and testing datasets 
+
+===
 
 Let's keep 30% of data for testing for each class, and set a fixed seed for reproducibility.
 
@@ -652,7 +657,7 @@ plot(mod_rpart, uniform = TRUE, main = "Classification Tree", mar = c(0.1, 0.1, 
 text(mod_rpart, cex = .8)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-29-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-30-1.png)
 {:.captioned}
 
 ===
@@ -661,13 +666,26 @@ Now predict the subset data based on the model; prediction for entire area takes
 
 
 
+~~~r
+raster_out_filename <- paste0("r_predicted_rpart_", out_suffix, file_format)
+raster_out_filename <- file.path(out_dir, raster_out_filename)
+
+r_predicted_rpart <- predict(r_stack, mod_rpart, 
+                             type='class',
+                             filename=raster_out_filename,
+                             progress = 'text',
+                             overwrite=T)
+~~~
+{:.text-document title="{{ site.handouts[0] }}"}
+
+
 
 
 ~~~r
-> plot(r_predicted_rpart)
+plot(r_predicted_rpart)
 ~~~
-{:.input title="Console"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-31-1.png)
+{:.text-document title="{{ site.handouts[0] }}"}
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-32-1.png)
 {:.captioned}
 
 
@@ -684,7 +702,7 @@ levelplot(r_predicted_rpart, maxpixels = 1e6,
           main = "Classification Tree")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-32-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-33-1.png)
 {:.captioned}
 
 ===
@@ -700,10 +718,16 @@ mod_svm <- svm(class_ID ~ Red +NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
                data=data_training,
                method="C-classification",
                kernel="linear") # can be radial
-
-summary(mod_svm)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
+
+
+
+
+~~~r
+> summary(mod_svm)
+~~~
+{:.input title="Console"}
 
 
 ~~~
@@ -739,22 +763,39 @@ Now predict the subset data based on the model; prediction for entire area takes
 
 
 
+~~~r
+raster_out_filename <- paste0("r_predicted_svm_", out_suffix, file_format)
+raster_out_filename <- file.path(out_dir, raster_out_filename)
+  
+r_predicted_svm <- predict(r_stack, mod_svm,
+                           progress = 'text',
+                           filename = raster_out_filename,
+                           overwrite = T)
+~~~
+{:.text-document title="{{ site.handouts[0] }}"}
+
+
+~~~
+  |                                                                         |                                                                 |   0%  |                                                                         |================                                                 |  25%  |                                                                         |================================                                 |  50%  |                                                                         |=================================================                |  75%  |                                                                         |=================================================================| 100%
+
+~~~
+{:.output}
 
 
 ~~~r
-> plot(r_predicted_svm)
+plot(r_predicted_svm)
 ~~~
-{:.input title="Console"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-35-1.png)
+{:.text-document title="{{ site.handouts[0] }}"}
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-36-1.png)
 {:.captioned}
 
 
 
 ~~~r
-> rasterVis::histogram(r_predicted_svm)
+rasterVis::histogram(r_predicted_svm)
 ~~~
-{:.input title="Console"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-36-1.png)
+{:.text-document title="{{ site.handouts[0] }}"}
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-37-1.png)
 {:.captioned}
 
 
@@ -771,7 +812,7 @@ levelplot(r_predicted_svm, maxpixels = 1e6,
           main = "SVM classification")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-37-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-38-1.png)
 {:.captioned}
 
 ===
@@ -779,19 +820,21 @@ levelplot(r_predicted_svm, maxpixels = 1e6,
 ## Part IV: Assessment and comparison of model performance
 
 Set up testing data:
-
+Full dataset, let's use data points for testing
 
 
 ~~~r
-dim(data_df) # full dataset, let's use data points for testing
+> dim(data_df) 
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:.input title="Console"}
 
 
 ~~~
 [1] 1547   17
 ~~~
 {:.output}
+
+
 
 
 ~~~r
@@ -983,7 +1026,7 @@ accuracy_info_rpart <- confusionMatrix(testing_rpart, data_testing$class_ID, pos
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
-overall accuracy produced
+Overall accuracy produced:
 
 
 

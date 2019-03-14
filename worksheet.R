@@ -41,25 +41,6 @@ infile_modis_bands_information <- "df_modis_band_info.txt" # MOD09 bands informa
 
 nlcd_2006_filename <- "nlcd_2006_RITA.tif" # NLCD2006 Land cover data aggregated at ~ 1km.
 
-infilename_class1 <- "class1.shp" # Ground truth data for class 1
-infilename_class2 <- "class2.shp" # Ground truth data for class 2
-infilename_class3 <- "class3.shp" # Ground truth data for class 3
-
-
-
-### Create an ouput directory:
-if(is.null(out_dir)){
-  out_dir <- dirname(in_dir_var) # output will be created in the input dir
-}
-
-out_suffix_s <- out_suffix # can modify name of output suffix
-if(create_out_dir_param==TRUE){
-  out_dir <- create_dir_fun(out_dir, out_suffix_s)
-  setwd(out_dir)
-}else{
-  setwd(out_dir) #use previoulsy defined directory
-}
-
 
 
 ### Part I: Read and map flooding from RITA hurricane 
@@ -80,6 +61,7 @@ band_refl_order <- df_modis_band_info$band_number
 
 names(r_after) <- df_modis_band_info$band_name
 
+names(r_after)
 
 # Use subset instead of $ if you want to wrap code into function
 r_after_MNDWI <- (subset(r_after,"Green") - subset(r_after,"SWIR2")) / (subset(r_after,"Green") + subset(r_after,"SWIR2"))
@@ -94,17 +76,17 @@ NAvalue(r_after_MNDWI) <- NA_flag_val
 out_filename <- paste("mndwi_post_Rita","_", out_suffix, file_format, sep="")
 out_filename <- file.path(out_dir, out_filename)
 writeRaster(r_after_MNDWI,
-            filename=out_filename,
-            datatype=data_type_str,
-            overwrite=T)
+            filename = out_filename,
+            datatype = data_type_str,
+            overwrite = T)
 
 NAvalue(r_after_NDVI) <- NA_flag_val
 out_filename <- paste("ndvi_post_Rita","_", out_suffix, file_format, sep="")
 out_filename <- file.path(out_dir, out_filename)
 writeRaster(r_after_NDVI,
-            filename=out_filename,
-            datatype=data_type_str,
-            overwrite=T)
+            filename = out_filename,
+            datatype = data_type_str,
+            overwrite = T)
 
 
 # Class 1) vegetation and other (small water fraction)
@@ -163,19 +145,9 @@ legend("topleft", legend=names_vals,
 # Let's use a palette that reflects wetness or level of water 
 col_palette <- c("green","blue","darkblue")
 
-plot(NDVI ~ MNDWI,
-     xlim=c(-1,1), ylim=c(-1,1),
-     cex=0.2,
-     col=col_palette[1],
-     subset(pixels_df, class_ID==1))
-points(NDVI ~ MNDWI,
-       cex=0.2,
-       col=col_palette[2],
-       subset(pixels_df, class_ID==2))
-points(NDVI ~ MNDWI,
-       cex=0.2,
-       col=col_palette[3],
-       subset(pixels_df, class_ID==3))
+plot(NDVI ~ MNDWI, xlim=c(-1,1), ylim=c(-1,1), cex=0.2, col=col_palette[1], subset(pixels_df, class_ID==1))
+points(NDVI ~ MNDWI, cex=0.2, col=col_palette[2], subset(pixels_df, class_ID==2))
+points(NDVI ~ MNDWI, cex=0.2, col=col_palette[3], subset(pixels_df, class_ID==3))
 names_vals <- c("vegetation","wetland","water")
 legend("topright", legend=names_vals,
        pt.cex=0.7,cex=0.7, col=col_palette,
@@ -294,8 +266,8 @@ levelplot(r_predicted_svm, maxpixels = 1e6,
 
 
 ### Part IV: Assessment and comparison of model performance
-
-dim(data_df) # full dataset; let's use data points for testing
+# Full dataset; let's use data points for testing
+dim(data_df) 
 
 # omit values that contain NA, because may be problematic with SVM.
 data_testing <- na.omit(subset(data_df, training==0)) 
@@ -333,7 +305,7 @@ tb_svm[1]/sum(tb_svm[,1]) # producer accuracy
 # overall accuracy for svm
 sum(diag(tb_svm))/sum(table(testing_svm))
 
-# overall accuracy for rpart
+# Overall accuracy for rpart:
 sum(diag(tb_rpart))/sum(table(testing_rpart))
 
 
@@ -348,6 +320,5 @@ accuracy_info_svm$overall
 # write out the results:
 write.table(accuracy_info_rpart$table, "confusion_matrix_rpart.txt", sep=",")
 write.table(accuracy_info_svm$table, "confusion_matrix_svm.txt", sep=",")
-
 
 
