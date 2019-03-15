@@ -20,7 +20,7 @@ library(caret) # complex regression and classification models
 in_dir <- "data"
 
 out_dir_suffix <- "rsc_lesson"
-out_dir <- paste("output_", out_dir_suffix, sep="")
+out_dir <- paste("output_", out_dir_suffix, sep = "")
 dir.create(out_dir, showWarnings = FALSE)
 ```
 
@@ -68,14 +68,17 @@ MOD09 raster image after hurricane Rita.
 r_after <- brick(file.path(in_dir, infile_RITA_reflectance_date2))
 ```
 
+```{r}
+head(r_after)
+```
+
 ===
 
 Read band information since it is more informative.
 
 ```{r, title = '{{ site.handouts[0] }}'}
 df_modis_band_info <- read.table(file.path(in_dir, infile_modis_bands_information),
-                                 sep=",",
-                                 stringsAsFactors = F)
+                                 sep=",", stringsAsFactors = F)
 ```
 
 ```{r}
@@ -85,8 +88,6 @@ df_modis_band_info
 ===
 
 ```{r, title = '{{ site.handouts[0] }}'}
-df_modis_band_info$band_number <- c(3,4,1,2,5,6,7)
-
 band_refl_order <- df_modis_band_info$band_number
 
 names(r_after) <- df_modis_band_info$band_name
@@ -98,39 +99,42 @@ names(r_after)
 
 ===
 
-Note: Use subset instead of $ if you want to wrap code into function.
-
+Define bands of interest: Use subset instead of $ if you want to wrap code into function
 ```{r, title = '{{ site.handouts[0] }}'}
-r_after_MNDWI <- (subset(r_after, "Green") - subset(r_after, "SWIR2")) / (subset(r_after, "Green") + subset(r_after, "SWIR2"))
+raft_gr <- subset(r_after,"Green") 
+raft_SWIR <- subset(r_after,"SWIR2")
+raft_NIR <- subset(r_after,"NIR") 
+raft_rd <- subset(r_after,"Red")
+```
+
+===
+
+Manipulate bands of interest
+```{r, title = '{{ site.handouts[0] }}'}
+r_after_MNDWI <- (raft_gr - raft_SWIR) / (raft_gr + raft_SWIR)
 
 plot(r_after_MNDWI, zlim = c(-1,1))
+```
+
+```{r, title = '{{ site.handouts[0] }}'}
+r_after_NDVI <- (raft_NIR - raft_rd) / (raft_NIR + raft_rd)
+
+plot(r_after_NDVI)
 ```
 
 ===
 
 ```{r, title = '{{ site.handouts[0] }}'}
-r_after_NDVI <- (subset(r_after,"NIR") - subset(r_after,"Red")) / (subset(r_after,"NIR") + subset(r_after,"Red"))
-
-plot(r_after_NDVI)
-```
-
-```{r, title = '{{ site.handouts[0] }}'}
 data_type_str <- dataType(r_after_NDVI)
 
-NAvalue(r_after_MNDWI) <- NA_flag_val
-out_filename <- paste("mndwi_post_Rita","_", out_suffix, file_format, sep="")
-out_filename <- file.path(out_dir, out_filename)
-writeRaster(r_after_MNDWI,
-            filename = out_filename,
-            datatype = data_type_str,
+NAvalue(r_after_MNDWI) <- NA_flag_val # set NA value
+out_filename_mn <- file.path(out_dir, paste0("mndwi_post_Rita","_", out_suffix, file_format))
+writeRaster(r_after_MNDWI, filename = out_filename_mn, datatype = data_type_str,
             overwrite = T)
  
 NAvalue(r_after_NDVI) <- NA_flag_val
-out_filename <- paste("ndvi_post_Rita","_", out_suffix, file_format, sep="")
-out_filename <- file.path(out_dir, out_filename)
-writeRaster(r_after_NDVI,
-            filename = out_filename,
-            datatype = data_type_str,
+out_filename_nd <- file.path(out_dir, paste0("ndvi_post_Rita","_", out_suffix, file_format))
+writeRaster(r_after_NDVI, filename = out_filename_nd, datatype = data_type_str,
             overwrite = T)
 ```
 
@@ -144,7 +148,7 @@ Classes for Classification:
 
 ===
 
-Make a dataframe for each class:
+Read in a polygon for each class:
 
 ```{r, title = '{{ site.handouts[0] }}'}
 class1_data_sf <- st_read(file.path(in_dir, "class1_sites"))
@@ -166,13 +170,16 @@ class_data_sf$poly_ID <- 1:nrow(class_data_sf) # unique ID for each polygon
 nrow(class_data_sf) 
 ```
 
+```{r, title = '{{ site.handouts[0] }}'}
+class_data_sp <- as(class_data_sf, "Spatial") # convert sf object to s4 object
+```
+
 ===
 
+Make new rasters and raster stack.
 ```{r, title = '{{ site.handouts[0] }}'}
-class_data_sp <- as(class_data_sf, "Spatial")
-
-r_x <- init(r_after, "x") # raster with coordinates x
-r_y <- init(r_after, "x") # raster with coordiates y
+r_x <- init(r_after, "x") # initializes a raster with coordinates x
+r_y <- init(r_after, "x") # initializes a raster with coordiates y
 
 r_stack <- stack(r_x, r_y, r_after, r_after_NDVI, r_after_MNDWI)
 names(r_stack) <- c("x", "y", "Red", "NIR", "Blue", "Green", "SWIR1", "SWIR2", "SWIR3", "NDVI", "MNDWI")
@@ -186,9 +193,10 @@ We have 1547 pixels extracted.
 
 ===
 
+Make the dataframe used for classification.
 ```{r, title = '{{ site.handouts[0] }}'}
 class_data_df <- class_data_sf
-st_geometry(class_data_df) <- NULL # This will coerce the sf object into a data.frame
+st_geometry(class_data_df) <- NULL # This will coerce the sf object into a data.frame by removing the geometry
 
 pixels_df <- merge(pixels_extracted_df, class_data_df, by.x="ID", by.y="poly_ID")
 ```
@@ -226,7 +234,7 @@ legend("topleft", legend=names_vals,
 Let's use a palette that reflects wetness or level of water. 
 
 ```{r, title = '{{ site.handouts[0] }}'}
-col_palette <- c("green","blue","darkblue")
+col_palette <- c("green", "lightblue", "darkblue")
 
 plot(NDVI ~ MNDWI, xlim=c(-1,1), ylim=c(-1,1), cex=0.2, col=col_palette[1], subset(pixels_df,class_ID==1))
 points(NDVI ~ MNDWI, cex=0.2, col=col_palette[2], subset(pixels_df,class_ID==2))
@@ -247,13 +255,9 @@ rasterVis::histogram(r_after)
 ===
 
 ```{r, title = '{{ site.handouts[0] }}'}
-pixels_df$class_ID <- factor(pixels_df$class_ID,
-                      levels = c(1,2,3),
-                      labels = names_vals)
+pixels_df$class_ID <- factor(pixels_df$class_ID, levels = c(1,2,3), labels = names_vals)
 
-boxplot(MNDWI~class_ID,
-        pixels_df,
-        xlab="category",
+boxplot(MNDWI~class_ID, pixels_df, xlab="category",
         main="Boxplot for MNDWI per class")
 ```
 
@@ -312,8 +316,7 @@ Fit model using training data for CART.
 
 ```{r, title = '{{ site.handouts[0] }}'}
 mod_rpart <- rpart(class_ID ~ Red + NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
-                   method="class", 
-                   data=data_training)
+                   method="class", data=data_training)
 ```
 
 Plot the fitted classification tree.
@@ -328,24 +331,20 @@ text(mod_rpart, cex = .8)
 Now predict the subset data based on the model; prediction for entire area takes more time.
 
 ```{r, title = '{{ site.handouts[0] }}', progress = FALSE, results = 'hide'}
-raster_out_filename <- paste0("r_predicted_rpart_", out_suffix, file_format)
-raster_out_filename <- file.path(out_dir, raster_out_filename)
+raster_out_filename <- file.path(out_dir, paste0("r_predicted_rpart_", out_suffix, file_format))
 
-r_predicted_rpart <- predict(r_stack, mod_rpart, 
-                             type='class',
-                             filename=raster_out_filename,
-                             progress = 'text',
-                             overwrite=T)
+r_predicted_rpart <- predict(r_stack, mod_rpart, type='class', filename = raster_out_filename,
+                             progress = 'text', overwrite = T)
 ```
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r}
 plot(r_predicted_rpart)
 ```
 
 ```{r, title = '{{ site.handouts[0] }}'}
-r_predicted_rpart <- ratify(r_predicted_rpart)
+r_predicted_rpart <- ratify(r_predicted_rpart) # creates a raster attribute table (rat)
 rat <- levels(r_predicted_rpart)[[1]]
-rat$legend <- c("vegetation","wetland","water")
+rat$legend <- c("vegetation", "wetland", "water")
 levels(r_predicted_rpart) <- rat
 
 levelplot(r_predicted_rpart, maxpixels = 1e6,
@@ -361,9 +360,8 @@ levelplot(r_predicted_rpart, maxpixels = 1e6,
 Set class_ID as factor to generate classification.
 
 ```{r, title = '{{ site.handouts[0] }}'}
-mod_svm <- svm(class_ID ~ Red +NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
-               data=data_training,
-               method="C-classification",
+mod_svm <- svm(class_ID ~ Red + NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
+               data=data_training, method="C-classification",
                kernel="linear") # can be radial
 ```
 
@@ -375,15 +373,14 @@ summary(mod_svm)
 
 Now predict the subset data based on the model; prediction for entire area takes longer time.
 
-```{r, title = '{{ site.handouts[0] }}'}
-raster_out_filename <- paste0("r_predicted_svm_", out_suffix, file_format)
-raster_out_filename <- file.path(out_dir, raster_out_filename)
+```{r, title = '{{ site.handouts[0] }}', progress = FALSE, results = 'hide'}
+raster_out_filename <- file.path(out_dir, paste0("r_predicted_svm_", out_suffix, file_format))
   
-r_predicted_svm <- predict(r_stack, mod_svm,
-                           progress = 'text',
-                           filename = raster_out_filename,
-                           overwrite = T)
+r_predicted_svm <- predict(r_stack, mod_svm, progress = 'text',
+                           filename = raster_out_filename, overwrite = T)
+```
 
+```{r, title = '{{ site.handouts[0] }}'}
 plot(r_predicted_svm)
 ```
 
@@ -439,6 +436,7 @@ testing_svm <- predict(mod_svm, data_testing, type='class')
 Predicted classes:
 
 ```{r, title = '{{ site.handouts[0] }}'}
+table(testing_rpart)
 table(testing_svm)
 ```
 
@@ -481,11 +479,11 @@ tb_svm[1]/sum(tb_svm[,1]) # producer accuracy
 Looking at accuracy more closely:
 
 ```{r, title = '{{ site.handouts[0] }}'}
-# overall accuracy for svm
-sum(diag(tb_svm))/sum(table(testing_svm))
-
 # overall accuracy for rpart
 sum(diag(tb_rpart))/sum(table(testing_rpart))
+
+# overall accuracy for svm
+sum(diag(tb_svm))/sum(table(testing_svm))
 ```
 
 ===
@@ -493,8 +491,8 @@ sum(diag(tb_rpart))/sum(table(testing_rpart))
 Generate more accurate measurements from functions in the caret package:
 
 ```{r, title = '{{ site.handouts[0] }}'}
-accuracy_info_svm <- confusionMatrix(testing_svm, data_testing$class_ID, positive = NULL)
 accuracy_info_rpart <- confusionMatrix(testing_rpart, data_testing$class_ID, positive = NULL)
+accuracy_info_svm <- confusionMatrix(testing_svm, data_testing$class_ID, positive = NULL)
 ```
 
 Overall accuracy produced:
