@@ -101,10 +101,10 @@ names(r_after)
 
 Define bands of interest: Use subset instead of $ if you want to wrap code into function
 ```{r, title = '{{ site.handouts[0] }}'}
-raft_gr <- subset(r_after,"Green") 
-raft_SWIR <- subset(r_after,"SWIR2")
-raft_NIR <- subset(r_after,"NIR") 
-raft_rd <- subset(r_after,"Red")
+raft_gr <- subset(r_after, "Green") 
+raft_SWIR <- subset(r_after, "SWIR2")
+raft_NIR <- subset(r_after, "NIR") 
+raft_rd <- subset(r_after, "Red")
 ```
 
 ===
@@ -123,6 +123,11 @@ plot(r_after_NDVI)
 ```
 
 ===
+
+Write out rasters
+```{r}
+dataType(r_after_NDVI)
+```
 
 ```{r, title = '{{ site.handouts[0] }}'}
 data_type_str <- dataType(r_after_NDVI)

@@ -60,10 +60,10 @@ names(r_after) <- df_modis_band_info$band_name
 names(r_after)
 
 # Define bands of interest: Use subset instead of $ if you want to wrap code into function
-raft_gr <- subset(r_after,"Green") 
-raft_SWIR <- subset(r_after,"SWIR2")
-raft_NIR <- subset(r_after,"NIR") 
-raft_rd <- subset(r_after,"Red")
+raft_gr <- subset(r_after, "Green") 
+raft_SWIR <- subset(r_after, "SWIR2")
+raft_NIR <- subset(r_after, "NIR") 
+raft_rd <- subset(r_after, "Red")
 
 # Manipulate bands of interest
 r_after_MNDWI <- (raft_gr - raft_SWIR) / (raft_gr + raft_SWIR)
@@ -72,6 +72,8 @@ plot(r_after_MNDWI, zlim=c(-1,1))
 r_after_NDVI <- (raft_NIR - raft_rd) / (raft_NIR + raft_rd)
 plot(r_after_NDVI)
 
+# Write out rasters
+dataType(r_after_NDVI)
 data_type_str <- dataType(r_after_NDVI)
 
 NAvalue(r_after_MNDWI) <- NA_flag_val # set NA value
@@ -83,6 +85,14 @@ NAvalue(r_after_NDVI) <- NA_flag_val
 out_filename_nd <- file.path(out_dir, paste0("ndvi_post_Rita","_", out_suffix, file_format))
 writeRaster(r_after_NDVI, filename = out_filename_nd, datatype = data_type_str,
             overwrite = T)
+
+# Remove rasters from memory 
+rm(r_after_MNDWI)
+rm(r_after_NDVI)
+
+# Read in rasters 
+r_after_MNDWI <- raster(out_filename_mn)
+r_after_NDVI <- raster(out_filename_nd)
 
 
 
@@ -109,7 +119,7 @@ class_data_sp <- as(class_data_sf, "Spatial") # convert sf object to s4 object
 
 # Make new rasters and raster stack
 r_x <- init(r_after, "x") # initializes a raster with coordinates x
-r_y <- init(r_after, "x") # initializes a raster with coordiates y
+r_y <- init(r_after, "y") # initializes a raster with coordinates y
 
 r_stack <- stack(r_x, r_y, r_after, r_after_NDVI, r_after_MNDWI)
 names(r_stack) <- c("x", "y", "Red", "NIR", "Blue", "Green", "SWIR1", "SWIR2", "SWIR3", "NDVI", "MNDWI")
@@ -168,7 +178,6 @@ boxplot(MNDWI~class_ID, pixels_df, xlab="category",
 ### Part II: Split data into training and testing datasets 
 
 # Let's keep 30% of data for testing for each class
-pixels_df$pix_ID <- 1:nrow(pixels_df)
 prop <- 0.3
 table(pixels_df$class_ID)
 set.seed(100) ## set random seed for reproducibility
@@ -181,7 +190,7 @@ level_labels <- names_vals
 for(i in 1:3){
   data_df <- subset(pixels_df, class_ID==level_labels[i])
   data_df$pix_id <- 1:nrow(data_df)
-  indices <- as.vector(createDataPartition(data_df$pix_ID, p=0.7, list=F))
+  indices <- as.vector(createDataPartition(data_df$pix_id, p=0.7, list=F))
   data_df$training <- as.numeric(data_df$pix_id %in% indices)
   list_data_df[[i]] <- data_df
 }
@@ -300,8 +309,6 @@ sum(diag(tb_rpart))/sum(table(testing_rpart))
 
 # Overall accuracy for svm:
 sum(diag(tb_svm))/sum(table(testing_svm))
-
-
 
 
 
