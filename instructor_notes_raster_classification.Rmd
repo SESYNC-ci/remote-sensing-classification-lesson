@@ -1,0 +1,87 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+## Where?  
+Rita passed over the Gulf of Mexico in 2005 and headed north, impacting Texas and Louisiana most directly.  
+We will be looking at a small portion of land on the border between Louisiana and Texas for today's lesson.
+
+## Brick
+A raster brick is a multi-layer raster object.  It's used because it decreases processing time.  
+There are 7 bands in this raster here.  
+
+## MODIS bands
+Lines 48 - 60:
+NIR = near infrared
+SWIR = shortwave infrared - useful for looking at water-logged ground.
+
+MNDWI = modified normalized difference water index (one of many water indicies)
+NDVI = normalized difference vegetation index
+
+Spectral bands from MODIS are sensed (raw) at 500m, but for this class they have bene processed to 1 km to agree with scale of other products.  
+
+Using bands allows you to create your own indicies, but comes with challenges.
+
+## Writing out rasters
+Lines 78 - 86:
+Need to know about datatype when writing out a raster. 
+
+## sf = simple features
+Lines 94 - 96: 
+We are using the st_read() function, which is from the sf package.  It reads in the files as dataframes with a
+geometry column.  Therefore, we can use simple functions like rbind() to manipulate files. 
+
+
+
+
+
+------------
+
+fix the prop of training and testing on lines 171 an 183.  
+ - during testing change the proportion to test robustness of results
+
+
+-------------
+
+## CART: 
+Classification and Regression Trees
+Split the data by minimizing the variance in the branches to build the tree. 
+Unsupervised I think - attempts to find natural clustering as stated above.  
+
+
+
+## SVM:
+Supervised Learning Models 
+Analyze data used for classification and regression.  Performs probabilistic binary linear classification. 
+Tries to split the data with widest gap possible, i.e the maximum distance between data points of both classes. 
+Finds an optimal solution.
+Hyperplanes are decision boundaries that help classify the data points. These are lines in 2D, and planes in 3D.
+Good visuals here:
+https://towardsdatascience.com/support-vector-machine-introduction-to-machine-learning-algorithms-934a444fca47
+Support vectors are the data points that lie closest to the decision surface (or hyperplane).  
+
+-------------
+
+Q for Benoit: 
+
+lines 286 - 290 are only for rpart
+     - can look at the svm testing stuff too
+     
+How much explanation of CART and SVM should I do?
+  - a few sentences, and then point them to other resources.  
+  
+Give a short description of confusion matrix.
+
+Overall accuracy can be mis-leading.  Need to look at the map, or other metrics of accuracy such as producer's accuracy. 
+
+What's correctly classified is on the diagonal - what's off diagonal is incorrectly classified.
+
+
+
+
+
+
+
+
+

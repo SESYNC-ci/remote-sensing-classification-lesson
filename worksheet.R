@@ -113,8 +113,6 @@ class_data_sf$poly_ID <- 1:nrow(class_data_sf) # unique ID for each polygon
 # 23 different polygons used as ground truth data
 nrow(class_data_sf) 
 
-class_data_sp <- as(class_data_sf, "Spatial") # convert sf object to s4 object
-
 
 
 # Make new rasters and raster stack
@@ -183,7 +181,6 @@ table(pixels_df$class_ID)
 set.seed(100) ## set random seed for reproducibility
 
 
-# This is for one class: better to do this as a function but we use a loop for clarity here
 list_data_df <- vector("list", length=3)
 level_labels <- names_vals
 
