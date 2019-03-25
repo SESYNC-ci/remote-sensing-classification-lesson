@@ -236,6 +236,18 @@ r_after <- brick(file.path(in_dir, infile_RITA_reflectance_date2))
 {:.output}
 
 
+~~~r
+> inMemory(r_after) # check if raster in memory
+~~~
+{:.input title="Console"}
+
+
+~~~
+[1] FALSE
+~~~
+{:.output}
+
+
 ===
 
 Read band information since it is more informative.
@@ -275,8 +287,6 @@ df_modis_band_info <- read.table(file.path(in_dir, infile_modis_bands_informatio
 
 
 ~~~r
-band_refl_order <- df_modis_band_info$band_number
-
 names(r_after) <- df_modis_band_info$band_name
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
@@ -335,6 +345,32 @@ plot(r_after_NDVI)
 ![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-13-1.png)
 {:.captioned}
 
+
+
+~~~r
+> inMemory(r_after_MNDWI) # check if raster in memory
+~~~
+{:.input title="Console"}
+
+
+~~~
+[1] TRUE
+~~~
+{:.output}
+
+
+~~~r
+> inMemory(r_after_NDVI)
+~~~
+{:.input title="Console"}
+
+
+~~~
+[1] TRUE
+~~~
+{:.output}
+
+
 ===
 
 Write out rasters
@@ -381,6 +417,7 @@ rm(r_after_NDVI)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+Can view the .tif images written out in photo viewer.  
 
 Read in rasters 
 
@@ -392,13 +429,33 @@ r_after_NDVI <- raster(out_filename_nd)
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+
+
+~~~r
+> inMemory(r_after_MNDWI) ; inMemory(r_after_NDVI)
+~~~
+{:.input title="Console"}
+
+
+~~~
+[1] FALSE
+~~~
+{:.output}
+
+
+~~~
+[1] FALSE
+~~~
+{:.output}
+
+
 ===
 
-Classes for Classification:
-
-1. vegetation and other (small water fraction)
-2. Flooded vegetation
-3. Flooded area, or water (lake, etc.)
+### Groundtruthing data
+Three levels of flooding (water content) determined via external grountruthing. 
+Class 1: vegetation and other (small water fraction)
+Class 2: Flooded vegetation
+Class 3: Flooded area, or water (lake etc)
 
 ===
 
@@ -407,7 +464,7 @@ Read in a polygon for each class:
 
 
 ~~~r
-class1_data_sf <- st_read(file.path(in_dir, "class1_sites"))
+class1_data_sf <- st_read(file.path(in_dir, "class1_sites")) 
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
@@ -460,9 +517,43 @@ proj4string:    NA
 {:.output}
 
 
+
+
+~~~r
+> class1_data_sf
+~~~
+{:.input title="Console"}
+
+
+~~~
+Simple feature collection with 6 features and 2 fields
+geometry type:  POLYGON
+dimension:      XY
+bbox:           xmin: 1588619 ymin: 859495.9 xmax: 1830803 ymax: 941484.1
+epsg (SRID):    NA
+proj4string:    NA
+  record_ID class_ID                       geometry
+1         1        1 POLYGON ((1610283 929863.7,...
+2         2        1 POLYGON ((1755141 900167.2,...
+3         3        1 POLYGON ((1688209 924699.1,...
+4         4        1 POLYGON ((1821103 866597.2,...
+5         5        1 POLYGON ((1806876 941161.3,...
+6         6        1 POLYGON ((1588619 899198.8,...
+~~~
+{:.output}
+
+
+~~~r
+> plot(r_after_MNDWI, zlim=c(-1,1)) 
+> plot(class3_data_sf["class_ID"], add = TRUE, color = NA, border = "blue", lwd = 3)
+~~~
+{:.input title="Console"}
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-21-1.png)
+{:.captioned}
+
 ===
 
-Combine objects; note they should be in the same projection system.
+Combine polygons; note they should be in the same projection system.
 
 
 ~~~r
@@ -499,6 +590,38 @@ r_y <- init(r_after, "y") # initializes a raster with coordiates y
 
 r_stack <- stack(r_x, r_y, r_after, r_after_NDVI, r_after_MNDWI)
 names(r_stack) <- c("x", "y", "Red", "NIR", "Blue", "Green", "SWIR1", "SWIR2", "SWIR3", "NDVI", "MNDWI")
+~~~
+{:.text-document title="{{ site.handouts[0] }}"}
+
+
+
+
+~~~r
+> str(r_stack, max.level = 2)
+~~~
+{:.input title="Console"}
+
+
+~~~
+Formal class 'RasterStack' [package "raster"] with 11 slots
+  ..@ filename: chr ""
+  ..@ layers  :List of 11
+  ..@ title   : chr(0) 
+  ..@ extent  :Formal class 'Extent' [package "raster"] with 4 slots
+  ..@ rotated : logi FALSE
+  ..@ rotation:Formal class '.Rotation' [package "raster"] with 2 slots
+  ..@ ncols   : int 298
+  ..@ nrows   : int 116
+  ..@ crs     :Formal class 'CRS' [package "sp"] with 1 slot
+  ..@ history : list()
+  ..@ z       : list()
+~~~
+{:.output}
+
+
+
+
+~~~r
 pixels_extracted_df <- extract(r_stack, class_data_sf, df=T)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
@@ -594,13 +717,20 @@ We have 1547 pixels extracted.
 
 ===
 
-Make the dataframe used for classification.
+Sometimes useful to store data as a csv: have to remove geometry column.
 
 
 ~~~r
 class_data_df <- class_data_sf
 st_geometry(class_data_df) <- NULL # This will coerce the sf object into a data.frame by removing the geometry
+~~~
+{:.text-document title="{{ site.handouts[0] }}"}
 
+
+Make the dataframe used for classification.
+
+
+~~~r
 pixels_df <- merge(pixels_extracted_df, class_data_df, by.x="ID", by.y="poly_ID")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
@@ -651,49 +781,65 @@ table(pixels_df$class_ID) # count by class of pixels ground truth data
 
 ===
 
-### Examining site data used for the classification
+### Examining data used for the classification
 
-Water
+Define geographic range.
 
 
 
 ~~~r
 x_range <- range(pixels_df$Green, na.rm=T)
 y_range <- range(pixels_df$NIR, na.rm=T)
-
-plot(NIR~Green, xlim=x_range, ylim=y_range, cex=0.2, col="blue", subset(pixels_df, class_ID==1))
-points(NIR~Green, col="green", cex=0.2, subset(pixels_df, class_ID==2))
-points(NIR~Green, col="red", cex=0.2, subset(pixels_df, class_ID==3))
-names_vals <- c("water class 1", "water class 2", "water class 3")
-legend("topleft", legend=names_vals,
-       pt.cex=0.7, cex=0.7, col=c("blue", "green", "red"),
-       pch=20, # add circle symbol to line
-       bty="n")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-26-1.png)
-{:.captioned}
 
-===
 
-Let's use a palette that reflects wetness or level of water. 
+Let's use a palette that reflects flooding or level of water.
 
 
 
 ~~~r
 col_palette <- c("green", "lightblue", "darkblue")
+~~~
+{:.text-document title="{{ site.handouts[0] }}"}
 
-plot(NDVI ~ MNDWI, xlim=c(-1,1), ylim=c(-1,1), cex=0.2, col=col_palette[1], subset(pixels_df,class_ID==1))
-points(NDVI ~ MNDWI, cex=0.2, col=col_palette[2], subset(pixels_df,class_ID==2))
-points(NDVI ~ MNDWI, cex=0.2, col=col_palette[3], subset(pixels_df,class_ID==3))
+
+===
+
+Many ways of looking at these data:
+
+
+
+~~~r
+> plot(NIR~Green, xlim=x_range, ylim=y_range, cex=0.3, col=col_palette[1], subset(pixels_df, class_ID==1))
+> points(NIR~Green, col=col_palette[2], cex=0.3, subset(pixels_df, class_ID==2))
+> points(NIR~Green, col=col_palette[3], cex=0.3, subset(pixels_df, class_ID==3))
+> names_vals <- c("vegetation","wetland","water")
+> legend("topleft", legend=names_vals,
++        pt.cex=0.7, cex=0.7, col=col_palette,
++        pch=20, # add circle symbol to line
++        bty="n")
+~~~
+{:.input title="Console"}
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-34-1.png)
+{:.captioned}
+
+===
+
+
+
+~~~r
+plot(NDVI ~ MNDWI, xlim=c(-1,1), ylim=c(-1,1), cex=0.3, col=col_palette[1], subset(pixels_df, class_ID==1))
+points(NDVI ~ MNDWI, cex=0.3, col=col_palette[2], subset(pixels_df, class_ID==2))
+points(NDVI ~ MNDWI, cex=0.3, col=col_palette[3], subset(pixels_df, class_ID==3))
 names_vals <- c("vegetation","wetland","water")
-legend("topright",legend=names_vals,
-       pt.cex=0.7,cex=0.7,col=col_palette,
+legend("topright", legend=names_vals,
+       pt.cex=0.7,cex=0.7, col=col_palette,
        pch=20, # add circle symbol to line
        bty="n")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-27-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-35-1.png)
 {:.captioned}
 
 ===
@@ -704,7 +850,7 @@ legend("topright",legend=names_vals,
 rasterVis::histogram(r_after)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-28-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-36-1.png)
 {:.captioned}
 
 ===
@@ -718,7 +864,7 @@ boxplot(MNDWI~class_ID, pixels_df, xlab="category",
         main="Boxplot for MNDWI per class")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-29-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-37-1.png)
 {:.captioned}
 
 ===
@@ -732,7 +878,6 @@ Let's keep 30% of data for testing for each class, and set a fixed seed for repr
 
 
 ~~~r
-pixels_df$pix_ID <- 1:nrow(pixels_df)
 set.seed(100)
 prop <- 0.3
 table(pixels_df$class_ID)
@@ -778,7 +923,7 @@ data_df <- do.call(rbind, list_data_df)
 
 
 ~~~
-[1] 1547   17
+[1] 1547   16
 ~~~
 {:.output}
 
@@ -797,20 +942,20 @@ data_df <- do.call(rbind, list_data_df)
 4  1 1616266 935352.5 0.05805403 0.3081988 0.02711912 0.05750944 0.3229090
 5  1 1617193 935352.5 0.04147716 0.3058677 0.01839499 0.05076184 0.3003513
 6  1 1618120 935352.5 0.04209801 0.3089238 0.01832494 0.05200353 0.2943777
-      SWIR2      SWIR3      NDVI      MNDWI record_ID   class_ID pix_ID
+      SWIR2      SWIR3      NDVI      MNDWI record_ID   class_ID pix_id
 1 0.1936452 0.07864757 0.7024759 -0.5474963         1 vegetation      1
 2 0.2102322 0.08679578 0.7014884 -0.5385503         1 vegetation      2
 3 0.2073480 0.08732812 0.6823238 -0.5714722         1 vegetation      3
 4 0.2079238 0.08741243 0.6829839 -0.5666749         1 vegetation      4
 5 0.1692552 0.06590501 0.7611759 -0.5385644         1 vegetation      5
 6 0.1697936 0.06790353 0.7601402 -0.5310712         1 vegetation      6
-  pix_id training
-1      1        0
-2      2        1
-3      3        0
-4      4        0
-5      5        1
-6      6        0
+  training
+1        0
+2        1
+3        0
+4        0
+5        1
+6        0
 ~~~
 {:.output}
 
@@ -851,19 +996,19 @@ plot(mod_rpart, uniform = TRUE, main = "Classification Tree", mar = c(0.1, 0.1, 
 text(mod_rpart, cex = .8)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-35-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-43-1.png)
 {:.captioned}
 
 ===
 
-Now predict the subset data based on the model; prediction for entire area takes more time.
+Now predict the subset data based on the model.
 
 
 
 ~~~r
-raster_out_filename <- file.path(out_dir, paste0("r_predicted_rpart_", out_suffix, file_format))
+raster_out_filename_rp <- file.path(out_dir, paste0("r_predicted_rpart_", out_suffix, file_format))
 
-r_predicted_rpart <- predict(r_stack, mod_rpart, type='class', filename = raster_out_filename,
+r_predicted_rpart <- predict(r_stack, mod_rpart, type='class', filename = raster_out_filename_rp,
                              progress = 'text', overwrite = T)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
@@ -875,7 +1020,7 @@ r_predicted_rpart <- predict(r_stack, mod_rpart, type='class', filename = raster
 > plot(r_predicted_rpart)
 ~~~
 {:.input title="Console"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-37-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-45-1.png)
 {:.captioned}
 
 
@@ -892,7 +1037,7 @@ levelplot(r_predicted_rpart, maxpixels = 1e6,
           main = "Classification Tree")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-38-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-46-1.png)
 {:.captioned}
 
 ===
@@ -948,15 +1093,15 @@ Levels:
 
 ===
 
-Now predict the subset data based on the model; prediction for entire area takes longer time.
+Now predict the subset data based on the model.
 
 
 
 ~~~r
-raster_out_filename <- file.path(out_dir, paste0("r_predicted_svm_", out_suffix, file_format))
+raster_out_filename_sv <- file.path(out_dir, paste0("r_predicted_svm_", out_suffix, file_format))
   
 r_predicted_svm <- predict(r_stack, mod_svm, progress = 'text',
-                           filename = raster_out_filename, overwrite = T)
+                           filename = raster_out_filename_sv, overwrite = T)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
@@ -967,7 +1112,7 @@ r_predicted_svm <- predict(r_stack, mod_svm, progress = 'text',
 plot(r_predicted_svm)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-42-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-50-1.png)
 {:.captioned}
 
 
@@ -976,7 +1121,7 @@ plot(r_predicted_svm)
 rasterVis::histogram(r_predicted_svm)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-43-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-51-1.png)
 {:.captioned}
 
 
@@ -993,7 +1138,7 @@ levelplot(r_predicted_svm, maxpixels = 1e6,
           main = "SVM classification")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-44-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-52-1.png)
 {:.captioned}
 
 ===
@@ -1001,7 +1146,7 @@ levelplot(r_predicted_svm, maxpixels = 1e6,
 ## Part IV: Assessment and comparison of model performance
 
 Set up testing data:
-Full dataset, let's use data points for testing
+Full dataset, let's use data points for testing.
 
 
 ~~~r
@@ -1011,7 +1156,7 @@ Full dataset, let's use data points for testing
 
 
 ~~~
-[1] 1547   17
+[1] 1547   16
 ~~~
 {:.output}
 
@@ -1034,14 +1179,14 @@ data_testing <- na.omit(subset(data_df, training==0))
 
 
 ~~~
-[1] 450  17
+[1] 450  16
 ~~~
 {:.output}
 
 
 ===
 
-Predict on testing data using rpart model fitted with training data.
+Predict on testing data using rpart model fitted with testing data.
 
 
 
@@ -1051,7 +1196,7 @@ testing_rpart <- predict(mod_rpart, data_testing, type='class')
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
-Predict on testing data using SVM model fitted with training data
+Predict on testing data using SVM model fitted with testing data.
 
 
 
@@ -1061,7 +1206,7 @@ testing_svm <- predict(mod_svm, data_testing, type='class')
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
-Predicted classes:
+Predicted number of pixels in each class:
 
 
 
@@ -1099,20 +1244,25 @@ vegetation    wetland      water
 
 More info on confusion matrices here: http://spatial-analyst.net/ILWIS/htm/ilwismen/confusion_matrix.htm
 
-Need to use: 
-testing_rpart: contains map prediction in the rows
-data_testing$class_ID: this column contains ground truth data
+Groundtruth data: 
 
 
 
 ~~~r
-tb_rpart <- table(testing_rpart, data_testing$class_ID)
-tb_svm <- table(testing_svm, data_testing$class_ID)
+> table(data_testing$class_ID)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:.input title="Console"}
 
 
-classification, map results
+~~~
+
+vegetation    wetland      water 
+       149         84        217 
+~~~
+{:.output}
+
+
+Classification model results:
 
 
 
@@ -1144,27 +1294,58 @@ vegetation    wetland      water
 {:.output}
 
 
-reference, ground truth in columns
+To generate confusion matrix, need to use: 
+testing_rpart: contains classification model prediction in the rows
+data_testing$class_ID: this column contains groundtruth data
 
 
 
 ~~~r
-> table(data_testing$class_ID)
+tb_rpart <- table(testing_rpart, data_testing$class_ID)
+tb_svm <- table(testing_svm, data_testing$class_ID)
+~~~
+{:.text-document title="{{ site.handouts[0] }}"}
+
+
+Matrices identifying correct and incorrect classifications by models:
+
+
+
+~~~r
+> tb_rpart
 ~~~
 {:.input title="Console"}
 
 
 ~~~
+             
+testing_rpart vegetation wetland water
+   vegetation        146       3     0
+   wetland             3      68     6
+   water               0      13   211
+~~~
+{:.output}
 
-vegetation    wetland      water 
-       149         84        217 
+
+~~~r
+> tb_svm
+~~~
+{:.input title="Console"}
+
+
+~~~
+            
+testing_svm  vegetation wetland water
+  vegetation        149       1     0
+  wetland             0      73     5
+  water               0      10   212
 ~~~
 {:.output}
 
 
 ===
 
-Accuracy (producer's accuracy): the fraction of correctly classified pixels compared to all pixels of that ground truth class.
+Accuracy (producer's accuracy): the fraction of correctly classified pixels compared to all pixels of that groundtruth class.
 
 
 
