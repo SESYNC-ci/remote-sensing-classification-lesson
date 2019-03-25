@@ -302,10 +302,10 @@ Define bands of interest: Use subset instead of $ if you want to wrap code into 
 
 
 ~~~r
-raft_gr <- subset(r_after,"Green") 
-raft_SWIR <- subset(r_after,"SWIR2")
-raft_NIR <- subset(r_after,"NIR") 
-raft_rd <- subset(r_after,"Red")
+raft_gr <- subset(r_after, "Green") 
+raft_SWIR <- subset(r_after, "SWIR2")
+raft_NIR <- subset(r_after, "NIR") 
+raft_rd <- subset(r_after, "Red")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
@@ -337,6 +337,21 @@ plot(r_after_NDVI)
 
 ===
 
+Write out rasters
+
+
+~~~r
+> dataType(r_after_NDVI)
+~~~
+{:.input title="Console"}
+
+
+~~~
+[1] "FLT4S"
+~~~
+{:.output}
+
+
 
 
 ~~~r
@@ -351,6 +366,28 @@ NAvalue(r_after_NDVI) <- NA_flag_val
 out_filename_nd <- file.path(out_dir, paste0("ndvi_post_Rita","_", out_suffix, file_format))
 writeRaster(r_after_NDVI, filename = out_filename_nd, datatype = data_type_str,
             overwrite = T)
+~~~
+{:.text-document title="{{ site.handouts[0] }}"}
+
+
+===
+
+Remove rasters from memory
+
+
+~~~r
+rm(r_after_MNDWI)
+rm(r_after_NDVI)
+~~~
+{:.text-document title="{{ site.handouts[0] }}"}
+
+
+Read in rasters 
+
+
+~~~r
+r_after_MNDWI <- raster(out_filename_mn)
+r_after_NDVI <- raster(out_filename_nd)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
@@ -451,14 +488,6 @@ class_data_sf$poly_ID <- 1:nrow(class_data_sf) # unique ID for each polygon
 {:.output}
 
 
-
-
-~~~r
-class_data_sp <- as(class_data_sf, "Spatial") # convert sf object to s4 object
-~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-
-
 ===
 
 Make new rasters and raster stack.
@@ -466,7 +495,7 @@ Make new rasters and raster stack.
 
 ~~~r
 r_x <- init(r_after, "x") # initializes a raster with coordinates x
-r_y <- init(r_after, "x") # initializes a raster with coordiates y
+r_y <- init(r_after, "y") # initializes a raster with coordiates y
 
 r_stack <- stack(r_x, r_y, r_after, r_after_NDVI, r_after_MNDWI)
 names(r_stack) <- c("x", "y", "Red", "NIR", "Blue", "Green", "SWIR1", "SWIR2", "SWIR3", "NDVI", "MNDWI")
@@ -586,16 +615,16 @@ pixels_df <- merge(pixels_extracted_df, class_data_df, by.x="ID", by.y="poly_ID"
 
 
 ~~~
-  ID       x       y        Red       NIR       Blue      Green     SWIR1
-1  1 1615340 1615340 0.05304649 0.3035397 0.02652384 0.05662384 0.3101271
-2  1 1614413 1614413 0.05782417 0.3295924 0.02751791 0.06305390 0.3453724
-3  1 1615340 1615340 0.05735013 0.3037102 0.02596963 0.05654212 0.3176476
-4  1 1616266 1616266 0.05805403 0.3081988 0.02711912 0.05750944 0.3229090
-5  1 1617193 1617193 0.04147716 0.3058677 0.01839499 0.05076184 0.3003513
-6  1 1618120 1618120 0.04209801 0.3089238 0.01832494 0.05200353 0.2943777
+  ID       x        y        Red       NIR       Blue      Green     SWIR1
+1  1 1615340 936279.2 0.05304649 0.3035397 0.02652384 0.05662384 0.3101271
+2  1 1614413 935352.5 0.05782417 0.3295924 0.02751791 0.06305390 0.3453724
+3  1 1615340 935352.5 0.05735013 0.3037102 0.02596963 0.05654212 0.3176476
+4  1 1616266 935352.5 0.05805403 0.3081988 0.02711912 0.05750944 0.3229090
+5  1 1617193 935352.5 0.04147716 0.3058677 0.01839499 0.05076184 0.3003513
+6  1 1618120 935352.5 0.04209801 0.3089238 0.01832494 0.05200353 0.2943777
       SWIR2      SWIR3      NDVI      MNDWI record_ID class_ID
-1 0.1936452 0.07864757 0.7024759 -0.5474962         1        1
-2 0.2102322 0.08679578 0.7014884 -0.5385502         1        1
+1 0.1936452 0.07864757 0.7024759 -0.5474963         1        1
+2 0.2102322 0.08679578 0.7014884 -0.5385503         1        1
 3 0.2073480 0.08732812 0.6823238 -0.5714722         1        1
 4 0.2079238 0.08741243 0.6829839 -0.5666749         1        1
 5 0.1692552 0.06590501 0.7611759 -0.5385644         1        1
@@ -642,7 +671,7 @@ legend("topleft", legend=names_vals,
        bty="n")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-24-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-26-1.png)
 {:.captioned}
 
 ===
@@ -664,7 +693,7 @@ legend("topright",legend=names_vals,
        bty="n")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-25-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-27-1.png)
 {:.captioned}
 
 ===
@@ -675,7 +704,7 @@ legend("topright",legend=names_vals,
 rasterVis::histogram(r_after)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-26-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-28-1.png)
 {:.captioned}
 
 ===
@@ -689,7 +718,7 @@ boxplot(MNDWI~class_ID, pixels_df, xlab="category",
         main="Boxplot for MNDWI per class")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-27-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-29-1.png)
 {:.captioned}
 
 ===
@@ -721,8 +750,6 @@ vegetation    wetland      water
 
 ===
 
-This is for one class: better to do this as a function but we use a loop for clarity here.
-
 
 
 ~~~r
@@ -732,7 +759,7 @@ level_labels <- names_vals
 for(i in 1:3){
   data_df <- subset(pixels_df, class_ID==level_labels[i])
   data_df$pix_id <- 1:nrow(data_df)
-  indices <- as.vector(createDataPartition(data_df$pix_ID, p=0.7, list=F))
+  indices <- as.vector(createDataPartition(data_df$pix_id, p=(1-prop), list=F))
   data_df$training <- as.numeric(data_df$pix_id %in% indices)
   list_data_df[[i]] <- data_df
 }
@@ -763,16 +790,16 @@ data_df <- do.call(rbind, list_data_df)
 
 
 ~~~
-  ID       x       y        Red       NIR       Blue      Green     SWIR1
-1  1 1615340 1615340 0.05304649 0.3035397 0.02652384 0.05662384 0.3101271
-2  1 1614413 1614413 0.05782417 0.3295924 0.02751791 0.06305390 0.3453724
-3  1 1615340 1615340 0.05735013 0.3037102 0.02596963 0.05654212 0.3176476
-4  1 1616266 1616266 0.05805403 0.3081988 0.02711912 0.05750944 0.3229090
-5  1 1617193 1617193 0.04147716 0.3058677 0.01839499 0.05076184 0.3003513
-6  1 1618120 1618120 0.04209801 0.3089238 0.01832494 0.05200353 0.2943777
+  ID       x        y        Red       NIR       Blue      Green     SWIR1
+1  1 1615340 936279.2 0.05304649 0.3035397 0.02652384 0.05662384 0.3101271
+2  1 1614413 935352.5 0.05782417 0.3295924 0.02751791 0.06305390 0.3453724
+3  1 1615340 935352.5 0.05735013 0.3037102 0.02596963 0.05654212 0.3176476
+4  1 1616266 935352.5 0.05805403 0.3081988 0.02711912 0.05750944 0.3229090
+5  1 1617193 935352.5 0.04147716 0.3058677 0.01839499 0.05076184 0.3003513
+6  1 1618120 935352.5 0.04209801 0.3089238 0.01832494 0.05200353 0.2943777
       SWIR2      SWIR3      NDVI      MNDWI record_ID   class_ID pix_ID
-1 0.1936452 0.07864757 0.7024759 -0.5474962         1 vegetation      1
-2 0.2102322 0.08679578 0.7014884 -0.5385502         1 vegetation      2
+1 0.1936452 0.07864757 0.7024759 -0.5474963         1 vegetation      1
+2 0.2102322 0.08679578 0.7014884 -0.5385503         1 vegetation      2
 3 0.2073480 0.08732812 0.6823238 -0.5714722         1 vegetation      3
 4 0.2079238 0.08741243 0.6829839 -0.5666749         1 vegetation      4
 5 0.1692552 0.06590501 0.7611759 -0.5385644         1 vegetation      5
@@ -824,7 +851,7 @@ plot(mod_rpart, uniform = TRUE, main = "Classification Tree", mar = c(0.1, 0.1, 
 text(mod_rpart, cex = .8)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-33-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-35-1.png)
 {:.captioned}
 
 ===
@@ -848,7 +875,7 @@ r_predicted_rpart <- predict(r_stack, mod_rpart, type='class', filename = raster
 > plot(r_predicted_rpart)
 ~~~
 {:.input title="Console"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-35-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-37-1.png)
 {:.captioned}
 
 
@@ -865,7 +892,7 @@ levelplot(r_predicted_rpart, maxpixels = 1e6,
           main = "Classification Tree")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-36-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-38-1.png)
 {:.captioned}
 
 ===
@@ -940,7 +967,7 @@ r_predicted_svm <- predict(r_stack, mod_svm, progress = 'text',
 plot(r_predicted_svm)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-40-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-42-1.png)
 {:.captioned}
 
 
@@ -949,7 +976,7 @@ plot(r_predicted_svm)
 rasterVis::histogram(r_predicted_svm)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-41-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-43-1.png)
 {:.captioned}
 
 
@@ -966,7 +993,7 @@ levelplot(r_predicted_svm, maxpixels = 1e6,
           main = "SVM classification")
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-42-1.png)
+![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-44-1.png)
 {:.captioned}
 
 ===
@@ -1099,6 +1126,20 @@ classification, map results
 testing_rpart
 vegetation    wetland      water 
        149         77        224 
+~~~
+{:.output}
+
+
+~~~r
+> table(testing_svm)
+~~~
+{:.input title="Console"}
+
+
+~~~
+testing_svm
+vegetation    wetland      water 
+       150         78        222 
 ~~~
 {:.output}
 
