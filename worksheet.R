@@ -48,13 +48,12 @@ nlcd_2006_filename <- "nlcd_2006_RITA.tif" # NLCD2006 Land cover data aggregated
 ### Display and explore the data
 r_after <- brick(file.path(in_dir, infile_RITA_reflectance_date2)) # MOD09 raster image after hurricane Rita
 head(r_after)
+inMemory(r_after) # check if raster in memory
 
 # Read band information since it is more informative!!
 df_modis_band_info <- read.table(file.path(in_dir, infile_modis_bands_information),
                                  sep=",", stringsAsFactors = F)
 df_modis_band_info
-
-band_refl_order <- df_modis_band_info$band_number
 
 names(r_after) <- df_modis_band_info$band_name
 names(r_after)
@@ -71,6 +70,9 @@ plot(r_after_MNDWI, zlim=c(-1,1))
 
 r_after_NDVI <- (raft_NIR - raft_rd) / (raft_NIR + raft_rd)
 plot(r_after_NDVI)
+
+inMemory(r_after_MNDWI) # check if raster in memory
+inMemory(r_after_NDVI)
 
 # Write out rasters
 dataType(r_after_NDVI)
@@ -90,22 +92,32 @@ writeRaster(r_after_NDVI, filename = out_filename_nd, datatype = data_type_str,
 rm(r_after_MNDWI)
 rm(r_after_NDVI)
 
+# Can view the .tif images written out in photo viewer.
+
 # Read in rasters 
 r_after_MNDWI <- raster(out_filename_mn)
 r_after_NDVI <- raster(out_filename_nd)
 
+inMemory(r_after_MNDWI) ; inMemory(r_after_NDVI)
 
 
-# Class 1) vegetation and other (small water fraction)
-# Class 2) Flooded vegetation
-# Class 3) Flooded area, or water (lake etc)
+
+# Groundtruthing data
+# Three levels of flooding (water content) determined via external grountruthing. 
+# Class 1: vegetation and other (small water fraction)
+# Class 2: Flooded vegetation
+# Class 3: Flooded area, or water (lake etc)
 
 # Read in a polygon for each class:
 class1_data_sf <- st_read(file.path(in_dir, "class1_sites"))
 class2_data_sf <- st_read(file.path(in_dir, "class2_sites"))
 class3_data_sf <- st_read(file.path(in_dir, "class3_sites"))
 
-# Combine objects; note they should be in the same projection system.
+class1_data_sf
+plot(r_after_MNDWI, zlim=c(-1,1)) 
+plot(class3_data_sf["class_ID"], add = TRUE, color = NA, border = "blue", lwd = 3)
+
+# Combine polygons; note they should be in the same projection system.
 class_data_sf <- rbind(class1_data_sf, class2_data_sf, class3_data_sf)
 
 class_data_sf$poly_ID <- 1:nrow(class_data_sf) # unique ID for each polygon
@@ -121,14 +133,14 @@ r_y <- init(r_after, "y") # initializes a raster with coordinates y
 
 r_stack <- stack(r_x, r_y, r_after, r_after_NDVI, r_after_MNDWI)
 names(r_stack) <- c("x", "y", "Red", "NIR", "Blue", "Green", "SWIR1", "SWIR2", "SWIR3", "NDVI", "MNDWI")
+str(r_stack, max.level = 2)
 
 pixels_extracted_df <- extract(r_stack, class_data_sf, df=T)
 dim(pixels_extracted_df) # We have 1547 pixels extracted.
 
+# Sometimes useful to store data as a csv: have to remove geometry column.
 class_data_df <- class_data_sf
 st_geometry(class_data_df) <- NULL # This will coerce the sf object into a data.frame by removing the geometry
-
-
 
 # Make the dataframe used for classification
 pixels_df <- merge(pixels_extracted_df, class_data_df, by.x="ID", by.y="poly_ID")
@@ -137,27 +149,28 @@ head(pixels_df)
 table(pixels_df$class_ID) # count by class of pixels ground truth data
 
 
-### Examining site data used for the classification
 
-# Water
-x_range <- range(pixels_df$Green, na.rm=T)
+### Examining data used for the classification
+x_range <- range(pixels_df$Green, na.rm=T) # Define geographic range.
 y_range <- range(pixels_df$NIR, na.rm=T)
 
-plot(NIR~Green, xlim=x_range, ylim=y_range, cex=0.2, col="blue", subset(pixels_df, class_ID==1))
-points(NIR~Green, col="green", cex=0.2, subset(pixels_df, class_ID==2))
-points(NIR~Green, col="red", cex=0.2, subset(pixels_df, class_ID==3))
-names_vals <- c("water class 1","water class 2","water class 3")
+# Let's use a palette that reflects flooding or level of water. 
+col_palette <- c("green", "lightblue", "darkblue")
+
+# Many ways of looking at these data:
+
+plot(NIR~Green, xlim=x_range, ylim=y_range, cex=0.3, col=col_palette[1], subset(pixels_df, class_ID==1))
+points(NIR~Green, col=col_palette[2], cex=0.3, subset(pixels_df, class_ID==2))
+points(NIR~Green, col=col_palette[3], cex=0.3, subset(pixels_df, class_ID==3))
+names_vals <- c("vegetation","wetland","water")
 legend("topleft", legend=names_vals,
-       pt.cex=0.7, cex=0.7, col=c("blue","green","red"),
+       pt.cex=0.7, cex=0.7, col=col_palette,
        pch=20, # add circle symbol to line
        bty="n")
 
-# Let's use a palette that reflects wetness or level of water 
-col_palette <- c("green", "lightblue", "darkblue")
-
-plot(NDVI ~ MNDWI, xlim=c(-1,1), ylim=c(-1,1), cex=0.2, col=col_palette[1], subset(pixels_df, class_ID==1))
-points(NDVI ~ MNDWI, cex=0.2, col=col_palette[2], subset(pixels_df, class_ID==2))
-points(NDVI ~ MNDWI, cex=0.2, col=col_palette[3], subset(pixels_df, class_ID==3))
+plot(NDVI ~ MNDWI, xlim=c(-1,1), ylim=c(-1,1), cex=0.3, col=col_palette[1], subset(pixels_df, class_ID==1))
+points(NDVI ~ MNDWI, cex=0.3, col=col_palette[2], subset(pixels_df, class_ID==2))
+points(NDVI ~ MNDWI, cex=0.3, col=col_palette[3], subset(pixels_df, class_ID==3))
 names_vals <- c("vegetation","wetland","water")
 legend("topright", legend=names_vals,
        pt.cex=0.7,cex=0.7, col=col_palette,
@@ -175,11 +188,10 @@ boxplot(MNDWI~class_ID, pixels_df, xlab="category",
 
 ### Part II: Split data into training and testing datasets 
 
-# Let's keep 30% of data for testing for each class
+# Let's keep 30% of data for testing for each class, and set a fixed seed for reproducibility.
+set.seed(100) 
 prop <- 0.3
-table(pixels_df$class_ID)
-set.seed(100) ## set random seed for reproducibility
-
+table(pixels_df$class_ID) 
 
 list_data_df <- vector("list", length=3)
 level_labels <- names_vals
@@ -187,7 +199,7 @@ level_labels <- names_vals
 for(i in 1:3){
   data_df <- subset(pixels_df, class_ID==level_labels[i])
   data_df$pix_id <- 1:nrow(data_df)
-  indices <- as.vector(createDataPartition(data_df$pix_id, p=0.7, list=F))
+  indices <- as.vector(createDataPartition(data_df$pix_id, p=(1-prop), list=F))
   data_df$training <- as.numeric(data_df$pix_id %in% indices)
   list_data_df[[i]] <- data_df
 }
@@ -209,14 +221,14 @@ data_training <- subset(data_df, training==1)
 mod_rpart <- rpart(class_ID ~ Red + NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
                    method="class", data=data_training)  
 
-# Plot the fitted  classification tree
+# Plot the fitted classification tree
 plot(mod_rpart, uniform = TRUE, main = "Classification Tree", mar = c(0.1, 0.1, 0.1, 0.1))
 text(mod_rpart, cex = .8)
 
-# Now predict the subset data based on the model; prediction for entire area takes longer time
-raster_out_filename <- file.path(out_dir, paste0("r_predicted_rpart_", out_suffix, file_format))
+# Now predict the subset data based on the model.
+raster_out_filename_rp <- file.path(out_dir, paste0("r_predicted_rpart_", out_suffix, file_format))
 
-r_predicted_rpart <- predict(r_stack, mod_rpart, type='class', filename = raster_out_filename,
+r_predicted_rpart <- predict(r_stack, mod_rpart, type='class', filename = raster_out_filename_rp,
                              progress = 'text', overwrite = T)
 
 plot(r_predicted_rpart)
@@ -241,11 +253,11 @@ mod_svm <- svm(class_ID ~ Red + NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
 
 summary(mod_svm)
 
-# Now predict the subset data based on the model; prediction for entire area takes longer time
-raster_out_filename <- file.path(out_dir, paste0("r_predicted_svm_", out_suffix, file_format))
+# Now predict the subset data based on the model.
+raster_out_filename_sv <- file.path(out_dir, paste0("r_predicted_svm_", out_suffix, file_format))
 
 r_predicted_svm <- predict(r_stack, mod_svm, progress = 'text',
-                           filename = raster_out_filename, overwrite = T)
+                           filename = raster_out_filename_sv, overwrite = T)
 
 plot(r_predicted_svm)
 
@@ -271,13 +283,13 @@ dim(data_df)
 data_testing <- na.omit(subset(data_df, training==0)) 
 dim(data_testing)
 
-# Predict on testing data using rpart model fitted with training data
+# Predict on testing data using rpart model fitted with testing data.
 testing_rpart <- predict(mod_rpart, data_testing, type='class')
 
-# Predict on testing data using SVM model fitted with training data
+# Predict on testing data using SVM model fitted with testing data.
 testing_svm <- predict(mod_svm, data_testing, type='class')
 
-# Predicted classes:
+# Predicted number of pixels in each class:
 table(testing_rpart)
 table(testing_svm)
 
@@ -286,17 +298,26 @@ table(testing_svm)
 ### Generate confusion matrix to assess the performance of the model
 # More info on confusion matrices here: http://spatial-analyst.net/ILWIS/htm/ilwismen/confusion_matrix.htm
 
-# Need to use: 
-# testing_rpart: contains map prediction in the rows
-# data_testing$class_ID: this column contains ground truth data 
+# Groundtruth data: 
+table(data_testing$class_ID)
+
+# Classification model results:
+table(testing_rpart)
+table(testing_svm)
+
+# To generate confusion matrix, need to use: 
+# testing_rpart: contains classification model prediction in the rows
+# data_testing$class_ID: this column contains groundtruth data
 tb_rpart <- table(testing_rpart, data_testing$class_ID)
 tb_svm <- table(testing_svm, data_testing$class_ID)
 
-table(testing_rpart) # classification, map results
-table(data_testing$class_ID) # reference, ground truth in columns
+# Matrices identifying correct and incorrect classifications by models:
+tb_rpart
+tb_svm
+
 
 # Accuracy (producer's accuracy): the fraction of correctly classified pixels compared to all pixels 
-# of that ground truth class. 
+# of that groundtruth class. 
 tb_rpart[1]/sum(tb_rpart[,1]) # producer accuracy
 tb_svm[1]/sum(tb_svm[,1]) # producer accuracy
 
@@ -316,8 +337,11 @@ accuracy_info_svm <- confusionMatrix(testing_svm, data_testing$class_ID, positiv
 accuracy_info_rpart$overall # overall accuracy produced
 accuracy_info_svm$overall
 
-# write out the results:
-write.table(accuracy_info_rpart$table, "confusion_matrix_rpart.txt", sep=",")
-write.table(accuracy_info_svm$table, "confusion_matrix_svm.txt", sep=",")
+# Write out the results:
+accuracy_filename_rpart <- file.path(out_dir, "confusion_matrix_rpart.txt")
+write.table(accuracy_info_rpart$table, accuracy_filename_rpart, sep=",")
+
+accuracy_filename_svm <- file.path(out_dir, "confusion_matrix_svm.txt")
+write.table(accuracy_info_svm$table, accuracy_filename_svm, sep=",")
 
 

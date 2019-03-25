@@ -70,6 +70,7 @@ r_after <- brick(file.path(in_dir, infile_RITA_reflectance_date2))
 
 ```{r}
 head(r_after)
+inMemory(r_after) # check if raster in memory
 ```
 
 ===
@@ -88,8 +89,6 @@ df_modis_band_info
 ===
 
 ```{r, title = '{{ site.handouts[0] }}'}
-band_refl_order <- df_modis_band_info$band_number
-
 names(r_after) <- df_modis_band_info$band_name
 ```
 
@@ -122,6 +121,11 @@ r_after_NDVI <- (raft_NIR - raft_rd) / (raft_NIR + raft_rd)
 plot(r_after_NDVI)
 ```
 
+```{r}
+inMemory(r_after_MNDWI) # check if raster in memory
+inMemory(r_after_NDVI)
+```
+
 ===
 
 Write out rasters
@@ -150,6 +154,7 @@ Remove rasters from memory
 rm(r_after_MNDWI)
 rm(r_after_NDVI)
 ```
+Can view the .tif images written out in photo viewer.  
 
 Read in rasters 
 ```{r, title = '{{ site.handouts[0] }}'}
@@ -157,27 +162,37 @@ r_after_MNDWI <- raster(out_filename_mn)
 r_after_NDVI <- raster(out_filename_nd)
 ```
 
+```{r}
+inMemory(r_after_MNDWI) ; inMemory(r_after_NDVI)
+```
+
 ===
 
-Classes for Classification:
-
-1. vegetation and other (small water fraction)
-2. Flooded vegetation
-3. Flooded area, or water (lake, etc.)
+### Groundtruthing data
+Three levels of flooding (water content) determined via external grountruthing. 
+Class 1: vegetation and other (small water fraction)
+Class 2: Flooded vegetation
+Class 3: Flooded area, or water (lake etc)
 
 ===
 
 Read in a polygon for each class:
 
 ```{r, title = '{{ site.handouts[0] }}'}
-class1_data_sf <- st_read(file.path(in_dir, "class1_sites"))
+class1_data_sf <- st_read(file.path(in_dir, "class1_sites")) 
 class2_data_sf <- st_read(file.path(in_dir, "class2_sites"))
 class3_data_sf <- st_read(file.path(in_dir, "class3_sites"))
 ```
 
+```{r}
+class1_data_sf
+plot(r_after_MNDWI, zlim=c(-1,1)) 
+plot(class3_data_sf["class_ID"], add = TRUE, color = NA, border = "blue", lwd = 3)
+```
+
 ===
 
-Combine objects; note they should be in the same projection system.
+Combine polygons; note they should be in the same projection system.
 ```{r, title = '{{ site.handouts[0] }}'}
 class_data_sf <- rbind(class1_data_sf, class2_data_sf, class3_data_sf)
 
@@ -198,6 +213,13 @@ r_y <- init(r_after, "y") # initializes a raster with coordiates y
 
 r_stack <- stack(r_x, r_y, r_after, r_after_NDVI, r_after_MNDWI)
 names(r_stack) <- c("x", "y", "Red", "NIR", "Blue", "Green", "SWIR1", "SWIR2", "SWIR3", "NDVI", "MNDWI")
+```
+
+```{r}
+str(r_stack, max.level = 2)
+```
+
+```{r, title = '{{ site.handouts[0] }}'}
 pixels_extracted_df <- extract(r_stack, class_data_sf, df=T)
 ```
 
@@ -208,11 +230,14 @@ We have 1547 pixels extracted.
 
 ===
 
-Make the dataframe used for classification.
+Sometimes useful to store data as a csv: have to remove geometry column.
 ```{r, title = '{{ site.handouts[0] }}'}
 class_data_df <- class_data_sf
 st_geometry(class_data_df) <- NULL # This will coerce the sf object into a data.frame by removing the geometry
+```
 
+Make the dataframe used for classification.
+```{r, title = '{{ site.handouts[0] }}'}
 pixels_df <- merge(pixels_extracted_df, class_data_df, by.x="ID", by.y="poly_ID")
 ```
 
@@ -226,37 +251,46 @@ table(pixels_df$class_ID) # count by class of pixels ground truth data
 
 ===
 
-### Examining site data used for the classification
+### Examining data used for the classification
 
-Water
+Define geographic range.
 
 ```{r, title = '{{ site.handouts[0] }}'}
 x_range <- range(pixels_df$Green, na.rm=T)
 y_range <- range(pixels_df$NIR, na.rm=T)
+```
 
-plot(NIR~Green, xlim=x_range, ylim=y_range, cex=0.2, col="blue", subset(pixels_df, class_ID==1))
-points(NIR~Green, col="green", cex=0.2, subset(pixels_df, class_ID==2))
-points(NIR~Green, col="red", cex=0.2, subset(pixels_df, class_ID==3))
-names_vals <- c("water class 1", "water class 2", "water class 3")
+Let's use a palette that reflects flooding or level of water.
+
+```{r, title = '{{ site.handouts[0] }}'}
+col_palette <- c("green", "lightblue", "darkblue")
+
+```
+
+===
+
+Many ways of looking at these data:
+
+```{r}
+plot(NIR~Green, xlim=x_range, ylim=y_range, cex=0.3, col=col_palette[1], subset(pixels_df, class_ID==1))
+points(NIR~Green, col=col_palette[2], cex=0.3, subset(pixels_df, class_ID==2))
+points(NIR~Green, col=col_palette[3], cex=0.3, subset(pixels_df, class_ID==3))
+names_vals <- c("vegetation","wetland","water")
 legend("topleft", legend=names_vals,
-       pt.cex=0.7, cex=0.7, col=c("blue", "green", "red"),
+       pt.cex=0.7, cex=0.7, col=col_palette,
        pch=20, # add circle symbol to line
        bty="n")
 ```
 
 ===
 
-Let's use a palette that reflects wetness or level of water. 
-
 ```{r, title = '{{ site.handouts[0] }}'}
-col_palette <- c("green", "lightblue", "darkblue")
-
-plot(NDVI ~ MNDWI, xlim=c(-1,1), ylim=c(-1,1), cex=0.2, col=col_palette[1], subset(pixels_df,class_ID==1))
-points(NDVI ~ MNDWI, cex=0.2, col=col_palette[2], subset(pixels_df,class_ID==2))
-points(NDVI ~ MNDWI, cex=0.2, col=col_palette[3], subset(pixels_df,class_ID==3))
+plot(NDVI ~ MNDWI, xlim=c(-1,1), ylim=c(-1,1), cex=0.3, col=col_palette[1], subset(pixels_df, class_ID==1))
+points(NDVI ~ MNDWI, cex=0.3, col=col_palette[2], subset(pixels_df, class_ID==2))
+points(NDVI ~ MNDWI, cex=0.3, col=col_palette[3], subset(pixels_df, class_ID==3))
 names_vals <- c("vegetation","wetland","water")
-legend("topright",legend=names_vals,
-       pt.cex=0.7,cex=0.7,col=col_palette,
+legend("topright", legend=names_vals,
+       pt.cex=0.7,cex=0.7, col=col_palette,
        pch=20, # add circle symbol to line
        bty="n")
 ```
@@ -285,7 +319,6 @@ boxplot(MNDWI~class_ID, pixels_df, xlab="category",
 Let's keep 30% of data for testing for each class, and set a fixed seed for reproducibility.
 
 ```{r, title = '{{ site.handouts[0] }}'}
-pixels_df$pix_ID <- 1:nrow(pixels_df)
 set.seed(100)
 prop <- 0.3
 table(pixels_df$class_ID)
@@ -341,12 +374,12 @@ text(mod_rpart, cex = .8)
 
 ===
 
-Now predict the subset data based on the model; prediction for entire area takes more time.
+Now predict the subset data based on the model.
 
 ```{r, title = '{{ site.handouts[0] }}', progress = FALSE, results = 'hide'}
-raster_out_filename <- file.path(out_dir, paste0("r_predicted_rpart_", out_suffix, file_format))
+raster_out_filename_rp <- file.path(out_dir, paste0("r_predicted_rpart_", out_suffix, file_format))
 
-r_predicted_rpart <- predict(r_stack, mod_rpart, type='class', filename = raster_out_filename,
+r_predicted_rpart <- predict(r_stack, mod_rpart, type='class', filename = raster_out_filename_rp,
                              progress = 'text', overwrite = T)
 ```
 
@@ -384,13 +417,13 @@ summary(mod_svm)
 
 ===
 
-Now predict the subset data based on the model; prediction for entire area takes longer time.
+Now predict the subset data based on the model.
 
 ```{r, title = '{{ site.handouts[0] }}', progress = FALSE, results = 'hide'}
-raster_out_filename <- file.path(out_dir, paste0("r_predicted_svm_", out_suffix, file_format))
+raster_out_filename_sv <- file.path(out_dir, paste0("r_predicted_svm_", out_suffix, file_format))
   
 r_predicted_svm <- predict(r_stack, mod_svm, progress = 'text',
-                           filename = raster_out_filename, overwrite = T)
+                           filename = raster_out_filename_sv, overwrite = T)
 ```
 
 ```{r, title = '{{ site.handouts[0] }}'}
@@ -418,7 +451,7 @@ levelplot(r_predicted_svm, maxpixels = 1e6,
 ## Part IV: Assessment and comparison of model performance
 
 Set up testing data:
-Full dataset, let's use data points for testing
+Full dataset, let's use data points for testing.
 ```{r}
 dim(data_df) 
 ```
@@ -434,19 +467,19 @@ dim(data_testing)
 
 ===
 
-Predict on testing data using rpart model fitted with training data.
+Predict on testing data using rpart model fitted with testing data.
 
 ```{r, title = '{{ site.handouts[0] }}'}
 testing_rpart <- predict(mod_rpart, data_testing, type='class')
 ```
 
-Predict on testing data using SVM model fitted with training data
+Predict on testing data using SVM model fitted with testing data.
 
 ```{r, title = '{{ site.handouts[0] }}'}
 testing_svm <- predict(mod_svm, data_testing, type='class')
 ```
 
-Predicted classes:
+Predicted number of pixels in each class:
 
 ```{r, title = '{{ site.handouts[0] }}'}
 table(testing_rpart)
@@ -459,31 +492,38 @@ table(testing_svm)
 
 More info on confusion matrices here: http://spatial-analyst.net/ILWIS/htm/ilwismen/confusion_matrix.htm
 
-Need to use: 
-testing_rpart: contains map prediction in the rows
-data_testing$class_ID: this column contains ground truth data
+Groundtruth data: 
 
-```{r, title = '{{ site.handouts[0] }}'}
-tb_rpart <- table(testing_rpart, data_testing$class_ID)
-tb_svm <- table(testing_svm, data_testing$class_ID)
+```{r}
+table(data_testing$class_ID)
 ```
 
-classification, map results
+Classification model results:
 
 ```{r}
 table(testing_rpart)
 table(testing_svm)
 ```
 
-reference, ground truth in columns
+To generate confusion matrix, need to use: 
+testing_rpart: contains classification model prediction in the rows
+data_testing$class_ID: this column contains groundtruth data
+
+```{r, title = '{{ site.handouts[0] }}'}
+tb_rpart <- table(testing_rpart, data_testing$class_ID)
+tb_svm <- table(testing_svm, data_testing$class_ID)
+```
+
+Matrices identifying correct and incorrect classifications by models:
 
 ```{r}
-table(data_testing$class_ID)
+tb_rpart
+tb_svm
 ```
 
 ===
 
-Accuracy (producer's accuracy): the fraction of correctly classified pixels compared to all pixels of that ground truth class.
+Accuracy (producer's accuracy): the fraction of correctly classified pixels compared to all pixels of that groundtruth class.
 
 ```{r, title = '{{ site.handouts[0] }}'}
 tb_rpart[1]/sum(tb_rpart[,1]) # producer accuracy

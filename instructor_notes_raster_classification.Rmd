@@ -1,6 +1,8 @@
 ---
-title: "Untitled"
-output: html_document
+title: 'Instructor Notes: Raster Classification with Hurricane Rita'
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ## Where?  
@@ -32,16 +34,6 @@ Lines 94 - 96:
 We are using the st_read() function, which is from the sf package.  It reads in the files as dataframes with a
 geometry column.  Therefore, we can use simple functions like rbind() to manipulate files. 
 
-
-
-
-
-------------
-
-fix the prop of training and testing on lines 171 an 183.  
- - during testing change the proportion to test robustness of results
-
-
 -------------
 
 ## CART: 
@@ -49,7 +41,7 @@ Classification and Regression Trees
 Split the data by minimizing the variance in the branches to build the tree. 
 Unsupervised I think - attempts to find natural clustering as stated above.  
 
-
+\pagebreak
 
 ## SVM:
 Supervised Learning Models 
@@ -63,19 +55,14 @@ Support vectors are the data points that lie closest to the decision surface (or
 
 -------------
 
-Q for Benoit: 
+## Confusion Matrix: 
+Counts up the number of pixels in each class.  What's correctly classified is on the diagonal - what's off diagonal is incorrectly classified.  
 
-lines 286 - 290 are only for rpart
-     - can look at the svm testing stuff too
-     
-How much explanation of CART and SVM should I do?
-  - a few sentences, and then point them to other resources.  
-  
-Give a short description of confusion matrix.
 
+## Accuracy metrics
 Overall accuracy can be mis-leading.  Need to look at the map, or other metrics of accuracy such as producer's accuracy. 
 
-What's correctly classified is on the diagonal - what's off diagonal is incorrectly classified.
+
 
 
 
