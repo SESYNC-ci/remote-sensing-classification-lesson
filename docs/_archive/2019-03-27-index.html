@@ -1,3 +1,6 @@
+---
+---
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -8,9 +11,9 @@
 <meta name="description" content="">
 <link rel="canonical"
   href="http://cyberhelp.sesync.org/remote-sensing-classification-lesson/course/archive.html">
-<link href="https://cdn.rawgit.com/sesync-ci/lesson-style/v2.0/docs/css/default.css" rel="stylesheet">
-<link href="https://cdn.rawgit.com/sesync-ci/lesson-style/v2.0/docs/css/syntax.css" rel="stylesheet">
-<link href="https://cdn.rawgit.com/sesync-ci/lesson-style/v2.0/docs/css/static.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sesync-ci/lesson-style@v2.0/docs/css/default.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sesync-ci/lesson-style@v2.0/docs/css/syntax.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sesync-ci/lesson-style@v2.0/docs/css/static.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
@@ -383,13 +386,13 @@ http://spatialreference.org/ref/epsg/nad83-texas-state-mapping-system/proj4/</p>
 
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="p">,</span><span class="w"> </span><span class="n">zlim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
-<p class="captioned"><img src="/remote-sensing-classification-lesson/images/raster_classification/unnamed-chunk-12-1.png" alt=" " /></p>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/raster_classification/unnamed-chunk-12-1.png" alt=" " /></p>
 
 <div class="language-r text-document highlighter-rouge" title="worksheet-5.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_after_NDVI</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="n">raft_NIR</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">raft_rd</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">raft_NIR</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">raft_rd</span><span class="p">)</span><span class="w">
 
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
-<p class="captioned"><img src="/remote-sensing-classification-lesson/images/raster_classification/unnamed-chunk-13-1.png" alt=" " /></p>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/raster_classification/unnamed-chunk-13-1.png" alt=" " /></p>
 
 <div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">inMemory</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="p">)</span><span class="w"> </span><span class="c1"># check if raster in memory</span><span class="w">
 </span></code></pre></div></div>
@@ -512,7 +515,7 @@ proj4string:    NA
 <div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">plot</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="p">,</span><span class="w"> </span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span><span class="w"> 
 </span><span class="o">&gt;</span><span class="w"> </span><span class="n">plot</span><span class="p">(</span><span class="n">class3_data_sf</span><span class="p">[</span><span class="s2">"class_ID"</span><span class="p">],</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NA</span><span class="p">,</span><span class="w"> </span><span class="n">border</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"blue"</span><span class="p">,</span><span class="w"> </span><span class="n">lwd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
-<p class="captioned"><img src="/remote-sensing-classification-lesson/images/raster_classification/unnamed-chunk-21-1.png" alt=" " /></p>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/raster_classification/unnamed-chunk-21-1.png" alt=" " /></p>
 
 <p>Combine polygons; note they should be in the same projection system.</p>
 
@@ -698,7 +701,7 @@ column name 'x' is duplicated in the result
 </span><span class="o">+</span><span class="w">        </span><span class="n">pch</span><span class="o">=</span><span class="m">20</span><span class="p">,</span><span class="w"> </span><span class="c1"># add circle symbol to line</span><span class="w">
 </span><span class="o">+</span><span class="w">        </span><span class="n">bty</span><span class="o">=</span><span class="s2">"n"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
-<p class="captioned"><img src="/remote-sensing-classification-lesson/images/raster_classification/unnamed-chunk-34-1.png" alt=" " /></p>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/raster_classification/unnamed-chunk-34-1.png" alt=" " /></p>
 
 <div class="language-r text-document highlighter-rouge" title="worksheet-5.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">NDVI</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">MNDWI</span><span class="p">,</span><span class="w"> </span><span class="n">xlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="w"> </span><span class="n">ylim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="w"> </span><span class="n">cex</span><span class="o">=</span><span class="m">0.3</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="o">=</span><span class="n">col_palette</span><span class="p">[</span><span class="m">1</span><span class="p">],</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">pixels_df</span><span class="p">,</span><span class="w"> </span><span class="n">class_ID</span><span class="o">==</span><span class="m">1</span><span class="p">))</span><span class="w">
 </span><span class="n">points</span><span class="p">(</span><span class="n">NDVI</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">MNDWI</span><span class="p">,</span><span class="w"> </span><span class="n">cex</span><span class="o">=</span><span class="m">0.3</span><span class="p">,</span><span class="w"> </span><span class="n">col</span><span class="o">=</span><span class="n">col_palette</span><span class="p">[</span><span class="m">2</span><span class="p">],</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">pixels_df</span><span class="p">,</span><span class="w"> </span><span class="n">class_ID</span><span class="o">==</span><span class="m">2</span><span class="p">))</span><span class="w">
@@ -709,18 +712,18 @@ column name 'x' is duplicated in the result
        </span><span class="n">pch</span><span class="o">=</span><span class="m">20</span><span class="p">,</span><span class="w"> </span><span class="c1"># add circle symbol to line</span><span class="w">
        </span><span class="n">bty</span><span class="o">=</span><span class="s2">"n"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
-<p class="captioned"><img src="/remote-sensing-classification-lesson/images/raster_classification/unnamed-chunk-35-1.png" alt=" " /></p>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/raster_classification/unnamed-chunk-35-1.png" alt=" " /></p>
 
 <div class="language-r text-document highlighter-rouge" title="worksheet-5.R"><div class="highlight"><pre class="highlight"><code><span class="n">rasterVis</span><span class="o">::</span><span class="n">histogram</span><span class="p">(</span><span class="n">r_after</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
-<p class="captioned"><img src="/remote-sensing-classification-lesson/images/raster_classification/unnamed-chunk-36-1.png" alt=" " /></p>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/raster_classification/unnamed-chunk-36-1.png" alt=" " /></p>
 
 <div class="language-r text-document highlighter-rouge" title="worksheet-5.R"><div class="highlight"><pre class="highlight"><code><span class="n">pixels_df</span><span class="o">$</span><span class="n">class_ID</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">factor</span><span class="p">(</span><span class="n">pixels_df</span><span class="o">$</span><span class="n">class_ID</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">3</span><span class="p">),</span><span class="w"> </span><span class="n">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">names_vals</span><span class="p">)</span><span class="w">
 
 </span><span class="n">boxplot</span><span class="p">(</span><span class="n">MNDWI</span><span class="o">~</span><span class="n">class_ID</span><span class="p">,</span><span class="w"> </span><span class="n">pixels_df</span><span class="p">,</span><span class="w"> </span><span class="n">xlab</span><span class="o">=</span><span class="s2">"category"</span><span class="p">,</span><span class="w">
         </span><span class="n">main</span><span class="o">=</span><span class="s2">"Boxplot for MNDWI per class"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
-<p class="captioned"><img src="/remote-sensing-classification-lesson/images/raster_classification/unnamed-chunk-37-1.png" alt=" " /></p>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/raster_classification/unnamed-chunk-37-1.png" alt=" " /></p>
 
 <h2 id="part-ii-split-data-into-training-and-testing-datasets">Part II: Split data into training and testing datasets</h2>
 
@@ -800,7 +803,7 @@ vegetation    wetland      water
 <div class="language-r text-document highlighter-rouge" title="worksheet-5.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">mod_rpart</span><span class="p">,</span><span class="w"> </span><span class="n">uniform</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w"> </span><span class="n">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Classification Tree"</span><span class="p">,</span><span class="w"> </span><span class="n">mar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0.1</span><span class="p">,</span><span class="w"> </span><span class="m">0.1</span><span class="p">,</span><span class="w"> </span><span class="m">0.1</span><span class="p">,</span><span class="w"> </span><span class="m">0.1</span><span class="p">))</span><span class="w">
 </span><span class="n">text</span><span class="p">(</span><span class="n">mod_rpart</span><span class="p">,</span><span class="w"> </span><span class="n">cex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">.8</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
-<p class="captioned"><img src="/remote-sensing-classification-lesson/images/raster_classification/unnamed-chunk-43-1.png" alt=" " /></p>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/raster_classification/unnamed-chunk-43-1.png" alt=" " /></p>
 
 <p>Now predict the subset data based on the model.</p>
 
@@ -812,7 +815,7 @@ vegetation    wetland      water
 
 <div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">plot</span><span class="p">(</span><span class="n">r_predicted_rpart</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
-<p class="captioned"><img src="/remote-sensing-classification-lesson/images/raster_classification/unnamed-chunk-45-1.png" alt=" " /></p>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/raster_classification/unnamed-chunk-45-1.png" alt=" " /></p>
 
 <div class="language-r text-document highlighter-rouge" title="worksheet-5.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_predicted_rpart</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ratify</span><span class="p">(</span><span class="n">r_predicted_rpart</span><span class="p">)</span><span class="w"> </span><span class="c1"># creates a raster attribute table (rat)</span><span class="w">
 </span><span class="n">rat</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">levels</span><span class="p">(</span><span class="n">r_predicted_rpart</span><span class="p">)[[</span><span class="m">1</span><span class="p">]]</span><span class="w">
@@ -824,7 +827,7 @@ vegetation    wetland      water
           </span><span class="n">scales</span><span class="o">=</span><span class="nf">list</span><span class="p">(</span><span class="n">draw</span><span class="o">=</span><span class="kc">FALSE</span><span class="p">),</span><span class="w">
           </span><span class="n">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Classification Tree"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
-<p class="captioned"><img src="/remote-sensing-classification-lesson/images/raster_classification/unnamed-chunk-46-1.png" alt=" " /></p>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/raster_classification/unnamed-chunk-46-1.png" alt=" " /></p>
 
 <h3 id="support-vector-machine-classification-svm">Support Vector Machine classification (SVM)</h3>
 
@@ -872,11 +875,11 @@ Levels:
 
 <div class="language-r text-document highlighter-rouge" title="worksheet-5.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
-<p class="captioned"><img src="/remote-sensing-classification-lesson/images/raster_classification/unnamed-chunk-50-1.png" alt=" " /></p>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/raster_classification/unnamed-chunk-50-1.png" alt=" " /></p>
 
 <div class="language-r text-document highlighter-rouge" title="worksheet-5.R"><div class="highlight"><pre class="highlight"><code><span class="n">rasterVis</span><span class="o">::</span><span class="n">histogram</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
-<p class="captioned"><img src="/remote-sensing-classification-lesson/images/raster_classification/unnamed-chunk-51-1.png" alt=" " /></p>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/raster_classification/unnamed-chunk-51-1.png" alt=" " /></p>
 
 <div class="language-r text-document highlighter-rouge" title="worksheet-5.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_predicted_svm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ratify</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)</span><span class="w">
 </span><span class="n">rat</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">levels</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)[[</span><span class="m">1</span><span class="p">]]</span><span class="w">
@@ -888,7 +891,7 @@ Levels:
           </span><span class="n">scales</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="n">draw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">),</span><span class="w">
           </span><span class="n">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"SVM classification"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
-<p class="captioned"><img src="/remote-sensing-classification-lesson/images/raster_classification/unnamed-chunk-52-1.png" alt=" " /></p>
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/raster_classification/unnamed-chunk-52-1.png" alt=" " /></p>
 
 <h2 id="part-iv-assessment-and-comparison-of-model-performance">Part IV: Assessment and comparison of model performance</h2>
 

@@ -16,7 +16,7 @@ library(caret) # complex regression and classification models
 
 ### Set up arguments and parameters
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 in_dir <- "data"
 
 out_dir_suffix <- "rsc_lesson"
@@ -29,7 +29,7 @@ dir.create(out_dir, showWarnings = FALSE)
 Regional coordinate reference system taken from: 
 http://spatialreference.org/ref/epsg/nad83-texas-state-mapping-system/proj4/
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 CRS_reg <- "+proj=lcc +lat_1=27.41666666666667 +lat_2=34.91666666666666 +lat_0=31.16666666666667 +lon_0=-100 +x_0=1000000 +y_0=1000000 +ellps=GRS80 +datum=NAD83 +units=m +no_defs" 
 
 file_format <- ".tif" 
@@ -44,7 +44,7 @@ out_suffix <- "raster_classification" # output suffix for the files and output f
 
 ### Define input data file names
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 infile_RITA_reflectance_date2 <- "mosaiced_MOD09A1_A2005273__006_reflectance_masked_RITA_reg_1km.tif"
 
 infile_reg_outline <- "new_strata_rita_10282017" # Region outline and FEMA zones
@@ -64,7 +64,7 @@ nlcd_2006_filename <- "nlcd_2006_RITA.tif" # NLCD2006 Land cover data aggregated
 
 MOD09 raster image after hurricane Rita.
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 r_after <- brick(file.path(in_dir, infile_RITA_reflectance_date2))
 ```
 
@@ -77,7 +77,7 @@ inMemory(r_after) # check if raster in memory
 
 Read band information since it is more informative.
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 df_modis_band_info <- read.table(file.path(in_dir, infile_modis_bands_information),
                                  sep=",", stringsAsFactors = F)
 ```
@@ -88,7 +88,7 @@ df_modis_band_info
 
 ===
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 names(r_after) <- df_modis_band_info$band_name
 ```
 
@@ -99,7 +99,7 @@ names(r_after)
 ===
 
 Define bands of interest: Use subset instead of $ if you want to wrap code into function
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 raft_gr <- subset(r_after, "Green") 
 raft_SWIR <- subset(r_after, "SWIR2")
 raft_NIR <- subset(r_after, "NIR") 
@@ -109,13 +109,13 @@ raft_rd <- subset(r_after, "Red")
 ===
 
 Manipulate bands of interest
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 r_after_MNDWI <- (raft_gr - raft_SWIR) / (raft_gr + raft_SWIR)
 
 plot(r_after_MNDWI, zlim = c(-1,1))
 ```
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 r_after_NDVI <- (raft_NIR - raft_rd) / (raft_NIR + raft_rd)
 
 plot(r_after_NDVI)
@@ -133,7 +133,7 @@ Write out rasters
 dataType(r_after_NDVI)
 ```
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 data_type_str <- dataType(r_after_NDVI)
 
 NAvalue(r_after_MNDWI) <- NA_flag_val # set NA value
@@ -150,14 +150,14 @@ writeRaster(r_after_NDVI, filename = out_filename_nd, datatype = data_type_str,
 ===
 
 Remove rasters from memory
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 rm(r_after_MNDWI)
 rm(r_after_NDVI)
 ```
 Can view the .tif images written out in photo viewer.  
 
 Read in rasters 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 r_after_MNDWI <- raster(out_filename_mn)
 r_after_NDVI <- raster(out_filename_nd)
 ```
@@ -178,7 +178,7 @@ Class 3: Flooded area, or water (lake etc)
 
 Read in a polygon for each class:
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 class1_data_sf <- st_read(file.path(in_dir, "class1_sites")) 
 class2_data_sf <- st_read(file.path(in_dir, "class2_sites"))
 class3_data_sf <- st_read(file.path(in_dir, "class3_sites"))
@@ -193,7 +193,7 @@ plot(class3_data_sf["class_ID"], add = TRUE, color = NA, border = "blue", lwd = 
 ===
 
 Combine polygons; note they should be in the same projection system.
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 class_data_sf <- rbind(class1_data_sf, class2_data_sf, class3_data_sf)
 
 class_data_sf$poly_ID <- 1:nrow(class_data_sf) # unique ID for each polygon
@@ -207,7 +207,7 @@ nrow(class_data_sf)
 ===
 
 Make new rasters and raster stack.
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 r_x <- init(r_after, "x") # initializes a raster with coordinates x
 r_y <- init(r_after, "y") # initializes a raster with coordiates y
 
@@ -219,7 +219,7 @@ names(r_stack) <- c("x", "y", "Red", "NIR", "Blue", "Green", "SWIR1", "SWIR2", "
 str(r_stack, max.level = 2)
 ```
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 pixels_extracted_df <- extract(r_stack, class_data_sf, df=T)
 ```
 
@@ -231,13 +231,13 @@ We have 1547 pixels extracted.
 ===
 
 Sometimes useful to store data as a csv: have to remove geometry column.
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 class_data_df <- class_data_sf
 st_geometry(class_data_df) <- NULL # This will coerce the sf object into a data.frame by removing the geometry
 ```
 
 Make the dataframe used for classification.
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 pixels_df <- merge(pixels_extracted_df, class_data_df, by.x="ID", by.y="poly_ID")
 ```
 
@@ -245,7 +245,7 @@ pixels_df <- merge(pixels_extracted_df, class_data_df, by.x="ID", by.y="poly_ID"
 head(pixels_df)
 ```
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 table(pixels_df$class_ID) # count by class of pixels ground truth data
 ```
 
@@ -255,14 +255,14 @@ table(pixels_df$class_ID) # count by class of pixels ground truth data
 
 Define geographic range.
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 x_range <- range(pixels_df$Green, na.rm=T)
 y_range <- range(pixels_df$NIR, na.rm=T)
 ```
 
 Let's use a palette that reflects flooding or level of water.
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 col_palette <- c("green", "lightblue", "darkblue")
 
 ```
@@ -284,7 +284,7 @@ legend("topleft", legend=names_vals,
 
 ===
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 plot(NDVI ~ MNDWI, xlim=c(-1,1), ylim=c(-1,1), cex=0.3, col=col_palette[1], subset(pixels_df, class_ID==1))
 points(NDVI ~ MNDWI, cex=0.3, col=col_palette[2], subset(pixels_df, class_ID==2))
 points(NDVI ~ MNDWI, cex=0.3, col=col_palette[3], subset(pixels_df, class_ID==3))
@@ -297,13 +297,13 @@ legend("topright", legend=names_vals,
 
 ===
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 rasterVis::histogram(r_after)
 ```
 
 ===
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 pixels_df$class_ID <- factor(pixels_df$class_ID, levels = c(1,2,3), labels = names_vals)
 
 boxplot(MNDWI~class_ID, pixels_df, xlab="category",
@@ -318,7 +318,7 @@ boxplot(MNDWI~class_ID, pixels_df, xlab="category",
 
 Let's keep 30% of data for testing for each class, and set a fixed seed for reproducibility.
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 set.seed(100)
 prop <- 0.3
 table(pixels_df$class_ID)
@@ -326,7 +326,7 @@ table(pixels_df$class_ID)
 
 ===
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 list_data_df <- vector("list", length=3)
 level_labels <- names_vals
 
@@ -346,7 +346,7 @@ dim(data_df)
 head(data_df)
 ```
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 data_training <- subset(data_df, training==1)
 ```
 
@@ -360,14 +360,14 @@ data_training <- subset(data_df, training==1)
 
 Fit model using training data for CART.
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 mod_rpart <- rpart(class_ID ~ Red + NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
                    method="class", data=data_training)
 ```
 
 Plot the fitted classification tree.
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 plot(mod_rpart, uniform = TRUE, main = "Classification Tree", mar = c(0.1, 0.1, 0.1, 0.1))
 text(mod_rpart, cex = .8)
 ```
@@ -376,7 +376,7 @@ text(mod_rpart, cex = .8)
 
 Now predict the subset data based on the model.
 
-```{r, title = '{{ site.handouts[0] }}', progress = FALSE, results = 'hide'}
+```{r, handout = 0, progress = FALSE, results = 'hide'}
 raster_out_filename_rp <- file.path(out_dir, paste0("r_predicted_rpart_", out_suffix, file_format))
 
 r_predicted_rpart <- predict(r_stack, mod_rpart, type='class', filename = raster_out_filename_rp,
@@ -387,7 +387,7 @@ r_predicted_rpart <- predict(r_stack, mod_rpart, type='class', filename = raster
 plot(r_predicted_rpart)
 ```
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 r_predicted_rpart <- ratify(r_predicted_rpart) # creates a raster attribute table (rat)
 rat <- levels(r_predicted_rpart)[[1]]
 rat$legend <- c("vegetation", "wetland", "water")
@@ -405,7 +405,7 @@ levelplot(r_predicted_rpart, maxpixels = 1e6,
 
 Set class_ID as factor to generate classification.
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 mod_svm <- svm(class_ID ~ Red + NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
                data=data_training, method="C-classification",
                kernel="linear") # can be radial
@@ -419,22 +419,22 @@ summary(mod_svm)
 
 Now predict the subset data based on the model.
 
-```{r, title = '{{ site.handouts[0] }}', progress = FALSE, results = 'hide'}
+```{r, handout = 0, progress = FALSE, results = 'hide'}
 raster_out_filename_sv <- file.path(out_dir, paste0("r_predicted_svm_", out_suffix, file_format))
   
 r_predicted_svm <- predict(r_stack, mod_svm, progress = 'text',
                            filename = raster_out_filename_sv, overwrite = T)
 ```
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 plot(r_predicted_svm)
 ```
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 rasterVis::histogram(r_predicted_svm)
 ```
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 r_predicted_svm <- ratify(r_predicted_svm)
 rat <- levels(r_predicted_svm)[[1]]
 rat$legend <- c("vegetation", "wetland", "water")
@@ -456,7 +456,7 @@ Full dataset, let's use data points for testing.
 dim(data_df) 
 ```
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 # omit values that contain NA, because may be problematic with SVM.
 data_testing <- na.omit(subset(data_df, training==0)) 
 ```
@@ -469,19 +469,19 @@ dim(data_testing)
 
 Predict on testing data using rpart model fitted with testing data.
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 testing_rpart <- predict(mod_rpart, data_testing, type='class')
 ```
 
 Predict on testing data using SVM model fitted with testing data.
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 testing_svm <- predict(mod_svm, data_testing, type='class')
 ```
 
 Predicted number of pixels in each class:
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 table(testing_rpart)
 table(testing_svm)
 ```
@@ -509,7 +509,7 @@ To generate confusion matrix, need to use:
 testing_rpart: contains classification model prediction in the rows
 data_testing$class_ID: this column contains groundtruth data
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 tb_rpart <- table(testing_rpart, data_testing$class_ID)
 tb_svm <- table(testing_svm, data_testing$class_ID)
 ```
@@ -525,14 +525,14 @@ tb_svm
 
 Accuracy (producer's accuracy): the fraction of correctly classified pixels compared to all pixels of that groundtruth class.
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 tb_rpart[1]/sum(tb_rpart[,1]) # producer accuracy
 tb_svm[1]/sum(tb_svm[,1]) # producer accuracy
 ```
 
 Looking at accuracy more closely:
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 # overall accuracy for rpart
 sum(diag(tb_rpart))/sum(table(testing_rpart))
 
@@ -544,7 +544,7 @@ sum(diag(tb_svm))/sum(table(testing_svm))
 
 Generate more accurate measurements from functions in the caret package:
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 accuracy_info_rpart <- confusionMatrix(testing_rpart, data_testing$class_ID, positive = NULL)
 accuracy_info_svm <- confusionMatrix(testing_svm, data_testing$class_ID, positive = NULL)
 ```
@@ -561,7 +561,7 @@ accuracy_info_svm$overall
 
 Write out the results:
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 table_out_filename <- file.path(out_dir, "confusion_matrix_rpart.txt")
 write.table(accuracy_info_rpart$table, table_out_filename, sep=",")
 

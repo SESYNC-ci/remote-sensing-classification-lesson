@@ -18,7 +18,7 @@ out_dir_suffix <- "rsc_lesson"
 out_dir <- paste("output_", out_dir_suffix, sep = "")
 dir.create(out_dir, showWarnings = FALSE)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ===
@@ -37,7 +37,7 @@ NA_flag_val <- -9999
 
 out_suffix <- "raster_classification" # output suffix for the files and output folder  
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ===
@@ -55,7 +55,7 @@ infile_modis_bands_information <- "df_modis_band_info.txt" # MOD09 bands informa
 
 nlcd_2006_filename <- "nlcd_2006_RITA.tif" # NLCD2006 Land cover data aggregated at ~ 1km.
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ===
@@ -73,7 +73,7 @@ MOD09 raster image after hurricane Rita.
 ~~~r
 r_after <- brick(file.path(in_dir, infile_RITA_reflectance_date2))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -81,7 +81,7 @@ r_after <- brick(file.path(in_dir, infile_RITA_reflectance_date2))
 ~~~r
 > head(r_after)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -239,7 +239,7 @@ r_after <- brick(file.path(in_dir, infile_RITA_reflectance_date2))
 ~~~r
 > inMemory(r_after) # check if raster in memory
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -258,7 +258,7 @@ Read band information since it is more informative.
 df_modis_band_info <- read.table(file.path(in_dir, infile_modis_bands_information),
                                  sep=",", stringsAsFactors = F)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -266,7 +266,7 @@ df_modis_band_info <- read.table(file.path(in_dir, infile_modis_bands_informatio
 ~~~r
 > df_modis_band_info
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -289,7 +289,7 @@ df_modis_band_info <- read.table(file.path(in_dir, infile_modis_bands_informatio
 ~~~r
 names(r_after) <- df_modis_band_info$band_name
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -297,7 +297,7 @@ names(r_after) <- df_modis_band_info$band_name
 ~~~r
 > names(r_after)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -317,7 +317,7 @@ raft_SWIR <- subset(r_after, "SWIR2")
 raft_NIR <- subset(r_after, "NIR") 
 raft_rd <- subset(r_after, "Red")
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ===
@@ -330,8 +330,8 @@ r_after_MNDWI <- (raft_gr - raft_SWIR) / (raft_gr + raft_SWIR)
 
 plot(r_after_MNDWI, zlim = c(-1,1))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-12-1.png)
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+![ ]({% include asset.html path="images/raster_classification/unnamed-chunk-12-1.png" %})
 {:.captioned}
 
 
@@ -341,8 +341,8 @@ r_after_NDVI <- (raft_NIR - raft_rd) / (raft_NIR + raft_rd)
 
 plot(r_after_NDVI)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-13-1.png)
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+![ ]({% include asset.html path="images/raster_classification/unnamed-chunk-13-1.png" %})
 {:.captioned}
 
 
@@ -350,7 +350,7 @@ plot(r_after_NDVI)
 ~~~r
 > inMemory(r_after_MNDWI) # check if raster in memory
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -362,7 +362,7 @@ plot(r_after_NDVI)
 ~~~r
 > inMemory(r_after_NDVI)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -379,7 +379,7 @@ Write out rasters
 ~~~r
 > dataType(r_after_NDVI)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -403,7 +403,7 @@ out_filename_nd <- file.path(out_dir, paste0("ndvi_post_Rita","_", out_suffix, f
 writeRaster(r_after_NDVI, filename = out_filename_nd, datatype = data_type_str,
             overwrite = T)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ===
@@ -415,7 +415,7 @@ Remove rasters from memory
 rm(r_after_MNDWI)
 rm(r_after_NDVI)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 Can view the .tif images written out in photo viewer.  
 
@@ -426,7 +426,7 @@ Read in rasters
 r_after_MNDWI <- raster(out_filename_mn)
 r_after_NDVI <- raster(out_filename_nd)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -434,7 +434,7 @@ r_after_NDVI <- raster(out_filename_nd)
 ~~~r
 > inMemory(r_after_MNDWI) ; inMemory(r_after_NDVI)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -466,7 +466,7 @@ Read in a polygon for each class:
 ~~~r
 class1_data_sf <- st_read(file.path(in_dir, "class1_sites")) 
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
@@ -484,7 +484,7 @@ proj4string:    NA
 ~~~r
 class2_data_sf <- st_read(file.path(in_dir, "class2_sites"))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
@@ -502,7 +502,7 @@ proj4string:    NA
 ~~~r
 class3_data_sf <- st_read(file.path(in_dir, "class3_sites"))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
@@ -522,7 +522,7 @@ proj4string:    NA
 ~~~r
 > class1_data_sf
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -547,8 +547,8 @@ proj4string:    NA
 > plot(r_after_MNDWI, zlim=c(-1,1)) 
 > plot(class3_data_sf["class_ID"], add = TRUE, color = NA, border = "blue", lwd = 3)
 ~~~
-{:.input title="Console"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-21-1.png)
+{:title="Console" .input}
+![ ]({% include asset.html path="images/raster_classification/unnamed-chunk-21-1.png" %})
 {:.captioned}
 
 ===
@@ -561,7 +561,7 @@ class_data_sf <- rbind(class1_data_sf, class2_data_sf, class3_data_sf)
 
 class_data_sf$poly_ID <- 1:nrow(class_data_sf) # unique ID for each polygon
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 23 different polygons used as ground truth data.
@@ -570,7 +570,7 @@ class_data_sf$poly_ID <- 1:nrow(class_data_sf) # unique ID for each polygon
 ~~~r
 > nrow(class_data_sf) 
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -591,7 +591,7 @@ r_y <- init(r_after, "y") # initializes a raster with coordiates y
 r_stack <- stack(r_x, r_y, r_after, r_after_NDVI, r_after_MNDWI)
 names(r_stack) <- c("x", "y", "Red", "NIR", "Blue", "Green", "SWIR1", "SWIR2", "SWIR3", "NDVI", "MNDWI")
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -599,7 +599,7 @@ names(r_stack) <- c("x", "y", "Red", "NIR", "Blue", "Green", "SWIR1", "SWIR2", "
 ~~~r
 > str(r_stack, max.level = 2)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -624,80 +624,7 @@ Formal class 'RasterStack' [package "raster"] with 11 slots
 ~~~r
 pixels_extracted_df <- extract(r_stack, class_data_sf, df=T)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-
-
-~~~
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-
-Warning in merge.data.frame(as.data.frame(x), as.data.frame(y), ...):
-column name 'x' is duplicated in the result
-~~~
-{:.output}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -705,7 +632,7 @@ column name 'x' is duplicated in the result
 ~~~r
 > dim(pixels_extracted_df) 
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -724,7 +651,7 @@ Sometimes useful to store data as a csv: have to remove geometry column.
 class_data_df <- class_data_sf
 st_geometry(class_data_df) <- NULL # This will coerce the sf object into a data.frame by removing the geometry
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 Make the dataframe used for classification.
@@ -733,7 +660,7 @@ Make the dataframe used for classification.
 ~~~r
 pixels_df <- merge(pixels_extracted_df, class_data_df, by.x="ID", by.y="poly_ID")
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -741,7 +668,7 @@ pixels_df <- merge(pixels_extracted_df, class_data_df, by.x="ID", by.y="poly_ID"
 ~~~r
 > head(pixels_df)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -768,7 +695,7 @@ pixels_df <- merge(pixels_extracted_df, class_data_df, by.x="ID", by.y="poly_ID"
 ~~~r
 table(pixels_df$class_ID) # count by class of pixels ground truth data
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
@@ -791,7 +718,7 @@ Define geographic range.
 x_range <- range(pixels_df$Green, na.rm=T)
 y_range <- range(pixels_df$NIR, na.rm=T)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 Let's use a palette that reflects flooding or level of water.
@@ -801,7 +728,7 @@ Let's use a palette that reflects flooding or level of water.
 ~~~r
 col_palette <- c("green", "lightblue", "darkblue")
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ===
@@ -820,8 +747,8 @@ Many ways of looking at these data:
 +        pch=20, # add circle symbol to line
 +        bty="n")
 ~~~
-{:.input title="Console"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-34-1.png)
+{:title="Console" .input}
+![ ]({% include asset.html path="images/raster_classification/unnamed-chunk-34-1.png" %})
 {:.captioned}
 
 ===
@@ -838,8 +765,8 @@ legend("topright", legend=names_vals,
        pch=20, # add circle symbol to line
        bty="n")
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-35-1.png)
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+![ ]({% include asset.html path="images/raster_classification/unnamed-chunk-35-1.png" %})
 {:.captioned}
 
 ===
@@ -849,8 +776,8 @@ legend("topright", legend=names_vals,
 ~~~r
 rasterVis::histogram(r_after)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-36-1.png)
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+![ ]({% include asset.html path="images/raster_classification/unnamed-chunk-36-1.png" %})
 {:.captioned}
 
 ===
@@ -863,8 +790,8 @@ pixels_df$class_ID <- factor(pixels_df$class_ID, levels = c(1,2,3), labels = nam
 boxplot(MNDWI~class_ID, pixels_df, xlab="category",
         main="Boxplot for MNDWI per class")
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-37-1.png)
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+![ ]({% include asset.html path="images/raster_classification/unnamed-chunk-37-1.png" %})
 {:.captioned}
 
 ===
@@ -882,7 +809,7 @@ set.seed(100)
 prop <- 0.3
 table(pixels_df$class_ID)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
@@ -911,7 +838,7 @@ for(i in 1:3){
 
 data_df <- do.call(rbind, list_data_df)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -919,7 +846,7 @@ data_df <- do.call(rbind, list_data_df)
 ~~~r
 > dim(data_df)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -931,7 +858,7 @@ data_df <- do.call(rbind, list_data_df)
 ~~~r
 > head(data_df)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -952,8 +879,8 @@ data_df <- do.call(rbind, list_data_df)
   training
 1        0
 2        1
-3        0
-4        0
+3        1
+4        1
 5        1
 6        0
 ~~~
@@ -965,7 +892,7 @@ data_df <- do.call(rbind, list_data_df)
 ~~~r
 data_training <- subset(data_df, training==1)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ===
@@ -984,7 +911,7 @@ Fit model using training data for CART.
 mod_rpart <- rpart(class_ID ~ Red + NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
                    method="class", data=data_training)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 Plot the fitted classification tree.
@@ -995,8 +922,8 @@ Plot the fitted classification tree.
 plot(mod_rpart, uniform = TRUE, main = "Classification Tree", mar = c(0.1, 0.1, 0.1, 0.1))
 text(mod_rpart, cex = .8)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-43-1.png)
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+![ ]({% include asset.html path="images/raster_classification/unnamed-chunk-43-1.png" %})
 {:.captioned}
 
 ===
@@ -1011,7 +938,7 @@ raster_out_filename_rp <- file.path(out_dir, paste0("r_predicted_rpart_", out_su
 r_predicted_rpart <- predict(r_stack, mod_rpart, type='class', filename = raster_out_filename_rp,
                              progress = 'text', overwrite = T)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -1019,8 +946,8 @@ r_predicted_rpart <- predict(r_stack, mod_rpart, type='class', filename = raster
 ~~~r
 > plot(r_predicted_rpart)
 ~~~
-{:.input title="Console"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-45-1.png)
+{:title="Console" .input}
+![ ]({% include asset.html path="images/raster_classification/unnamed-chunk-45-1.png" %})
 {:.captioned}
 
 
@@ -1036,8 +963,8 @@ levelplot(r_predicted_rpart, maxpixels = 1e6,
           scales=list(draw=FALSE),
           main = "Classification Tree")
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-46-1.png)
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+![ ]({% include asset.html path="images/raster_classification/unnamed-chunk-46-1.png" %})
 {:.captioned}
 
 ===
@@ -1053,7 +980,7 @@ mod_svm <- svm(class_ID ~ Red + NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
                data=data_training, method="C-classification",
                kernel="linear") # can be radial
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -1061,7 +988,7 @@ mod_svm <- svm(class_ID ~ Red + NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
 ~~~r
 > summary(mod_svm)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -1076,11 +1003,10 @@ Parameters:
    SVM-Type:  C-classification 
  SVM-Kernel:  linear 
        cost:  1 
-      gamma:  0.1428571 
 
-Number of Support Vectors:  110
+Number of Support Vectors:  111
 
- ( 12 54 44 )
+ ( 11 55 45 )
 
 
 Number of Classes:  3 
@@ -1103,7 +1029,7 @@ raster_out_filename_sv <- file.path(out_dir, paste0("r_predicted_svm_", out_suff
 r_predicted_svm <- predict(r_stack, mod_svm, progress = 'text',
                            filename = raster_out_filename_sv, overwrite = T)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -1111,8 +1037,8 @@ r_predicted_svm <- predict(r_stack, mod_svm, progress = 'text',
 ~~~r
 plot(r_predicted_svm)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-50-1.png)
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+![ ]({% include asset.html path="images/raster_classification/unnamed-chunk-50-1.png" %})
 {:.captioned}
 
 
@@ -1120,8 +1046,8 @@ plot(r_predicted_svm)
 ~~~r
 rasterVis::histogram(r_predicted_svm)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-51-1.png)
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+![ ]({% include asset.html path="images/raster_classification/unnamed-chunk-51-1.png" %})
 {:.captioned}
 
 
@@ -1137,8 +1063,8 @@ levelplot(r_predicted_svm, maxpixels = 1e6,
           scales = list(draw = FALSE),
           main = "SVM classification")
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-![ ]({{ site.baseurl }}/images/raster_classification/unnamed-chunk-52-1.png)
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+![ ]({% include asset.html path="images/raster_classification/unnamed-chunk-52-1.png" %})
 {:.captioned}
 
 ===
@@ -1152,7 +1078,7 @@ Full dataset, let's use data points for testing.
 ~~~r
 > dim(data_df) 
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -1167,7 +1093,7 @@ Full dataset, let's use data points for testing.
 # omit values that contain NA, because may be problematic with SVM.
 data_testing <- na.omit(subset(data_df, training==0)) 
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
@@ -1175,11 +1101,11 @@ data_testing <- na.omit(subset(data_df, training==0))
 ~~~r
 > dim(data_testing)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
-[1] 450  16
+[1] 452  16
 ~~~
 {:.output}
 
@@ -1193,7 +1119,7 @@ Predict on testing data using rpart model fitted with testing data.
 ~~~r
 testing_rpart <- predict(mod_rpart, data_testing, type='class')
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 Predict on testing data using SVM model fitted with testing data.
@@ -1203,7 +1129,7 @@ Predict on testing data using SVM model fitted with testing data.
 ~~~r
 testing_svm <- predict(mod_svm, data_testing, type='class')
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 Predicted number of pixels in each class:
@@ -1213,13 +1139,13 @@ Predicted number of pixels in each class:
 ~~~r
 table(testing_rpart)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
 testing_rpart
 vegetation    wetland      water 
-       149         77        224 
+       153         77        222 
 ~~~
 {:.output}
 
@@ -1227,13 +1153,13 @@ vegetation    wetland      water
 ~~~r
 table(testing_svm)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
 testing_svm
 vegetation    wetland      water 
-       150         78        222 
+       152         84        216 
 ~~~
 {:.output}
 
@@ -1251,13 +1177,13 @@ Groundtruth data:
 ~~~r
 > table(data_testing$class_ID)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
 
 vegetation    wetland      water 
-       149         84        217 
+       151         84        217 
 ~~~
 {:.output}
 
@@ -1269,13 +1195,13 @@ Classification model results:
 ~~~r
 > table(testing_rpart)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
 testing_rpart
 vegetation    wetland      water 
-       149         77        224 
+       153         77        222 
 ~~~
 {:.output}
 
@@ -1283,13 +1209,13 @@ vegetation    wetland      water
 ~~~r
 > table(testing_svm)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
 testing_svm
 vegetation    wetland      water 
-       150         78        222 
+       152         84        216 
 ~~~
 {:.output}
 
@@ -1304,7 +1230,7 @@ data_testing$class_ID: this column contains groundtruth data
 tb_rpart <- table(testing_rpart, data_testing$class_ID)
 tb_svm <- table(testing_svm, data_testing$class_ID)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 Matrices identifying correct and incorrect classifications by models:
@@ -1314,15 +1240,15 @@ Matrices identifying correct and incorrect classifications by models:
 ~~~r
 > tb_rpart
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
              
 testing_rpart vegetation wetland water
-   vegetation        146       3     0
-   wetland             3      68     6
-   water               0      13   211
+   vegetation        148       5     0
+   wetland             3      70     4
+   water               0       9   213
 ~~~
 {:.output}
 
@@ -1330,15 +1256,15 @@ testing_rpart vegetation wetland water
 ~~~r
 > tb_svm
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
             
 testing_svm  vegetation wetland water
-  vegetation        149       1     0
-  wetland             0      73     5
-  water               0      10   212
+  vegetation        151       1     0
+  wetland             0      77     7
+  water               0       6   210
 ~~~
 {:.output}
 
@@ -1352,11 +1278,11 @@ Accuracy (producer's accuracy): the fraction of correctly classified pixels comp
 ~~~r
 tb_rpart[1]/sum(tb_rpart[,1]) # producer accuracy
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
-[1] 0.9798658
+[1] 0.9801325
 ~~~
 {:.output}
 
@@ -1364,7 +1290,7 @@ tb_rpart[1]/sum(tb_rpart[,1]) # producer accuracy
 ~~~r
 tb_svm[1]/sum(tb_svm[,1]) # producer accuracy
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
@@ -1381,11 +1307,11 @@ Looking at accuracy more closely:
 # overall accuracy for rpart
 sum(diag(tb_rpart))/sum(table(testing_rpart))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
-[1] 0.9444444
+[1] 0.9535398
 ~~~
 {:.output}
 
@@ -1394,11 +1320,11 @@ sum(diag(tb_rpart))/sum(table(testing_rpart))
 # overall accuracy for svm
 sum(diag(tb_svm))/sum(table(testing_svm))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
-[1] 0.9644444
+[1] 0.9690265
 ~~~
 {:.output}
 
@@ -1413,7 +1339,7 @@ Generate more accurate measurements from functions in the caret package:
 accuracy_info_rpart <- confusionMatrix(testing_rpart, data_testing$class_ID, positive = NULL)
 accuracy_info_svm <- confusionMatrix(testing_svm, data_testing$class_ID, positive = NULL)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 Overall accuracy produced:
@@ -1423,14 +1349,14 @@ Overall accuracy produced:
 ~~~r
 > accuracy_info_rpart$overall
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
       Accuracy          Kappa  AccuracyLower  AccuracyUpper   AccuracyNull 
-  9.444444e-01   9.101603e-01   9.190787e-01   9.637284e-01   4.822222e-01 
+  9.535398e-01   9.249994e-01   9.298553e-01   9.710138e-01   4.800885e-01 
 AccuracyPValue  McnemarPValue 
- 1.266887e-101            NaN 
+ 3.536418e-108            NaN 
 ~~~
 {:.output}
 
@@ -1440,14 +1366,14 @@ AccuracyPValue  McnemarPValue
 ~~~r
 > accuracy_info_svm$overall
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
       Accuracy          Kappa  AccuracyLower  AccuracyUpper   AccuracyNull 
-  9.644444e-01   9.425947e-01   9.429011e-01   9.795429e-01   4.822222e-01 
+  9.690265e-01   9.503390e-01   9.485775e-01   9.829652e-01   4.800885e-01 
 AccuracyPValue  McnemarPValue 
- 9.645095e-114            NaN 
+ 3.961900e-118            NaN 
 ~~~
 {:.output}
 
@@ -1463,5 +1389,5 @@ write.table(accuracy_info_rpart$table, table_out_filename, sep=",")
 table_out_filename <- file.path(out_dir, "confusion_matrix_svm.txt")
 write.table(accuracy_info_svm$table, table_out_filename, sep=",")
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 

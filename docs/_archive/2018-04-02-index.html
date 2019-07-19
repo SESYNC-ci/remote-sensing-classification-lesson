@@ -1,3 +1,6 @@
+---
+---
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -7,8 +10,8 @@
 <title>Remote Sensing & Classification</title>
 <meta name="description" content="">
 <link rel="canonical" href="http://cyberhelp.sesync.org/remote-sensing-classification-lesson/course/archive.html">
-<link rel="stylesheet" href="https://cdn.rawgit.com/sesync-ci/lesson-style/v1.3/docs/css/default.css">
-<link rel="stylesheet" href="https://cdn.rawgit.com/sesync-ci/lesson-style/v1.3/docs/css/static.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sesync-ci/lesson-style@v1.3/docs/css/default.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sesync-ci/lesson-style@v1.3/docs/css/static.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
 
   </head>
@@ -311,7 +314,7 @@ Attaching package: 'plotrix'
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_before</span><span class="p">)</span><span class="w"> </span><span class="c1"># Note that this is a multibands image.</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-1.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-1.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">reg_sf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">st_read</span><span class="p">(</span><span class="n">file.path</span><span class="p">(</span><span class="n">in_dir_var</span><span class="p">,</span><span class="n">infile_reg_outline</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
@@ -336,7 +339,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_ref</span><span class="p">)</span><span class="w"> </span><span class="c1"># zone 2 is flooded and zone 1 is not flooded</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-2.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-2.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Let's examine a location within FEMA flooded zone and outside: use centroids</span><span class="w">
 </span><span class="n">centroids_sf</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">st_centroid</span><span class="p">(</span><span class="n">reg_sf</span><span class="p">)</span><span class="w">
@@ -349,7 +352,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 </span><span class="n">lines</span><span class="p">(</span><span class="n">df_after</span><span class="p">[</span><span class="m">2</span><span class="p">,],</span><span class="n">col</span><span class="o">=</span><span class="s2">"red"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-3.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-3.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">## Read band information since it is more informative!!</span><span class="w">
 </span><span class="n">df_modis_band_info</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">read.table</span><span class="p">(</span><span class="n">file.path</span><span class="p">(</span><span class="n">in_dir_var</span><span class="p">,</span><span class="n">infile_modis_bands_information</span><span class="p">),</span><span class="w">
@@ -389,7 +392,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
        </span><span class="n">bty</span><span class="o">=</span><span class="s2">"n"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-4.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-4.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###############################################</span><span class="w">
 </span><span class="c1">##### PART II: Examine spectral class signatures for land cover NLCD classes ##############</span><span class="w">
@@ -494,7 +497,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
       </span><span class="n">col</span><span class="o">=</span><span class="s2">"darkred"</span><span class="p">)</span><span class="w"> </span><span class="c1">#22 developed,High intensity</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-5.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-5.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">####### Explore data in Feature space:</span><span class="w">
 
@@ -502,22 +505,22 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_before</span><span class="o">$</span><span class="n">Red</span><span class="p">,</span><span class="w"> </span><span class="n">r_before</span><span class="o">$</span><span class="n">NIR</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-6.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-6.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before</span><span class="o">$</span><span class="n">Green</span><span class="p">,</span><span class="n">r_before</span><span class="o">$</span><span class="n">Red</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-7.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-7.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before</span><span class="o">$</span><span class="n">SWIR1</span><span class="p">,</span><span class="n">r_before</span><span class="o">$</span><span class="n">NIR</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-8.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-8.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before</span><span class="o">$</span><span class="n">Red</span><span class="p">,</span><span class="n">r_before</span><span class="o">$</span><span class="n">SWIR1</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-9.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-9.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">df_r_before_nlcd</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.data.frame</span><span class="p">(</span><span class="n">stack</span><span class="p">(</span><span class="n">r_before</span><span class="p">,</span><span class="n">nlcd2006_reg</span><span class="p">))</span><span class="w">
 </span><span class="n">head</span><span class="p">(</span><span class="n">df_r_before_nlcd</span><span class="p">)</span><span class="w">
@@ -571,7 +574,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
        </span><span class="n">bty</span><span class="o">=</span><span class="s2">"n"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-10.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-10.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Feature space Red and NIR</span><span class="w">
 
@@ -606,7 +609,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
        </span><span class="n">bty</span><span class="o">=</span><span class="s2">"n"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-11.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-11.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Feature space Blue and Red</span><span class="w">
 
@@ -641,7 +644,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
        </span><span class="n">bty</span><span class="o">=</span><span class="s2">"n"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-12.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-12.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Generate Color composites</span><span class="w">
 </span><span class="c1">### True color composite</span><span class="w">
@@ -654,7 +657,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
         </span><span class="n">stretch</span><span class="o">=</span><span class="s2">"hist"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-13.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-13.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### False color composite:</span><span class="w">
 
@@ -666,7 +669,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
         </span><span class="n">stretch</span><span class="o">=</span><span class="s2">"hist"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-14.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-14.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plotRGB</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="w">
         </span><span class="n">r</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="w">
@@ -676,7 +679,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
         </span><span class="n">stretch</span><span class="o">=</span><span class="s2">"hist"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-15.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-15.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Note the effect of flooding is particularly visible in the false color composites.</span><span class="w">
 </span><span class="c1">### Let's examine different band combination to enhance features in the image, including flooded areas.</span><span class="w">
@@ -689,12 +692,12 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 </span><span class="n">plot</span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_before</span><span class="p">,</span><span class="s2">"NIR"</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-16.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-16.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"NIR"</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-17.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-17.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Lower NIR often correlates to areas with high water fraction or inundated:</span><span class="w">
 </span><span class="n">r_rec_NIR_before</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">r_before</span><span class="p">,</span><span class="s2">"NIR"</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">0.2</span><span class="w">
@@ -704,12 +707,12 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_rec_NIR_before</span><span class="p">,</span><span class="w"> </span><span class="n">main</span><span class="o">=</span><span class="s2">"Before RITA, NIR &gt; 0.2"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-18.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-18.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_rec_NIR_after</span><span class="p">,</span><span class="w"> </span><span class="n">main</span><span class="o">=</span><span class="s2">"After RITA, NIR &gt; 0.2"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-19.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-19.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#Compare to actual flooding data</span><span class="w">
 </span><span class="n">freq_fema_zones</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.data.frame</span><span class="p">(</span><span class="n">freq</span><span class="p">(</span><span class="n">r_ref</span><span class="p">))</span><span class="w">
@@ -742,12 +745,12 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_before_NDVI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="n">col</span><span class="o">=</span><span class="n">matlab.like</span><span class="p">(</span><span class="m">255</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-20.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-20.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="n">col</span><span class="o">=</span><span class="n">matlab.like2</span><span class="p">(</span><span class="m">255</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-21.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-21.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Experiment with different threshold values:</span><span class="w">
 </span><span class="c1"># THis is suggesting flooding!!!</span><span class="w">
@@ -755,32 +758,32 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 </span><span class="n">histogram</span><span class="p">(</span><span class="n">r_before_NDVI</span><span class="p">)</span><span class="w"> </span><span class="c1"># Examine histogram to look for potential threshold values</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-22.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-22.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">histogram</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="p">)</span><span class="w"> </span><span class="c1"># Examine histogram to look for poential threshold values</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-23.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-23.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before_NDVI</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">-0.5</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-24.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-24.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">-0.5</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-25.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-25.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before_NDVI</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">-0.1</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-26.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-26.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">-0.1</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-27.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-27.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#2) NDWI = (Green - NIR)/(Green + NIR)</span><span class="w">
 </span><span class="c1">#3) MNDWI = Green - SWIR2 / Green + SWIR2</span><span class="w">
@@ -798,44 +801,44 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_before_MNDWI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="n">col</span><span class="o">=</span><span class="n">rev</span><span class="p">(</span><span class="n">matlab.like</span><span class="p">(</span><span class="m">255</span><span class="p">)))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-28.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-28.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="n">col</span><span class="o">=</span><span class="n">rev</span><span class="p">(</span><span class="n">matlab.like</span><span class="p">(</span><span class="m">255</span><span class="p">)))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-29.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-29.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### THis is suggesting flooding!!!</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_before_MNDWI</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-30.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-30.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-31.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-31.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_before_MNDWI</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.1</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-32.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-32.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.1</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-33.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-33.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_diff_MNDWI</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">r_after_MNDWI</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">r_before_MNDWI</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_diff_MNDWI</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-34.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-34.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_diff_MNDWI</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.2</span><span class="p">)</span><span class="w"> </span><span class="c1">## Increase in MNDWI: Areas that may have become flooded</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-35.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-35.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#Standardize image:</span><span class="w">
 </span><span class="n">mean_val</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">cellStats</span><span class="p">(</span><span class="n">r_diff_MNDWI</span><span class="p">,</span><span class="s2">"mean"</span><span class="p">)</span><span class="w">
@@ -845,22 +848,22 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_diff_std</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-36.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-36.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">histogram</span><span class="p">(</span><span class="n">r_diff_std</span><span class="p">)</span><span class="w"> 
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-37.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-37.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_diff_std</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="c1">## increase in MNDWI 2 standard deiation away</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-38.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-38.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_diff_std</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="c1">## increase in MNDWI 2 standard deiation away</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-39.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-39.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Generate a map of flooding with MNDWI and compare to FEMA map:</span><span class="w">
 
@@ -874,7 +877,7 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_ref_rec</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-40.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-40.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">xtab_tb</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">crosstab</span><span class="p">(</span><span class="n">r_after_flood</span><span class="p">,</span><span class="n">r_ref_rec</span><span class="p">)</span><span class="w">
 
@@ -883,13 +886,13 @@ proj4string:    +proj=longlat +datum=NAD83 +no_defs
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_after_flood</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-41.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-41.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_overlap</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">r_ref_rec</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">r_after_flood</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_overlap</span><span class="p">)</span><span class="w"> </span><span class="c1">## Flood map area of aggreement with FEMA</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-42.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-42.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###############################################</span><span class="w">
 </span><span class="c1">##### PART IV: Principal Component Analysis and band transformation</span><span class="w">
@@ -973,13 +976,13 @@ Cumulative Var 0.627 0.957 0.992 0.997 0.998 1.000 1.000
        </span><span class="n">lwd</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="n">bty</span><span class="o">=</span><span class="s2">"n"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-43.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-43.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">## Add scree plot</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">pca_mod</span><span class="o">$</span><span class="n">values</span><span class="p">,</span><span class="n">main</span><span class="o">=</span><span class="s2">"Scree plot: Variance explained"</span><span class="p">,</span><span class="n">type</span><span class="o">=</span><span class="s2">"b"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-44.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-44.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Generate scores from eigenvectors</span><span class="w">
 </span><span class="c1">### Using predict function: this is recommended for raster.</span><span class="w">
@@ -987,27 +990,27 @@ Cumulative Var 0.627 0.957 0.992 0.997 0.998 1.000 1.000
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">2</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-2</span><span class="p">,</span><span class="m">2</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-45.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-45.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">1</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-2</span><span class="p">,</span><span class="m">2</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-46.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-46.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="m">3</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-2</span><span class="p">,</span><span class="m">2</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-47.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-47.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="n">subset</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="m">2</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-48.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-48.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="m">2</span><span class="p">),</span><span class="n">subset</span><span class="p">(</span><span class="n">r_pca</span><span class="p">,</span><span class="m">3</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-49.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-49.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Generate a plot for PCA with loadings and compare to Tassel Cap</span><span class="w">
 
@@ -1034,7 +1037,7 @@ Cumulative Var 0.627 0.957 0.992 0.997 0.998 1.000 1.000
 </span><span class="n">grid</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-50.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-50.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">##### plot feature space:</span><span class="w">
 
@@ -1083,18 +1086,18 @@ Cumulative Var 0.627 0.957 0.992 0.997 0.998 1.000 1.000
        </span><span class="n">col</span><span class="o">=</span><span class="s2">"green"</span><span class="p">,</span><span class="n">cex</span><span class="o">=</span><span class="m">0.15</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-51.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-51.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">### Note the negative values are related to Forest and positve to water on PC2</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_pca</span><span class="o">$</span><span class="n">pc_scores.2</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0.1</span><span class="p">)</span><span class="w"> </span><span class="c1">#water related?</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-52.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-52.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_pca</span><span class="o">$</span><span class="n">pc_scores.2</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">0.1</span><span class="p">)</span><span class="w"> </span><span class="c1">#vegetation related?</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-53.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-53.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">#### Examine relationship with Tasselcap transform adapted for MODIS:</span><span class="w">
 </span><span class="c1">#6) TCWI =  0.10839 * Red+ 0.0912 * NIR +0.5065 * Blue+ 0.404 * Green </span><span class="w">
@@ -1135,37 +1138,37 @@ values      : 0.00172096, 0.4989139  (min, max)
 </span><span class="n">histogram</span><span class="p">(</span><span class="n">r_TCWI</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-54.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-54.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_TCWI</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-55.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-55.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_TCWI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">0.2</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-56.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-56.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_TCWI</span><span class="o">&gt;</span><span class="m">0.1</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-57.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-57.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">histogram</span><span class="p">(</span><span class="n">r_TCBI</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-58.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-58.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_TCBI</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-59.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-59.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_TCBI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">0.2</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-60.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-60.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_stack</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">stack</span><span class="p">(</span><span class="n">r_TCWI</span><span class="p">,</span><span class="n">r_TCBI</span><span class="p">,</span><span class="w"> </span><span class="n">r_pca</span><span class="p">)</span><span class="w">
 </span><span class="nf">names</span><span class="p">(</span><span class="n">r_stack</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"TCWI"</span><span class="p">,</span><span class="s2">"TCBI"</span><span class="p">,</span><span class="nf">names</span><span class="p">(</span><span class="n">r_pca</span><span class="p">))</span><span class="w">
@@ -1225,7 +1228,7 @@ pc_scores.7  0.127193911  0.3596098185  0.05074089  1.00000000
 </span><span class="n">grid</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part1/unnamed-chunk-1-61.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part1/unnamed-chunk-1-61.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-1.R"><div class="highlight"><pre class="highlight"><code><span class="c1">########################## End of Script ###################################</span><span class="w">
 </span></code></pre></div></div>
@@ -1426,13 +1429,13 @@ Attaching package: 'ggplot2'
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_after_MNDWI</span><span class="p">,</span><span class="n">zlim</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="m">1</span><span class="p">))</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-1.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part2/unnamed-chunk-1-1.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_after_NDVI</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"NIR"</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"Red"</span><span class="p">))</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"NIR"</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">subset</span><span class="p">(</span><span class="n">r_after</span><span class="p">,</span><span class="s2">"Red"</span><span class="p">))</span><span class="w">
 </span><span class="n">plot</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-2.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part2/unnamed-chunk-1-2.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">data_type_str</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">dataType</span><span class="p">(</span><span class="n">r_after_NDVI</span><span class="p">)</span><span class="w">
 
@@ -1647,7 +1650,7 @@ column name 'x' is duplicated in the result
        </span><span class="n">bty</span><span class="o">=</span><span class="s2">"n"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-3.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part2/unnamed-chunk-1-3.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">## Let's use a palette that reflects wetness or level of water </span><span class="w">
 </span><span class="n">col_palette</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"green"</span><span class="p">,</span><span class="s2">"blue"</span><span class="p">,</span><span class="s2">"darkblue"</span><span class="p">)</span><span class="w">
@@ -1674,12 +1677,12 @@ column name 'x' is duplicated in the result
        </span><span class="n">bty</span><span class="o">=</span><span class="s2">"n"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-4.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part2/unnamed-chunk-1-4.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">histogram</span><span class="p">(</span><span class="n">r_after</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-5.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part2/unnamed-chunk-1-5.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">pixels_df</span><span class="o">$</span><span class="n">class_ID</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">factor</span><span class="p">(</span><span class="n">pixels_df</span><span class="o">$</span><span class="n">class_ID</span><span class="p">,</span><span class="w">
                     </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">3</span><span class="p">),</span><span class="w">
@@ -1691,7 +1694,7 @@ column name 'x' is duplicated in the result
         </span><span class="n">main</span><span class="o">=</span><span class="s2">"Boxplot for MNDWI per class"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-6.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part2/unnamed-chunk-1-6.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###############################################</span><span class="w">
 </span><span class="c1">##### PART II: Split training and testing ##############</span><span class="w">
@@ -1775,7 +1778,7 @@ vegetation    wetland      water
 </span><span class="n">text</span><span class="p">(</span><span class="n">mod_rpart</span><span class="p">,</span><span class="w"> </span><span class="n">cex</span><span class="o">=</span><span class="m">.8</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-7.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part2/unnamed-chunk-1-7.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1"># Now predict the subset data based on the model; prediction for entire area takes longer time</span><span class="w">
 </span><span class="n">raster_out_filename</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">paste0</span><span class="p">(</span><span class="s2">"r_predicted_rpart_"</span><span class="p">,</span><span class="n">out_suffix</span><span class="p">,</span><span class="n">file_format</span><span class="p">)</span><span class="w">
@@ -1803,7 +1806,7 @@ vegetation    wetland      water
 <div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_predicted_rpart</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-8.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part2/unnamed-chunk-1-8.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_predicted_rpart</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ratify</span><span class="p">(</span><span class="n">r_predicted_rpart</span><span class="p">)</span><span class="w">
 </span><span class="n">rat</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">levels</span><span class="p">(</span><span class="n">r_predicted_rpart</span><span class="p">)[[</span><span class="m">1</span><span class="p">]]</span><span class="w">
@@ -1815,7 +1818,7 @@ vegetation    wetland      water
           </span><span class="n">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Classification Tree"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-9.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part2/unnamed-chunk-1-9.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">############### Using Support Vector Machine #########</span><span class="w">
 
@@ -1878,12 +1881,12 @@ Levels:
 <div class="language-r text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">plot</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-10.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part2/unnamed-chunk-1-10.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">histogram</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-11.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part2/unnamed-chunk-1-11.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="n">r_predicted_svm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ratify</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)</span><span class="w">
 </span><span class="n">rat</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">levels</span><span class="p">(</span><span class="n">r_predicted_svm</span><span class="p">)[[</span><span class="m">1</span><span class="p">]]</span><span class="w">
@@ -1895,7 +1898,7 @@ Levels:
           </span><span class="n">main</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"SVM classification"</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/remote-sensing-classification-lesson/images/part2/unnamed-chunk-1-12.png" alt="plot of chunk unnamed-chunk-1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/remote-sensing-classification-lesson@v0.1/docs/images/part2/unnamed-chunk-1-12.png" alt="plot of chunk unnamed-chunk-1" /></p>
 
 <div class="language-r captioned text-document highlighter-rouge" title="worksheet-3-2.R"><div class="highlight"><pre class="highlight"><code><span class="c1">###############################################</span><span class="w">
 </span><span class="c1">##### PART IV: Compare methods for the performance ##############</span><span class="w">

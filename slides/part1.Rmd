@@ -4,7 +4,7 @@ editor_options:
 excerpt: Introduction to Remote Sensing
 ---
 ### Load packages
-```{r, title = "{{ site.handouts[0] }}"}
+```{r, handout = 0}
 library(raster) # raster functionalities
 library(rgdal) # GDAL/OGR binding for R with functionalities
 library(sf) # spatial objects classes
