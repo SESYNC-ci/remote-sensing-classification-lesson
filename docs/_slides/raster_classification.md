@@ -475,8 +475,7 @@ Simple feature collection with 6 features and 2 fields
 geometry type:  POLYGON
 dimension:      XY
 bbox:           xmin: 1588619 ymin: 859495.9 xmax: 1830803 ymax: 941484.1
-epsg (SRID):    NA
-proj4string:    NA
+CRS:            NA
 ~~~
 {:.output}
 
@@ -493,8 +492,7 @@ Simple feature collection with 8 features and 2 fields
 geometry type:  MULTIPOLYGON
 dimension:      XY
 bbox:           xmin: 1605433 ymin: 848843.8 xmax: 1794265 ymax: 884027.8
-epsg (SRID):    NA
-proj4string:    NA
+CRS:            NA
 ~~~
 {:.output}
 
@@ -511,8 +509,7 @@ Simple feature collection with 9 features and 2 fields
 geometry type:  POLYGON
 dimension:      XY
 bbox:           xmin: 1587649 ymin: 845271.3 xmax: 1777404 ymax: 891073.1
-epsg (SRID):    NA
-proj4string:    NA
+CRS:            NA
 ~~~
 {:.output}
 
@@ -530,8 +527,7 @@ Simple feature collection with 6 features and 2 fields
 geometry type:  POLYGON
 dimension:      XY
 bbox:           xmin: 1588619 ymin: 859495.9 xmax: 1830803 ymax: 941484.1
-epsg (SRID):    NA
-proj4string:    NA
+CRS:            NA
   record_ID class_ID                       geometry
 1         1        1 POLYGON ((1610283 929863.7,...
 2         2        1 POLYGON ((1755141 900167.2,...
@@ -995,8 +991,7 @@ mod_svm <- svm(class_ID ~ Red + NIR + Blue + Green + SWIR1 + SWIR2 + SWIR3,
 
 Call:
 svm(formula = class_ID ~ Red + NIR + Blue + Green + SWIR1 + SWIR2 + 
-    SWIR3, data = data_training, method = "C-classification", 
-    kernel = "linear")
+    SWIR3, data = data_training, method = "C-classification", kernel = "linear")
 
 
 Parameters:
